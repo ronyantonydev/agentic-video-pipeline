@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, rmSync, writeFileSync, readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { probe, frameContrast, frameLuminance, ProbeError } from '../src/ffmpeg/probe.js';
@@ -29,6 +29,34 @@ beforeAll(() => {
 }, 60_000);
 
 afterAll(() => rmSync(dir, { recursive: true, force: true }));
+
+describe('ffmpeg portability', () => {
+  it('uses only filters present in every ffmpeg build', () => {
+    // CI caught this: `gradients` exists in Homebrew's ffmpeg 7.x but not in
+    // Ubuntu's build, so a test passed locally and failed on push. Anything
+    // used by the suite or by the fake provider must be core.
+    const sources = [
+      readFileSync(new URL('./qa.test.ts', import.meta.url), 'utf8'),
+      readFileSync(new URL('../src/higgsfield/fake-provider.ts', import.meta.url), 'utf8'),
+    ].join('\n');
+
+    // Strip comments, which legitimately name the filter while explaining it.
+    const code = sources.replace(/\/\/.*$/gm, '').replace(/\/\*[\s\S]*?\*\//g, '');
+
+    // Only lavfi INPUT sources matter - those are what a missing filter
+    // breaks. Matching bare filter names would collide with ordinary
+    // identifiers, so the pattern requires the `-i` position.
+    const lavfiSources = [...code.matchAll(/'-i',\s*[`'"]([a-z0-9_]+)[=:]/g)].map((m) => m[1]);
+
+    // Present in every ffmpeg build, including the one Ubuntu ships.
+    const CORE = new Set(['testsrc2', 'testsrc', 'color', 'anullsrc', 'sine', 'smptebars']);
+
+    for (const filter of new Set(lavfiSources)) {
+      expect(CORE.has(filter!), `lavfi source "${filter}" may be absent from some builds`)
+        .toBe(true);
+    }
+  });
+});
 
 describe('probe', () => {
   it('reads stream properties', async () => {
@@ -70,7 +98,15 @@ describe('blank detection measures contrast WITHIN a frame', () => {
   it('does not confuse a static shot with a blank one', async () => {
     // A still image with real content: constant over time, high contrast
     // within the frame. The old check called this blank.
-    const still = makeVideo('still.mp4', 'gradients=size=640x480:rate=10:speed=0');
+    //
+    // Built from testsrc2 with a frozen frame rather than the `gradients`
+    // source: gradients is absent from Ubuntu's ffmpeg build, so the test
+    // passed locally and failed in CI. Every filter used here - testsrc2,
+    // trim, loop - is core.
+    const still = makeVideo(
+      'still.mp4',
+      'testsrc2=size=640x480:rate=10,trim=end_frame=1,loop=loop=-1:size=1,fps=10',
+    );
     const luma = await frameLuminance(still);
     const contrast = await frameContrast(still);
 

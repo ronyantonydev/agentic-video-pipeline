@@ -236,10 +236,13 @@ export class FakeProvider implements GenerationProvider {
           path,
         ]);
       } else if (kind === 'image') {
+        // testsrc2 rather than `gradients`: the latter is absent from some
+        // distribution builds of ffmpeg, including Ubuntu's, which would
+        // break PROVIDER_MODE=fake on Linux entirely.
         await exec(env.ffmpegBin, [
           '-y', '-loglevel', 'error',
           '-f', 'lavfi',
-          '-i', `gradients=size=${width}x${height}:duration=1:speed=0.1`,
+          '-i', `testsrc2=size=${width}x${height}:rate=1`,
           '-frames:v', '1',
           path,
         ]);
