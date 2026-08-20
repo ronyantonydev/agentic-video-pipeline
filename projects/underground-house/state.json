@@ -2,10 +2,10 @@
   "version": 1,
   "projectName": "underground-house",
   "createdAt": "2026-08-20T04:02:45.372Z",
-  "updatedAt": "2026-08-20T06:55:17.128Z",
+  "updatedAt": "2026-08-20T07:09:21.255Z",
   "idea": "A 90-second cinematic video of a man building an underground house",
   "mode": "full",
-  "stage": "generation-plan",
+  "stage": "qa-machine",
   "completedStages": [
     "init",
     "story",
@@ -32,11 +32,11 @@
   },
   "budget": {
     "maxBudgetUSD": 20,
-    "spentUSD": 3.28,
+    "spentUSD": 15.51,
     "reservedUSD": 0,
     "creditsStart": 1385,
-    "creditsUsed": 52.339999999999996,
-    "creditsRemaining": 1332.66
+    "creditsUsed": 247.34,
+    "creditsRemaining": 1137.66
   },
   "projectSettings": {
     "width": 1920,
@@ -55,6 +55,51 @@
       "attempts": 0
     },
     "shot_014": {
+      "status": "downloaded",
+      "attempts": 0
+    },
+    "shot_002": {
+      "status": "downloaded",
+      "attempts": 0
+    },
+    "shot_003": {
+      "status": "downloaded",
+      "attempts": 0
+    },
+    "shot_004": {
+      "status": "downloaded",
+      "attempts": 0
+    },
+    "shot_005": {
+      "status": "downloaded",
+      "attempts": 0
+    },
+    "shot_006": {
+      "status": "qa-flagged",
+      "attempts": 0,
+      "failureClass": "continuity-issue"
+    },
+    "shot_007": {
+      "status": "downloaded",
+      "attempts": 0
+    },
+    "shot_009": {
+      "status": "downloaded",
+      "attempts": 0
+    },
+    "shot_010": {
+      "status": "downloaded",
+      "attempts": 0
+    },
+    "shot_011": {
+      "status": "downloaded",
+      "attempts": 0
+    },
+    "shot_012": {
+      "status": "downloaded",
+      "attempts": 0
+    },
+    "shot_013": {
       "status": "downloaded",
       "attempts": 0
     }

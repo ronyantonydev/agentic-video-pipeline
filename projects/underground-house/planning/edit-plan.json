@@ -45,31 +45,21 @@
       "shotId": "shot_005",
       "startSeconds": 25.0,
       "screenDurationSeconds": 3.0,
-      "motionSeconds": 0.0,
+      "motionSeconds": 2.55,
       "speedFactor": 1.0,
       "transitionIn": "cut",
       "transitionOut": "cut",
-      "isStill": true,
-      "kenBurns": {
-        "enabled": true,
-        "startScale": 1.0,
-        "endScale": 1.12
-      }
+      "isStill": false
     },
     {
       "shotId": "shot_006",
       "startSeconds": 28.0,
       "screenDurationSeconds": 3.0,
-      "motionSeconds": 0.0,
+      "motionSeconds": 2.55,
       "speedFactor": 1.0,
       "transitionIn": "cut",
       "transitionOut": "cut",
-      "isStill": true,
-      "kenBurns": {
-        "enabled": true,
-        "startScale": 1.0,
-        "endScale": 1.12
-      }
+      "isStill": false
     },
     {
       "shotId": "shot_007",

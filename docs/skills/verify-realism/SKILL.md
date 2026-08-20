@@ -30,6 +30,19 @@ identity-reference input at all.
 - FAIL if `continuity.json` describes a character but no reference image
   exists in `references/character/`.
 
+**"Contains the character" includes body parts.** This was missed on the
+second run: a macro shot of "dirty bare hands gripping a shovel shaft" was
+generated WITHOUT the reference, on the assumption that a hands-only shot
+had no identity to hold. The result had different hands - darker skin - and
+a different environment entirely (dry open farmland instead of damp forest).
+It cost 20 credits and had to be regenerated.
+
+A shot needs the character reference if it shows ANY of: hands, arms, boots,
+legs, torso, or clothing. Only shots with no human presence at all - an
+empty clearing, a tool standing alone, a finished structure - may omit it.
+
+When in doubt, attach the reference. It costs nothing extra.
+
 **Wardrobe details must be FIXABLE, not adjectives.** "Weathered jacket" is
 unusable. "Olive-drab jacket with a torn left cuff, grey thermal collar
 visible at the neck, mud line at the knees" gives the model something to

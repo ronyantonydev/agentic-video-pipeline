@@ -2,206 +2,240 @@
   "items": [
     {
       "shotId": "shot_001",
-      "modelId": "seedance_2_0",
+      "modelId": "seedance_2_0_mini",
       "requiredSeconds": 6.8,
       "billableSeconds": 7,
       "prompt": "Static wide of an untouched forest clearing on a gentle slope, bare trees, leaf litter, damp brown earth, faint drizzle. Nothing happens except leaves stirring in the wind. handheld bushcraft documentary footage, flat overcast light, no sun, damp forest clearing, muddy and unpolished, close low camera, natural amateur camera shake, raw unedited look, wide shot, 24mm lens.",
       "negativePrompt": "cinematic color grading, golden hour, lens flare, drone shot, aerial view, slow motion, time-lapse, modern machinery, excavator, power tools, architectural glass, designer interior, polished, glossy, oversaturated, film trailer look, text overlay, watermark, multiple people",
       "aspectRatio": "16:9",
-      "resolution": "1080p",
-      "usesStartFrame": true,
-      "usesEndFrame": true,
+      "resolution": "720p",
+      "usesStartFrame": false,
+      "usesEndFrame": false,
       "nativeAudio": true,
       "settings": {
-        "mode": "std",
-        "genre": "auto"
+        "resolution": "720p",
+        "generate_audio": true
       }
     },
     {
       "shotId": "shot_002",
-      "modelId": "seedance_2_0",
+      "modelId": "seedance_2_0_mini",
       "requiredSeconds": 5.1,
       "billableSeconds": 6,
       "prompt": "a man in an olive-drab work jacket with a torn left cuff, grey thermal collar visible, dark brown canvas trousers muddy at the knees, bare dirty hands walks into the clearing carrying a worn steel shovel over one shoulder, stops, and looks down at the ground. He does not dig yet. handheld bushcraft documentary footage, flat overcast light, no sun, damp forest clearing, muddy and unpolished, close low camera, natural amateur camera shake, raw unedited look, wide shot, 24mm lens.",
       "negativePrompt": "cinematic color grading, golden hour, lens flare, drone shot, aerial view, slow motion, time-lapse, modern machinery, excavator, power tools, architectural glass, designer interior, polished, glossy, oversaturated, film trailer look, text overlay, watermark, multiple people",
       "aspectRatio": "16:9",
-      "resolution": "1080p",
+      "resolution": "720p",
       "usesStartFrame": false,
       "usesEndFrame": false,
       "nativeAudio": true,
       "settings": {
-        "mode": "std",
-        "genre": "auto"
+        "resolution": "720p",
+        "generate_audio": true
       }
     },
     {
       "shotId": "shot_003",
-      "modelId": "seedance_2_0",
+      "modelId": "seedance_2_0_mini",
       "requiredSeconds": 4.25,
       "billableSeconds": 5,
       "prompt": "Close on a worn steel spade blade being pushed into damp leaf litter by a muddy boot. The blade cuts through roots. Single continuous push. handheld bushcraft documentary footage, flat overcast light, no sun, damp forest clearing, muddy and unpolished, close low camera, natural amateur camera shake, raw unedited look, close shot, 24mm lens.",
       "negativePrompt": "cinematic color grading, golden hour, lens flare, drone shot, aerial view, slow motion, time-lapse, modern machinery, excavator, power tools, architectural glass, designer interior, polished, glossy, oversaturated, film trailer look, text overlay, watermark, multiple people",
       "aspectRatio": "16:9",
-      "resolution": "1080p",
+      "resolution": "720p",
       "usesStartFrame": false,
       "usesEndFrame": false,
       "nativeAudio": true,
       "settings": {
-        "mode": "std",
-        "genre": "auto"
+        "resolution": "720p",
+        "generate_audio": true
       }
     },
     {
       "shotId": "shot_004",
-      "modelId": "seedance_2_0",
+      "modelId": "seedance_2_0_mini",
       "requiredSeconds": 5.1,
       "billableSeconds": 6,
       "prompt": "Close on hands levering a spade, one slab of turf and root lifting away to reveal dark wet soil underneath. One lift only. handheld bushcraft documentary footage, flat overcast light, no sun, damp forest clearing, muddy and unpolished, close low camera, natural amateur camera shake, raw unedited look, close shot, 24mm lens.",
       "negativePrompt": "cinematic color grading, golden hour, lens flare, drone shot, aerial view, slow motion, time-lapse, modern machinery, excavator, power tools, architectural glass, designer interior, polished, glossy, oversaturated, film trailer look, text overlay, watermark, multiple people",
       "aspectRatio": "16:9",
-      "resolution": "1080p",
+      "resolution": "720p",
       "usesStartFrame": false,
       "usesEndFrame": false,
       "nativeAudio": true,
       "settings": {
-        "mode": "std",
-        "genre": "auto"
+        "resolution": "720p",
+        "generate_audio": true
+      }
+    },
+    {
+      "shotId": "shot_005",
+      "modelId": "seedance_2_0_mini",
+      "requiredSeconds": 2.55,
+      "billableSeconds": 4,
+      "prompt": "Static wide of a shallow rectangular cut in the forest floor, turf stacked to one side, shovel standing upright in the soil. Nobody in frame. handheld bushcraft documentary footage, flat overcast light, no sun, damp forest clearing, muddy and unpolished, close low camera, natural amateur camera shake, raw unedited look, wide shot, 24mm lens.",
+      "negativePrompt": "cinematic color grading, golden hour, lens flare, drone shot, aerial view, slow motion, time-lapse, modern machinery, excavator, power tools, architectural glass, designer interior, polished, glossy, oversaturated, film trailer look, text overlay, watermark, multiple people",
+      "aspectRatio": "16:9",
+      "resolution": "720p",
+      "usesStartFrame": false,
+      "usesEndFrame": false,
+      "nativeAudio": true,
+      "settings": {
+        "resolution": "720p",
+        "generate_audio": true
+      }
+    },
+    {
+      "shotId": "shot_006",
+      "modelId": "seedance_2_0_mini",
+      "requiredSeconds": 2.55,
+      "billableSeconds": 4,
+      "prompt": "Macro on dirty bare hands gripping a weathered wooden shovel shaft, soil crumbling between the fingers, small stones falling. handheld bushcraft documentary footage, flat overcast light, no sun, damp forest clearing, muddy and unpolished, close low camera, natural amateur camera shake, raw unedited look, macro shot, 24mm lens.",
+      "negativePrompt": "cinematic color grading, golden hour, lens flare, drone shot, aerial view, slow motion, time-lapse, modern machinery, excavator, power tools, architectural glass, designer interior, polished, glossy, oversaturated, film trailer look, text overlay, watermark, multiple people",
+      "aspectRatio": "16:9",
+      "resolution": "720p",
+      "usesStartFrame": false,
+      "usesEndFrame": false,
+      "nativeAudio": true,
+      "settings": {
+        "resolution": "720p",
+        "generate_audio": true
       }
     },
     {
       "shotId": "shot_007",
-      "modelId": "seedance_2_0",
+      "modelId": "seedance_2_0_mini",
       "requiredSeconds": 5.95,
       "billableSeconds": 6,
       "prompt": "a man in an olive-drab work jacket with a torn left cuff, grey thermal collar visible, dark brown canvas trousers muddy at the knees, bare dirty hands standing knee-deep in a shallow pit, lifting one shovelful of soil and tossing it over the rim. One throw, then he pauses to breathe. handheld bushcraft documentary footage, flat overcast light, no sun, damp forest clearing, muddy and unpolished, close low camera, natural amateur camera shake, raw unedited look, medium shot, 24mm lens.",
       "negativePrompt": "cinematic color grading, golden hour, lens flare, drone shot, aerial view, slow motion, time-lapse, modern machinery, excavator, power tools, architectural glass, designer interior, polished, glossy, oversaturated, film trailer look, text overlay, watermark, multiple people",
       "aspectRatio": "16:9",
-      "resolution": "1080p",
+      "resolution": "720p",
       "usesStartFrame": false,
       "usesEndFrame": false,
       "nativeAudio": true,
       "settings": {
-        "mode": "std",
-        "genre": "auto"
+        "resolution": "720p",
+        "generate_audio": true
       }
     },
     {
       "shotId": "shot_008",
-      "modelId": "seedance_2_0",
+      "modelId": "seedance_2_0_mini",
       "requiredSeconds": 7.65,
       "billableSeconds": 8,
       "prompt": "a man in an olive-drab work jacket with a torn left cuff, grey thermal collar visible, dark brown canvas trousers muddy at the knees, bare dirty hands waist-deep in a raw earth pit, vertical soil walls around him, lifting one shovelful and throwing it up over the edge. Camera low at the pit rim looking down. One continuous action. handheld bushcraft documentary footage, flat overcast light, no sun, damp forest clearing, muddy and unpolished, close low camera, natural amateur camera shake, raw unedited look, medium shot, 24mm lens.",
       "negativePrompt": "cinematic color grading, golden hour, lens flare, drone shot, aerial view, slow motion, time-lapse, modern machinery, excavator, power tools, architectural glass, designer interior, polished, glossy, oversaturated, film trailer look, text overlay, watermark, multiple people",
       "aspectRatio": "16:9",
-      "resolution": "1080p",
-      "usesStartFrame": true,
-      "usesEndFrame": true,
+      "resolution": "720p",
+      "usesStartFrame": false,
+      "usesEndFrame": false,
       "nativeAudio": true,
       "settings": {
-        "mode": "std",
-        "genre": "auto"
+        "resolution": "720p",
+        "generate_audio": true
       }
     },
     {
       "shotId": "shot_009",
-      "modelId": "seedance_2_0",
+      "modelId": "seedance_2_0_mini",
       "requiredSeconds": 5.95,
       "billableSeconds": 6,
       "prompt": "a man in an olive-drab work jacket with a torn left cuff, grey thermal collar visible, dark brown canvas trousers muddy at the knees, bare dirty hands kneeling in the pit floor, setting a rough debarked pine log upright against the earth wall and steadying it with both hands. handheld bushcraft documentary footage, flat overcast light, no sun, damp forest clearing, muddy and unpolished, close low camera, natural amateur camera shake, raw unedited look, medium shot, 24mm lens.",
       "negativePrompt": "cinematic color grading, golden hour, lens flare, drone shot, aerial view, slow motion, time-lapse, modern machinery, excavator, power tools, architectural glass, designer interior, polished, glossy, oversaturated, film trailer look, text overlay, watermark, multiple people",
       "aspectRatio": "16:9",
-      "resolution": "1080p",
+      "resolution": "720p",
       "usesStartFrame": false,
       "usesEndFrame": false,
       "nativeAudio": true,
       "settings": {
-        "mode": "std",
-        "genre": "auto"
+        "resolution": "720p",
+        "generate_audio": true
       }
     },
     {
       "shotId": "shot_010",
-      "modelId": "seedance_2_0",
+      "modelId": "seedance_2_0_mini",
       "requiredSeconds": 6.8,
       "billableSeconds": 7,
       "prompt": "Close on hands wedging a rough pine log tight against packed earth, tapping it with the flat of a small forest axe. Wood and soil contact in detail. handheld bushcraft documentary footage, flat overcast light, no sun, damp forest clearing, muddy and unpolished, close low camera, natural amateur camera shake, raw unedited look, close shot, 24mm lens.",
       "negativePrompt": "cinematic color grading, golden hour, lens flare, drone shot, aerial view, slow motion, time-lapse, modern machinery, excavator, power tools, architectural glass, designer interior, polished, glossy, oversaturated, film trailer look, text overlay, watermark, multiple people",
       "aspectRatio": "16:9",
-      "resolution": "1080p",
-      "usesStartFrame": true,
-      "usesEndFrame": true,
+      "resolution": "720p",
+      "usesStartFrame": false,
+      "usesEndFrame": false,
       "nativeAudio": true,
       "settings": {
-        "mode": "std",
-        "genre": "auto"
+        "resolution": "720p",
+        "generate_audio": true
       }
     },
     {
       "shotId": "shot_011",
-      "modelId": "seedance_2_0",
+      "modelId": "seedance_2_0_mini",
       "requiredSeconds": 5.95,
       "billableSeconds": 6,
       "prompt": "a man in an olive-drab work jacket with a torn left cuff, grey thermal collar visible, dark brown canvas trousers muddy at the knees, bare dirty hands lowering one rough pine roof beam across the top of the log walls, sliding it into position with both hands. One beam only. handheld bushcraft documentary footage, flat overcast light, no sun, damp forest clearing, muddy and unpolished, close low camera, natural amateur camera shake, raw unedited look, medium shot, 24mm lens.",
       "negativePrompt": "cinematic color grading, golden hour, lens flare, drone shot, aerial view, slow motion, time-lapse, modern machinery, excavator, power tools, architectural glass, designer interior, polished, glossy, oversaturated, film trailer look, text overlay, watermark, multiple people",
       "aspectRatio": "16:9",
-      "resolution": "1080p",
-      "usesStartFrame": true,
-      "usesEndFrame": true,
+      "resolution": "720p",
+      "usesStartFrame": false,
+      "usesEndFrame": false,
       "nativeAudio": true,
       "settings": {
-        "mode": "std",
-        "genre": "auto"
+        "resolution": "720p",
+        "generate_audio": true
       }
     },
     {
       "shotId": "shot_012",
-      "modelId": "seedance_2_0",
+      "modelId": "seedance_2_0_mini",
       "requiredSeconds": 5.1,
       "billableSeconds": 6,
       "prompt": "Close on a shovel heaping damp soil onto rough log roof beams, soil falling between the gaps. One continuous heap. handheld bushcraft documentary footage, flat overcast light, no sun, damp forest clearing, muddy and unpolished, close low camera, natural amateur camera shake, raw unedited look, close shot, 24mm lens.",
       "negativePrompt": "cinematic color grading, golden hour, lens flare, drone shot, aerial view, slow motion, time-lapse, modern machinery, excavator, power tools, architectural glass, designer interior, polished, glossy, oversaturated, film trailer look, text overlay, watermark, multiple people",
       "aspectRatio": "16:9",
-      "resolution": "1080p",
+      "resolution": "720p",
       "usesStartFrame": false,
       "usesEndFrame": false,
       "nativeAudio": true,
       "settings": {
-        "mode": "std",
-        "genre": "auto"
+        "resolution": "720p",
+        "generate_audio": true
       }
     },
     {
       "shotId": "shot_013",
-      "modelId": "seedance_2_0",
+      "modelId": "seedance_2_0_mini",
       "requiredSeconds": 5.1,
       "billableSeconds": 6,
       "prompt": "Static wide of a low earth-covered mound in the forest clearing, dark timber-framed doorway cut into its side, loose soil and scattered tools still lying around. Overcast, damp. handheld bushcraft documentary footage, flat overcast light, no sun, damp forest clearing, muddy and unpolished, close low camera, natural amateur camera shake, raw unedited look, wide shot, 24mm lens.",
       "negativePrompt": "cinematic color grading, golden hour, lens flare, drone shot, aerial view, slow motion, time-lapse, modern machinery, excavator, power tools, architectural glass, designer interior, polished, glossy, oversaturated, film trailer look, text overlay, watermark, multiple people",
       "aspectRatio": "16:9",
-      "resolution": "1080p",
+      "resolution": "720p",
       "usesStartFrame": false,
       "usesEndFrame": false,
       "nativeAudio": true,
       "settings": {
-        "mode": "std",
-        "genre": "auto"
+        "resolution": "720p",
+        "generate_audio": true
       }
     },
     {
       "shotId": "shot_014",
-      "modelId": "seedance_2_0",
+      "modelId": "seedance_2_0_mini",
       "requiredSeconds": 5.1,
       "billableSeconds": 6,
       "prompt": "Handheld shot slowly approaching a rough timber-framed doorway set into an earth mound at dusk. Warm firelight flickers from inside, uneven and orange, spilling onto muddy ground. The timber is hand-cut and irregular, salvaged glass in a crooked frame beside the door. handheld bushcraft documentary footage, flat overcast light, no sun, damp forest clearing, muddy and unpolished, close low camera, natural amateur camera shake, raw unedited look, medium shot, 24mm lens.",
       "negativePrompt": "cinematic color grading, golden hour, lens flare, drone shot, aerial view, slow motion, time-lapse, modern machinery, excavator, power tools, architectural glass, designer interior, polished, glossy, oversaturated, film trailer look, text overlay, watermark, multiple people",
       "aspectRatio": "16:9",
-      "resolution": "1080p",
-      "usesStartFrame": true,
-      "usesEndFrame": true,
+      "resolution": "720p",
+      "usesStartFrame": false,
+      "usesEndFrame": false,
       "nativeAudio": true,
       "settings": {
-        "mode": "std",
-        "genre": "auto"
+        "resolution": "720p",
+        "generate_audio": true
       }
     }
   ]
