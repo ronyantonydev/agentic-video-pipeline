@@ -93,3 +93,24 @@ Skills live in `.claude/skills/`. Two kinds:
 
 Adding a rule to a `verify-*` skill is usually better than adding a comment.
 A comment is read once; a skill is enforced every time.
+
+## Claude Code settings
+
+Two files, and the difference matters:
+
+| File | Committed | Contains |
+|---|---|---|
+| `.claude/settings.json` | yes | Shared, conservative defaults for everyone |
+| `.claude/settings.local.json` | **no** (gitignored) | Your personal choices |
+
+The shared file allows only free, local, read-only things: build, typecheck,
+test, and the Higgsfield tools that just report status or balance. Anything
+that **spends money** — `generate_*`, `upscale_*`, `npm run gen:*` — is in
+`ask`, so it stops and confirms.
+
+That is deliberate. A clone should never be able to spend your credits
+without asking. If you want generation to run unattended on your own machine,
+put those entries in `settings.local.json` — never in the shared file.
+
+Do not commit `defaultMode: "dontAsk"`. It disables confirmation for every
+tool, including on someone else's machine and someone else's card.

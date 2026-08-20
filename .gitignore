@@ -21,6 +21,11 @@ projects/
 hyperframes/.cache/
 hyperframes/out/
 
+# ---- personal Claude Code settings ----
+# settings.json is shared and committed; settings.local.json is per-developer
+# and must never be. Relying on a contributor's global gitignore is not enough.
+.claude/settings.local.json
+
 # ---- test / coverage ----
 coverage/
 *.log
