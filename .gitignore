@@ -11,15 +11,11 @@ dist/
 build/
 *.tsbuildinfo
 
-# ---- generated projects (paid assets, large media) ----
-# Project planning JSON is worth keeping; generated media is not.
-projects/*/shots/
-projects/*/references/
-projects/*/storyboard/frames/
-projects/*/stills/
-projects/*/audio/
-projects/*/output/
-projects/*/logs/
+# ---- generated projects ----
+# Project runs are local working output, not source. Ignored wholesale so a new
+# output directory can never get committed by accident.
+# (Files already tracked under projects/ stay tracked; see git rm --cached.)
+projects/
 
 # ---- hyperframes render artifacts ----
 hyperframes/.cache/
