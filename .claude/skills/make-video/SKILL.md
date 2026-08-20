@@ -1,23 +1,39 @@
 ---
 name: make-video
-description: Make a video from an idea. Interviews the user for idea, runtime and budget, prices the options, recommends one, and runs the pipeline after they choose. Use whenever someone asks to create, generate or make a video in this project.
+description: Make a video from an idea. Asks four questions, fits a model and runtime to the stated budget, and runs the pipeline through to a finished video without further confirmations. Use whenever someone asks to create, generate or make a video in this project.
 allowed-tools: [Bash, Read, Write, Edit, Glob, Grep]
 ---
 
 # Make a video
 
-Interview, price, recommend, confirm, then build. Never generate before the
-user has picked an option and seen the number.
+**Four questions, then build it. Nothing else stops.**
+
+The budget answer is a ceiling and a decision. Once it is given, fitting a
+model and a runtime inside it is arithmetic, not a preference - do the
+arithmetic, print what it produced, and keep going. Every further
+confirmation asks the user to re-approve a number they already chose.
+
+Stop only for something they have NOT already decided:
+
+| Stop | Why it is not a re-ask |
+|---|---|
+| Estimate exceeds the budget | They chose a ceiling, not this overage |
+| A shot has no known cost | Nobody can approve an unknown number |
+| Generation fails past its retries | The plan on the table is no longer true |
+
+Warnings are **printed, not asked**. "$5 buys 25s of the 30s you asked for"
+is information, and the run continues.
 
 **This is the quick path - four questions.** For a video worth real money,
 [[grill-video]] asks up to twenty and normally buys back 15-25% of the
-budget by finding cheaper ways to shoot the same thing. Offer it when the
-budget is above about $10, or when a person appears in several shots.
+budget by finding cheaper ways to shoot the same thing. Mention it once when
+the budget is above about $10. Below that it buys back less than a dollar
+for twenty questions - do not offer it.
 
 ## 1. Interview
 
 Ask these four, one at a time. Do not assume answers - a wrong guess here
-costs real money.
+costs real money. Ask nothing else.
 
 1. **What is the video about?** One or two sentences.
 2. **How long, in seconds?** (default 90)
@@ -26,44 +42,53 @@ costs real money.
 
 Question 4 matters more than it looks. If yes, the model must accept
 `image_references`, which rules out the cheapest option - see
-[[verify-realism]] rule 1.
+[[verify-realism]] rule 1. "Hands only" still counts as yes: the same
+forearms, cuff and ring have to persist or it reads as three different
+people doing one job.
 
-## 2. Price it
+## 2. Price it and pick
 
 ```bash
 npm run budget -- --budget <usd> --runtime <seconds>
 ```
 
-Add `--no-character` when nobody recurs.
+Add `--no-character` when nobody recurs. This spends nothing.
 
-This spends nothing. Show the user the whole table, not just the winner -
-they are choosing, not being told.
+Print the whole table so the number is visible, then **take the recommended
+option and continue**. Do not ask which one. The table is the receipt for a
+decision the budget already made.
 
-## 3. Recommend
+Two rules the picker follows, and you should state in one line each when
+they apply:
 
-State plainly:
+- **Never auto-pick a model that cannot hold identity** when a person
+  recurs. Kling has no `image_references` slot; five shots become five
+  different people. Name it as skipped and why, then move on.
+- **Trim runtime rather than quality.** When the budget buys less than was
+  asked for, build the shorter video and say what was cut:
+  `30s requested; $5 buys 25s. Building 25s - dropping the finish pass.`
 
-- **which** option you recommend
-- **why** - usually "holds the character and fits the runtime"
-- **what they give up** on the cheaper option
-- **the real number**: seconds of video, credits, dollars
-
-When the budget will not cover the requested runtime, say so in money terms:
-"90 seconds needs about $14; at $8 you get 50 seconds." Offer both a shorter
-video and a larger budget. Do not quietly shorten it.
+The user can still override with an explicit instruction ("use Kling"). Obey
+it, print the consequence once, and continue.
 
 Measured rate, so estimates are honest: **~$0.20 per second** of finished
 video at Seedance 2.0 Mini quality. A 20-minute video is about $188.
 
-## 4. Confirm
+Keep every shot at a duration the cost table actually measures (5s for
+Mini). Longer shots extrapolate, and an extrapolated price on a tight budget
+is how a run ends two shots short.
 
-Wait for an explicit choice. Then:
+## 3. Create the project
 
 ```bash
-npm run start -- --idea "<idea>" --runtime <seconds> --budget <usd>
+npm run init -- <project> --idea "<idea>" --budget <usd>
 ```
 
-## 5. Plan
+`--budget` is not optional. Without it the project inherits
+`MAX_BUDGET_USD` from the environment and the guard protects a number the
+user never chose.
+
+## 4. Plan
 
 Write the planning JSON into `projects/<name>/planning/`. This is the part
 only Claude can do - the CLI validates, it never authors (architecture §2).
@@ -90,20 +115,21 @@ npm run plan:generation -- <project>
 A stage that fails validation is telling you the plan is wrong. Fix the JSON;
 do not weaken the check.
 
-## 6. Cost gate
+## 5. Cost gate
 
 ```bash
 npm run cost -- <project>
 ```
 
-This stops and asks for approval. That is the design (§21) - it writes state
-and exits rather than blocking. Show the user the estimate and wait.
+**Inside budget this approves itself and moves on.** It stops only when the
+estimate exceeds the stated budget, or a shot has no known cost - neither of
+which the user has agreed to. When it does stop, show the number and wait:
 
 ```bash
 npm run approve -- <project> --gate cost
 ```
 
-## 7. Generate reference sheets
+## 6. Generate reference sheets
 
 Build these BEFORE any shot, using `generate_image` directly. The whole set
 costs about **one credit** and every shot reuses it.
@@ -125,6 +151,18 @@ Only when a person appears.
 - Wardrobe details must be **reproducible**: "torn left cuff, grey thermal
   collar, mud at the knees" - not "weathered jacket"
 
+**Generate the pack as ONE multi-view turnaround sheet, not six separate
+calls.** `soul_2` returns a front head-and-shoulders portrait whatever pose
+is asked for, and one reference image steers style rather than identity - six
+calls gives six different people. A single `nano_banana_pro` turnaround holds
+identity by construction; cut the six views out of it locally with ffmpeg at
+zero cost.
+
+When cutting, **check the crop resolution**. Views sliced from a sheet are
+often only 300-500px wide, which the reference gate rejects and which carries
+almost no facial detail. Crop generously from the full-size sheet and upscale
+to at least 768px on the long edge.
+
 Save to `references/character/`.
 
 **Then run the drift test.** Generate 5-10 cheap samples from the pack in
@@ -144,9 +182,30 @@ Save to `references/environment/`.
 
 ### Prop sheets - one per recurring object
 
-The shovel, the axe, the timber. Front and three-quarter on one sheet, on
-grey. One angle is not enough - the model will hallucinate the parts it
-cannot see.
+The shovel, the axe, the timber. Front and three-quarter on one sheet. One
+angle is not enough - the model will hallucinate the parts it cannot see.
+
+**A prop that rests on something must be photographed resting on something.**
+Give it a plain wooden surface and a visible contact shadow - NOT the grey
+studio void used for character packs. The grey rule exists to stop clutter
+competing for attention while the model learns a face. Applied to a prop it
+teaches the model that the object touches nothing, and that is what it
+reproduces.
+
+`oak-stool` shot_004 asked for "the finished stool stands on the bench" while
+passing a stool reference floating on seamless grey. The model copied the
+reference's framing - an object contacting no surface - and rendered the
+stool hovering in mid-air beside the bench. Unusable, and the credits were
+spent.
+
+Props that are HELD (a chisel, a mallet) can stay on grey; nothing about them
+implies contact with a ground plane. The rule is about objects whose whole
+meaning is that they stand, sit, hang or lean.
+
+Then check the sheet and the shot prompt agree about where the object is.
+"Stands on the bench" with a floor-height reference is a contradiction, and
+the model resolves contradictions by inventing something that satisfies
+neither.
 
 Save to `references/props/`.
 
@@ -171,6 +230,22 @@ These are not per-video assets:
 Same character in a new story? Reuse the pack. It costs nothing and
 guarantees they look identical across episodes.
 
+## 7. Reference gate
+
+```bash
+npm run refcheck -- <project>
+```
+
+This is enforced in code, not by memory: `assertReferencesVerified` refuses
+to generate until a passing result exists on disk. It is free - perceptual
+hashing and ffmpeg only.
+
+It blocks on no character reference, a corrupt or undersized image, or a
+failed drift test. It warns on a thin pack or missing sheets and continues.
+
+A block is a real finding, not an obstacle. Fix the references; do not pass
+`requireVerifiedReferences: false` to get past it.
+
 ## 8. Generate the shots
 
 Anchor frames come from the sheets, not from fresh descriptions. Pass the
@@ -180,8 +255,15 @@ including shots of only their hands, boots or clothing.
 `image_references` costs nothing extra. Verified against the live API: a
 Seedance generation is 12.5 credits with the pack attached and 12.5 without.
 
-**Prove the look on ONE shot before generating the set.** All three clips in
-the rejected run shared the same defect because none was checked first.
+Generation runs through MCP `generate_video_batch`, not the REST client -
+Seedance has no REST slug. Submit the independent shots together, wait with
+`jobs_wait`, and collect results in one `show_generation_by_ids`.
+
+Generate the full set. The reference gate and drift test are the pre-flight
+check; a separate single proof shot doubles the round trips for a check
+already done. When the budget is tight enough that one bad shot cannot be
+retried, say so in one line before submitting - that is information the user
+needs, not a question.
 
 ## 9. Finish
 
@@ -195,14 +277,20 @@ npm run qa:final   -- <project>
 npm run report     -- <project>
 ```
 
+Then report **actual** spend, read from `transactions` - not the estimate.
+
 ## Rules
 
-- **Never generate before the user picks an option.**
 - **Never exceed the stated budget.** The guard will hard-stop; do not raise
-  `MAX_BUDGET_USD` to get around it.
-- **Never silently downgrade quality.** Offer the cheaper tier, say what it
-  costs in quality, let the user decide.
-- **Report actual spend**, not the estimate. Read it from `transactions`.
+  `MAX_BUDGET_USD` to get around it. When the plan does not fit, trim the
+  runtime - that is the agreed behaviour, and print what was cut.
+- **Hold back ~20% inside the budget for retries.** On a five-shot film one
+  shot coming back wrong is likely, not hypothetical. Retry headroom lives
+  inside the ceiling, never above it.
+- **Never silently downgrade quality.** Print the cheaper tier and what it
+  costs in quality; the run continues on the better one unless told
+  otherwise.
+- **Never generate without a passing reference check** when a person appears.
 
 Lowering the budget lowers the ceiling, not the floor: machine QA still
 rejects corrupt, blank and frozen output at any tier.

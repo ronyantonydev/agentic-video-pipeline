@@ -30,6 +30,13 @@ identity-reference input at all.
     the head stops the reference teaching the model who this is.
   - Plain **grey background**. Clutter competes for the model's attention;
     grey gives it nothing to fixate on but the subject.
+
+    This applies to CHARACTER packs. A prop that rests on a surface - a
+    stool, a chair, a crate - must be shot ON that kind of surface with a
+    visible contact shadow. On grey it has no ground plane, and the model
+    reproduces an object touching nothing: oak-stool shot_004 rendered a
+    stool hovering in mid-air beside the bench because its reference floated
+    on a seamless backdrop. Held props (chisel, mallet) can stay on grey.
 - Feed the pack into EVERY shot containing that character, via a model that
   accepts `image_references` (seedance_2_0, seedance_2_0_mini, wan2_7).
 - A model with no identity-reference slot must not be used for shots

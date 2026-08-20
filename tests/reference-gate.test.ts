@@ -133,8 +133,19 @@ describe('reference check', () => {
     expect(check.pass).toBe(true);
   }, 180_000);
 
-  it('blocks when the drift test fails', async () => {
-    // The whole point: an unverified reference must not reach a paid run.
+  it('warns but does NOT block when the drift score is low', async () => {
+    // A low score is advisory, never a blocker.
+    //
+    // Measured 2026-08-20 on this project's own assets: five real samples of
+    // the character scored 0.391-0.734 against the master while a photo of a
+    // STOOL scored 0.500 - above two of the five. A 64-bit perceptual hash
+    // averages ~0.5 between any two unrelated images, so every one of those
+    // numbers is inside the noise floor. Face-cropping first, tested both
+    // loosely and tightly aligned, widened the spread instead of separating
+    // it. There is no threshold that tells a face from a stool.
+    //
+    // Blocking on that number stopped every run and was overridden every
+    // time. The score is still recorded and surfaced as a smoke signal.
     makePack(PROJECT);
     const samples = [
       makeImage(join(tmp, 'd1.png'), 'color=c=gray:size=1280x720'),
@@ -143,8 +154,20 @@ describe('reference check', () => {
     const check = await checkReferences(PROJECT, { driftSamples: samples });
 
     expect(check.driftTest!.holds).toBe(false);
-    expect(check.pass).toBe(false);
-    expect(check.blockers.join(' ')).toMatch(/drift test failed/i);
+    expect(check.pass).toBe(true); // <- continues
+    expect(check.blockers).toHaveLength(0);
+    expect(check.warnings.join(' ')).toMatch(/advisory only/i);
+  }, 180_000);
+
+  it('lets generation proceed after a low drift score', async () => {
+    // The end-to-end promise: a low score never stops a run.
+    makePack(PROJECT);
+    const samples = [
+      makeImage(join(tmp, 'e1.png'), 'color=c=gray:size=1280x720'),
+      makeImage(join(tmp, 'e2.png'), 'color=c=gray:size=1280x720'),
+    ];
+    await checkReferences(PROJECT, { driftSamples: samples });
+    expect(() => assertReferencesVerified(PROJECT)).not.toThrow();
   }, 180_000);
 
   it('warns when the drift test was not run at all', async () => {
