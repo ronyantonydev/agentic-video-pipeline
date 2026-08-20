@@ -33,7 +33,8 @@
     "report": "tsx src/cli/index.ts report",
     "doctor": "tsx src/cli/index.ts doctor",
     "start": "tsx src/cli/index.ts start",
-    "budget": "tsx src/cli/index.ts budget"
+    "budget": "tsx src/cli/index.ts budget",
+    "debug": "tsx src/cli/index.ts debug"
   },
   "dependencies": {
     "commander": "^12.1.0",

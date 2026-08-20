@@ -165,6 +165,7 @@ npm run qa:final   -- my-project
 npm run report     -- my-project
 
 npm run status  -- my-project                  # where did it stop?
+npm run debug   -- my-project                  # bundle for a bug report
 ```
 
 The `plan:*` commands **validate**; they never author. Planning JSON is
@@ -327,6 +328,29 @@ no cost — real H.264 files, so QA and rendering run for real.
 **Zod** validates every artifact before it can drive a paid call.
 
 ---
+
+## Reporting a problem
+
+If a video comes out wrong, the video alone cannot explain why. Run:
+
+```bash
+npm run debug -- my-project
+```
+
+That writes a zip of about 1MB containing what a diagnosis needs: `state.json`
+(where it stopped, which shots failed and their failure class),
+`manifest.json` (every generation with its prompt, model, seed and cost),
+`qa-report.json`, the planning JSON, `run.log`, sample frames from each shot,
+and your Node/FFmpeg/provider versions.
+
+It deliberately **excludes the video** — the real one is over 100MB, and the
+sampled frames show the same defect.
+
+It also **strips secrets rather than trusting them to be absent**. Your `.env`
+is never collected, and anything matching a key, token or authorization
+pattern in the collected files is redacted first, keeping only the last four
+characters so lines can still be correlated. A test asserts no fragment of a
+redacted value survives.
 
 ## Documentation
 

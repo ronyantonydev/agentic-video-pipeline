@@ -436,6 +436,49 @@ guard approve a call it should refuse.
 
 ---
 
+## 10a. Diagnostics
+
+Terminal output scrolls away, so every project-scoped command mirrors its
+output into `projects/<name>/logs/run.log`. The file always receives
+DEBUG-level detail regardless of `LOG_LEVEL`, because its purpose is to
+answer questions nobody knew to ask when the run started. It appends rather
+than truncates - a resumed run is part of the same story as the run that
+stopped.
+
+A logging failure never aborts a run. Disk full, bad permissions, a deleted
+directory: the write is skipped and the terminal continues.
+
+### The debug bundle
+
+`npm run debug -- <project>` collects a diagnosis into one ~1MB zip:
+
+| Included | Answers |
+|---|---|
+| `state.json` | where it stopped, per-shot status, failure classes |
+| `manifest.json` | every generation: prompt, model, seed, cost, accepted |
+| `qa-report.json` | every check and its verdict |
+| `reference-check.json` | were references verified, did drift hold |
+| `planning/*.json` | the exact prompts |
+| `run.log` | what happened, in order |
+| `frames/` | samples per shot and from the final render |
+| `environment.txt` | node, ffmpeg, provider mode, budget settings |
+
+**The video is excluded deliberately.** A 147MB render cannot be attached to
+an issue; sampled frames carry the same defect at a thousandth of the size.
+
+**Secrets are stripped, not assumed absent.** `.env` is never collected, and
+anything matching a key, token or authorization pattern is redacted from the
+files that are - keeping the last four characters so two lines referring to
+the same id remain correlatable.
+
+One subtlety worth recording: an early version chained the redaction patterns,
+which let a later pattern match inside an earlier replacement and emit stray
+fragments of the secret. Patterns are now applied to the original text and
+the spans merged, with a test asserting no 8-character run of a redacted
+value survives anywhere in the bundle.
+
+---
+
 ## 11. Rendering
 
 `edit-plan.json` compiles to a **HyperFrames project** — a directory

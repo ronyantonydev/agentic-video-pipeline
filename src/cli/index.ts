@@ -15,6 +15,10 @@ import {
 } from './commands.js';
 import type { GateNameT } from '../schemas/state.js';
 import { runWizard } from './wizard.js';
+import { buildDebugBundle } from '../reports/debug-bundle.js';
+import { attachProjectLog } from '../util/logger.js';
+import { paths } from '../state/paths.js';
+import { existsSync } from 'node:fs';
 import { fitToBudget, formatFit } from '../budget/budget-fit.js';
 
 const program = new Command();
@@ -45,11 +49,43 @@ program
     cmdInit(project, opts.idea, opts.mode as 'full' | 'proof' | 'dry-run');
   });
 
+/**
+ * Mirror this run into the project's log file.
+ *
+ * Terminal output scrolls away. A bug report needs a record of what actually
+ * ran, in what order - see `npm run debug`.
+ */
+function withLog(project: string): string {
+  const root = paths(project).root;
+  if (existsSync(root)) attachProjectLog(root);
+  return project;
+}
+
+program
+  .command('debug')
+  .description('Collect a diagnostic bundle for a bug report (no video, no secrets)')
+  .argument('<project>', 'project name')
+  .option('--output <path>', 'where to write the zip')
+  .action(async (project: string, opts: { output?: string }) => {
+    const result = await buildDebugBundle(project, {
+      ...(opts.output !== undefined ? { outputPath: opts.output } : {}),
+    });
+    process.stdout.write(`\n  ${result.path}\n`);
+    process.stdout.write(
+      `  ${(result.sizeBytes / 1048576).toFixed(1)}MB · ${result.included.length} items · ` +
+        `${result.redactions} redaction(s)\n\n`,
+    );
+    if (result.warnings.length > 0) {
+      for (const w of result.warnings) process.stdout.write(`  ! ${w}\n`);
+      process.stdout.write('\n');
+    }
+  });
+
 program
   .command('status')
   .description('Show project stage, gates, budget and artifacts')
   .argument('<project>', 'project name')
-  .action((project: string) => cmdStatus(project));
+  .action((project: string) => cmdStatus(withLog(project)));
 
 program
   .command('start')
@@ -91,7 +127,7 @@ for (const stage of ['story', 'audio', 'storyboard', 'edit', 'generation'] as co
     .command(stage)
     .description(`Validate the artifacts for the ${stage} stage and advance state`)
     .argument('<project>', 'project name')
-    .action((project: string) => cmdPlan(project, stage as PlanStage));
+    .action((project: string) => cmdPlan(withLog(project), stage as PlanStage));
 }
 
 /* ------------------------------------------------------------- cost / gates */
@@ -103,6 +139,7 @@ program
   .option('--dry-run', 'print the report without requesting approval')
   .option('--no-api', 'do not call the estimate endpoint')
   .action(async (project: string, opts: { dryRun?: boolean; api?: boolean }) => {
+    withLog(project);
     await cmdCost(project, {
       ...(opts.dryRun !== undefined ? { dryRun: opts.dryRun } : {}),
       allowApi: opts.api !== false,
@@ -117,6 +154,7 @@ program
   .option('--reject', 'reject instead of approving')
   .option('--note <text>', 'reason for the decision')
   .action((project: string, opts: { gate: string; reject?: boolean; note?: string }) => {
+    withLog(project);
     cmdApprove(
       project,
       opts.gate as GateNameT,
