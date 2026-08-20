@@ -230,6 +230,30 @@
       "status": "completed",
       "localFile": "projects/underground-house/references/character/main.png",
       "accepted": true
+    },
+    {
+      "assetHash": "4f00230b50fcdcd1",
+      "shotId": "shot_008",
+      "kind": "video",
+      "provider": "higgsfield-mcp",
+      "model": "seedance_2_0_mini",
+      "prompt": "shot_008 v2 bushcraft: man waist-deep in pit, one shovelful thrown over rim",
+      "settings": {
+        "resolution": "720p",
+        "generate_audio": true,
+        "image_references": 1
+      },
+      "jobId": "6620851c-9b09-4b97-a14d-e12dbf73b7b1",
+      "submittedAt": "2026-08-20T06:55:17.106Z",
+      "completedAt": "2026-08-20T06:55:17.106Z",
+      "billableDuration": 8,
+      "estimatedCredits": 20,
+      "estimatedUSD": 1.25,
+      "actualCredits": 20,
+      "actualUSD": 1.25,
+      "status": "completed",
+      "localFile": "projects/underground-house/shots/shot_008/test_v2.mp4",
+      "accepted": null
     }
   ]
 }

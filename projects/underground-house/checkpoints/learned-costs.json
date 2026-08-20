@@ -24,6 +24,14 @@
       "usd": 0.56,
       "measuredAt": "2026-08-20T06:29:07.276Z",
       "note": "measured from Higgsfield transaction log"
+    },
+    {
+      "configHash": "6877a09ff2d7cfc7",
+      "modelId": "seedance_2_0_mini",
+      "credits": 20,
+      "usd": 1.25,
+      "measuredAt": "2026-08-20T06:55:17.118Z",
+      "note": "measured 2026-08-20"
     }
   ]
 }
