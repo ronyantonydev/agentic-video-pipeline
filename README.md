@@ -1,129 +1,60 @@
 # Agentic Video Pipeline
 
-Turn one sentence into a finished video. Claude plans; deterministic code
-spends.
+**Turn one sentence into a finished video — without losing control of the
+budget.**
 
+You describe an idea. Claude interviews you, prices the options, and waits.
+You choose. Then deterministic code does the spending, checks every clip, and
+renders the result.
+
+```text
+your idea → interview → price → you choose → generate → QA → edit → final.mp4
 ```
-your idea → story → shots → prompts → generation → QA → edit → final.mp4
-```
+
+Built after a real video was rejected for looking like *"imagination, not
+DIY"*. Everything here exists because something went wrong first.
 
 ---
 
-## What you need
-
-| | |
-|---|---|
-| **Node 22+** | `node -v` — HyperFrames requires it |
-| **FFmpeg** | `brew install ffmpeg` |
-| **Higgsfield account** | with credits, for generation |
-| **Claude Code** | with the Higgsfield MCP connector |
-
----
-
-## First run
-
-### 1. Install
+## 30-second setup
 
 ```bash
+git clone https://github.com/ronyantonydev/agentic-video-pipeline
+cd agentic-video-pipeline
 npm install
-```
-
-### 2. Configure
-
-```bash
 cp .env.sample .env
-```
-
-Open `.env` and set **who spends money**:
-
-```bash
-PROVIDER_MODE=mcp     # Claude calls Higgsfield, billed to your subscription
-```
-
-Three modes:
-
-- **`mcp`** — uses your Higgsfield subscription credits. No API key needed.
-  Reaches Kling, Veo, Seedance. **Start here.**
-- **`rest`** — Node calls the Higgsfield Cloud API directly using a key.
-  Budget checks are fully mechanical. Note that Cloud bills from a *separate*
-  wallet that must be funded on its own.
-- **`fake`** — synthesised media, no network, no cost. For development.
-
-Then set your ceiling:
-
-```bash
-MAX_BUDGET_USD=20        # code refuses any call that would exceed this
-MAX_SINGLE_CALL_USD=3    # and any single call above this
-```
-
-### 3. Grant MCP permissions
-
-For `PROVIDER_MODE=mcp`, add these to `~/.claude/settings.json` under
-`permissions.allow`:
-
-```json
-"mcp__claude_ai_Higgsfield__balance",
-"mcp__claude_ai_Higgsfield__models_explore",
-"mcp__claude_ai_Higgsfield__generate_image",
-"mcp__claude_ai_Higgsfield__generate_video",
-"mcp__claude_ai_Higgsfield__jobs_wait",
-"mcp__claude_ai_Higgsfield__transactions"
-```
-
-Restart Claude Code afterwards — settings load at session start.
-
-### 4. Check everything works
-
-```bash
 npm run doctor
 ```
 
-Every line should be green before you continue.
+`doctor` tells you what is missing. You need **Node 22+**, **FFmpeg**
+(`brew install ffmpeg`), and a **Higgsfield account** with credits.
 
----
-
-## Making a video
-
-### The easy way: ask Claude
+Then start talking:
 
 ```bash
-cd agentic-video-pipeline
 claude
 ```
 
+```text
+/grill-video
 ```
-> make a video about restoring an old motorcycle
-```
 
-Two skills handle this, and they differ in how hard they interrogate you:
+---
 
-| | Questions | Use it for |
-|---|---:|---|
-| **`make-video`** | 4 | a quick test |
-| **`grill-video`** | up to 20 | a video worth real money |
+## Why this exists
 
-`grill-video` covers genre, character, story, look, budget and
-cost-efficiency, shows the cost estimate moving as you answer, and argues
-with you when the runtime and the budget do not fit. Its last round exists
-purely to buy back budget — which shots need no character reference, which
-could be a still, whether it is all one location. That normally recovers
-15–25%.
+### 1. AI video is priced per second, and it adds up fast
 
-Both stop and wait for you to choose before anything is generated.
+Ask for a 20-minute video and you are asking for about **$188** of
+generation. Most tools discover this after you have spent it.
 
-Force one explicitly with `/make-video` or `/grill-video`.
-
-### Or drive it yourself, one command at a time
-
-#### Start with the budget
+This one tells you first:
 
 ```bash
 npm run budget -- --budget 20 --runtime 90
 ```
 
-This spends nothing. It tells you which model your money buys:
-
-```
+```text
   Budget $20.00 = 319 credits (12% held back for reference images and retries)
 
 → Seedance 2.0 Mini        90s   15 shots    225cr  $14.11
@@ -134,151 +65,241 @@ This spends nothing. It tells you which model your money buys:
     ! budget covers 31s of the 90s requested
 ```
 
-The arrow marks the recommendation. Cheaper models are always shown, with
-what they cost you in quality.
+Nothing is spent. Cheaper options are always shown, with what they cost you
+in quality.
 
-#### Then create the project
+### 2. A budget you can exceed is not a budget
 
-```bash
-npm run start
+Four guards, all in code, all before the money moves:
+
+- **Per-call ceiling** — no single generation above `MAX_SINGLE_CALL_USD`
+- **Project budget** — `spent + this call ≤ MAX_BUDGET_USD`, checked before
+  every paid call
+- **Reservations** — two parallel jobs cannot both claim the last dollar
+- **Unknown cost = refusal** — a price that cannot be established stops the
+  run rather than being guessed
+
+Failed generations are not charged, and release their reservation
+automatically.
+
+### 3. The same character keeps turning into a different person
+
+Text descriptions cannot hold a face. The first paid run put *"weathered man
+in a green jacket"* in every prompt and got a different man each time.
+
+The fix is a **reference image**, fed into every shot — including shots of
+just their hands. `verify-realism` enforces it, and blocks generation when no
+reference exists.
+
+### 4. Cost-cutting quietly turns a video into a slideshow
+
+Replacing a failed clip with a photograph is cheap. Do it three times and the
+video is dead.
+
+**Motion-ratio lint runs twice** — after edit planning, and again after any
+fallbacks. A panning photograph does not count as motion, which is exactly
+the substitution it is looking for.
+
+---
+
+## Talk to it
+
+Two skills, differing in how hard they interrogate you.
+
+| | Questions | Use it for |
+| --- | ---: | --- |
+| `/make-video` | 4 | a quick test |
+| `/grill-video` | up to 20 | a video worth real money |
+
+```text
+/grill-video restoring an old motorcycle
 ```
 
-It asks four questions — idea, runtime, budget, whether the same person
-appears in several shots — prices the answer, and only then creates anything.
+**`grill-video`** covers six rounds — genre, character, story, look, budget,
+efficiency — re-prices as you answer, and argues when the numbers do not fit:
 
-Non-interactive:
+> *"90 seconds needs about $14. At $8 you get 50 seconds. Shorter video, or
+> bigger budget?"*
+
+Its final round exists purely to buy back budget: which shots need no
+character reference, which could be a still, whether it is all one location.
+**That typically recovers 15–25%.**
+
+Both stop and wait for you to choose before anything is generated.
+
+> Type the slash command. If you just describe an idea, Claude picks a skill
+> for you — and it cannot know whether this video matters enough for the long
+> interview.
+
+---
+
+## Or drive it yourself
+
+Every stage is a separate command that writes state and exits, so a run
+survives a closed laptop.
 
 ```bash
-npm run start -- --idea "a man building an underground shelter" \
-                 --runtime 90 --budget 20
-```
+npm run budget  -- --budget 20 --runtime 90   # price it, spend nothing
+npm run start                                  # 4 questions, then create
 
-#### Then plan, price, approve, generate
-
-Claude writes the planning JSON into `projects/<name>/planning/`. Each command
-below **validates** it and moves the run forward:
-
-```bash
-npm run plan:story      -- my-project
+npm run plan:story      -- my-project          # validate what Claude wrote
 npm run plan:audio      -- my-project
 npm run plan:storyboard -- my-project
-npm run plan:edit       -- my-project    # motion-ratio lint #1
+npm run plan:edit       -- my-project          # motion lint #1
 npm run plan:generation -- my-project
 
-npm run cost -- my-project --dry-run     # full price, $0 spent
-npm run cost -- my-project               # requests approval, then stops
-
+npm run cost    -- my-project --dry-run        # full price, $0 spent
+npm run cost    -- my-project                  # asks for approval, exits
 npm run approve -- my-project --gate cost
-```
 
-After approval, generation, QA, and render:
-
-```bash
-npm run qa:machine -- my-project    # free, deterministic
-npm run qa:vision  -- my-project    # extracts frames for a human to check
-npm run review     -- my-project    # accept / retry / fallback
-npm run render     -- my-project    # HyperFrames → final.mp4
+npm run qa:machine -- my-project               # free, deterministic
+npm run qa:vision  -- my-project               # frames for a human to judge
+npm run review     -- my-project               # accept / retry / fallback
+npm run render     -- my-project               # HyperFrames → final.mp4
 npm run thumbnail  -- my-project
 npm run qa:final   -- my-project
 npm run report     -- my-project
+
+npm run status  -- my-project                  # where did it stop?
 ```
 
-Check where a run is at any point:
+The `plan:*` commands **validate**; they never author. Planning JSON is
+written by Claude — that separation is what keeps *"Claude plans, code
+spends"* honest.
+
+---
+
+## Skills reference
+
+Skills live in `.claude/skills/`. Two kinds:
+
+**User-invoked** — you type them. They orchestrate.
+
+| Skill | What it does |
+| --- | --- |
+| `/make-video` | Four questions, prices it, builds it. For a quick test. |
+| `/grill-video` | Twenty questions across six rounds. For a video worth spending on. |
+
+**Model-invoked** — Claude reaches for these automatically when the task
+fits. They are guardrails, not workflows.
+
+| Skill | What it protects |
+| --- | --- |
+| `verify-realism` | The four prompt rules. Blocks generation when no character reference exists. |
+| `verify-spend-safety` | No paid call without a budget check. No invented prices. `HardStop` is terminal. |
+| `verify-plan-coherence` | Artifacts agree, continuity graph is executable, motion lint runs twice. |
+| `verify-provider-contract` | Providers never enforce policy; recovery re-attaches rather than resubmitting. |
+| `verify-schema-integrity` | Nothing unvalidated reaches execution; paid work is never lost or double-charged. |
+| `verify-project-conventions` | Strict TypeScript, config-driven behaviour, typed errors. |
+
+---
+
+## The four prompt rules
+
+Each one cost real credits to learn. `verify-realism` enforces them.
+
+**1. Identity needs a reference image, never a text description.**
+Generate one character reference and feed it into every shot showing that
+person — *including shots of just their hands*. Use a model with an
+`image_references` slot (Seedance, Wan). Kling has none.
+
+**2. One shot = one moment.**
+Never `time-lapse`, `as time passes`, `progressively`. Progress belongs in
+the cut between shots; the viewer infers the weeks.
+
+**3. Match the genre.**
+Bushcraft is handheld, close, flat overcast, muddy. Not drone shots and
+golden hour. Establish the genre *before* writing any prompt.
+
+**4. Handmade must look handmade.**
+Tool marks, irregular timber, salvaged glass — not architectural glazing.
+
+Plus: **prove a new look on one shot before generating the set.** Three
+rejected clips shared the same defect because none was checked first.
+
+---
+
+## What it actually costs
+
+Measured from a real 80-second video, not estimated:
+
+| | |
+| --- | --- |
+| Runtime | 79.6s across 14 shots |
+| Spend | 259.84 credits (~$16.29) |
+| Rate | Seedance 2.0 Mini bills 2.5 credits/second |
+
+**≈ $0.20 per second of finished video.** A 20-minute video is about $188.
+That per-second rate is a wall; no prompt technique moves it.
+
+A test asserts this rate reproduces the real spend, so a wrong figure fails
+the suite instead of your budget.
+
+---
+
+## Who spends the money
+
+One setting in `.env`:
 
 ```bash
-npm run status -- my-project
+PROVIDER_MODE=mcp
 ```
 
----
+| Mode | Who pays | Reaches | Notes |
+| --- | --- | --- | --- |
+| `mcp` | Claude, via your subscription credits | Kling, Veo, Seedance, Cinema Studio | No API key. **Start here.** |
+| `rest` | Node, via a Higgsfield Cloud key | dop, soul | Budget checks fully mechanical. Cloud bills from a **separate wallet** that must be funded on its own. |
+| `fake` | nobody | synthesised media | Development and CI. |
 
-## How the budget is protected
+For `mcp`, add these to `~/.claude/settings.json` under `permissions.allow`,
+then restart Claude Code:
 
-Four independent guards, all in code:
-
-1. **Per-call ceiling** — no single generation above `MAX_SINGLE_CALL_USD`
-2. **Project budget** — `spent + this call ≤ MAX_BUDGET_USD`, checked before
-   every paid call
-3. **Reservations** — two parallel jobs cannot both claim the last dollar
-4. **Unknown cost = refusal** — a price that cannot be established stops the
-   run rather than being guessed
-
-Failed generations are not charged and release their reservation
-automatically.
-
----
-
-## Quality checks
-
-Cheaper models produce weaker footage, but the floor holds regardless of
-budget.
-
-**Machine QA** (free, automatic) rejects: corrupt files, wrong duration,
-black frames, blank renders, frozen video, missing audio, wrong format.
-
-**Vision QA** (free) extracts frames for inspection. It flags; it never
-spends. A human decides accept / retry / fallback.
-
-**Motion-ratio lint** runs twice — after edit planning, and again after any
-fallbacks — so cost-cutting cannot quietly turn the video into a slideshow.
-
----
-
-## Four rules for prompts
-
-Learned from a paid run that was rejected. `docs/skills/verify-realism/`
-enforces them.
-
-1. **Identity needs a reference image, never a text description.** Generate
-   one character reference and feed it into every shot showing that person —
-   including shots of just their hands. Use a model with an
-   `image_references` slot (Seedance, Wan). Kling has none.
-
-2. **One shot = one moment.** Never `time-lapse`, `as time passes`,
-   `progressively`. Progress belongs in the cut between shots.
-
-3. **Match the genre.** Bushcraft is handheld, close, flat overcast light,
-   muddy. Not drone shots and golden hour.
-
-4. **Handmade must look handmade.** Tool marks, irregular timber, salvaged
-   materials — not architectural glazing.
-
-Plus: **prove a new look on one shot before generating the set.**
+```json
+"mcp__claude_ai_Higgsfield__balance",
+"mcp__claude_ai_Higgsfield__models_explore",
+"mcp__claude_ai_Higgsfield__generate_image",
+"mcp__claude_ai_Higgsfield__generate_video",
+"mcp__claude_ai_Higgsfield__jobs_wait",
+"mcp__claude_ai_Higgsfield__transactions"
+```
 
 ---
 
 ## Where things live
 
-```
+```text
+.claude/skills/         the skills, loaded by Claude Code
+config/                 models, project defaults, quality thresholds
+src/                    the pipeline
 projects/<name>/
-├── idea.md
 ├── state.json          where the run is; resume reads this
 ├── manifest.json       every paid generation, written before submission
 ├── planning/           the JSON Claude writes
 ├── references/         character and environment references
-├── shots/              original.mp4, normalized.mp4, frames
+├── shots/              original.mp4, normalized.mp4, qa frames
 ├── hyperframes/        the compiled composition
 ├── reports/            cost.md, qa-report.json
 └── output/             final.mp4, thumbnail.png
 ```
 
-Generated media is git-ignored — it is large and reproducible from the
-manifest. Planning JSON is committed, because it is the valuable part.
+Generated media is git-ignored — large, and reproducible from the manifest.
+Planning JSON is committed, because it is the valuable part.
 
 ---
 
 ## Resuming
 
-Every stage writes state and exits. Nothing blocks on input, so a closed
+Nothing blocks on input. Every stage writes state and exits, so a closed
 terminal or a sleeping laptop loses nothing:
 
 ```bash
-npm run status -- my-project     # see where it stopped
+npm run status  -- my-project
 npm run approve -- my-project --gate cost
 ```
 
 A crash mid-generation is recoverable too: the manifest records each job
-before submission, so an interrupted run re-attaches to jobs already paid for
-rather than resubmitting them.
+*before* submission, so an interrupted run re-attaches to work already paid
+for rather than paying twice.
 
 ---
 
@@ -290,21 +311,13 @@ npm run typecheck
 npm run doctor
 ```
 
-Set `PROVIDER_MODE=fake` to exercise the whole pipeline with synthesised
-media and no cost.
+`PROVIDER_MODE=fake` exercises the whole pipeline with synthesised media and
+no cost — real H.264 files, so QA and rendering run for real.
 
 ---
 
-## What it actually costs
+## Stack
 
-Measured, not estimated — from a real 80-second video:
-
-| | |
-|---|---|
-| Runtime | 79.6s, 14 shots |
-| Spend | 259.84 credits (~$16.29) |
-| Rate | Seedance 2.0 Mini bills 2.5 credits/second |
-
-So roughly **$0.20 per second** of finished video at that quality. A
-20-minute video is about $188 — the per-second rate is the wall, and no
-prompt trick moves it.
+**Claude** plans. **Higgsfield** generates (Seedance, Kling, Veo, Soul).
+**FFmpeg** normalises and checks. **HyperFrames** edits and renders.
+**Zod** validates every artifact before it can drive a paid call.
