@@ -11,6 +11,7 @@
 
 import { probe, frameLuminance, frameContrast, frameDifferences, ProbeError, type MediaInfo } from '../ffmpeg/probe.js';
 import { conformsToProject } from '../ffmpeg/normalize.js';
+import { checkClipDrift } from './identity.js';
 import { loadProjectDefaults, loadQualityPolicy, type QualityPolicy } from '../config/loader.js';
 
 export type CheckStatus = 'pass' | 'fail' | 'warn' | 'unknown';
@@ -36,6 +37,8 @@ export async function runMachineQa(
     expectedDurationSeconds?: number;
     expectAudio?: boolean;
     policy?: QualityPolicy;
+    /** Compare the last frame to the first. Only useful when a person is on screen. */
+    checkIdentityDrift?: boolean;
   } = {},
 ): Promise<MachineQaResult> {
   const policy = opts.policy ?? loadQualityPolicy();
@@ -164,6 +167,34 @@ export async function runMachineQa(
       status: longestRun <= maxRunFrames ? 'pass' : 'fail',
       detail: `longest still run ${(longestRun / SAMPLE_FPS).toFixed(1)}s (limit ${rules.maxFrozenRunSeconds}s)`,
     });
+  }
+
+  // 9. Identity drift within the clip.
+  //
+  // A generation can start on-model and end as someone else. Checking the
+  // start frame alone never sees this - it is why a shot can pass every
+  // other check and still be unusable.
+  //
+  // Perceptual hashing cannot prove two faces are the same, so a low score
+  // WARNS for human review rather than failing. Vision QA and the human
+  // decide; this tier never spends (section 15).
+  if (opts.checkIdentityDrift) {
+    try {
+      const drift = await checkClipDrift(file);
+      checks.push({
+        name: 'identity-drift',
+        status: drift.pass ? 'pass' : 'warn',
+        detail:
+          `end frame ${(drift.similarity * 100).toFixed(0)}% similar to start` +
+          (drift.pass ? '' : ' - review for character drift'),
+      });
+    } catch (err) {
+      checks.push({
+        name: 'identity-drift',
+        status: 'unknown',
+        detail: `could not compare frames: ${(err as Error).message.slice(0, 80)}`,
+      });
+    }
   }
 
   return {
