@@ -1,6 +1,6 @@
 ---
 name: grill-video
-description: Deep interview before making a video. Asks up to 20 adaptive questions across genre, character, story, look, budget and cost-efficiency, showing a running cost estimate as answers come in, and pushes back when the budget and the ambition do not match. Use for a real video worth spending on; use make-video instead for a quick test.
+description: Deep interview before making a video. Asks up to 26 adaptive questions across genre, character, story, look, budget, efficiency and reference reuse, showing a running cost estimate as answers come in, and pushes back when the budget and the ambition do not match. Use for a real video worth spending on; use make-video instead for a quick test.
 allowed-tools: [Bash, Read, Write, Edit, Glob, Grep]
 ---
 
@@ -14,8 +14,8 @@ asks four questions and gets on with it.
 
 ## How to run the interview
 
-**Ask one question at a time.** A wall of twenty questions gets skimmed, and
-skimmed answers are what produce a rejected video.
+**Ask one question at a time.** A wall of twenty-six questions gets skimmed,
+and skimmed answers are what produce a rejected video.
 
 **Adapt.** Skip whole rounds that do not apply - no person on screen means
 round 2 is one question, not five.
@@ -68,7 +68,7 @@ The biggest cost lever. A recurring person forces a model that accepts
 
 6. **In how many shots?**
    One shot means identity barely matters. Several means a character
-   reference is mandatory - see [[verify-realism]] rule 1.
+   reference pack is mandatory - see [[verify-realism]] rule 1.
 
 7. **Describe them.** Push for **reproducible** detail. "Weathered man" is
    unusable; "mid-30s, short dark hair, three-day stubble, plain face" can be
@@ -87,8 +87,8 @@ The biggest cost lever. A recurring person forces a model that accepts
 npm run budget -- --budget <usd> --runtime <seconds>
 ```
 
-Show the table. If they said a person recurs, point out that the cheapest
-row is now unavailable and why.
+Show the table. If they said a person recurs, point out that the cheapest row
+is now unavailable and why.
 
 ---
 
@@ -167,6 +167,20 @@ This round exists purely to buy more video for the same money.
     10-second establishing shot to 6 saves 10 credits and usually improves
     the edit.
 
+25. **Which locations, props and characters repeat?**
+    Each becomes a single reference sheet, generated once and reused by every
+    shot that needs it - roughly one credit for the whole set.
+
+    This is not only a quality measure. Without a sheet, each shot
+    re-describes its subject in words and the model reinvents it, which is
+    how one shot in a winter-forest video came back with summer ferns and
+    cost 20 credits to redo.
+
+26. **Have you made a video with this character or in this style before?**
+    If so, reuse those sheets rather than regenerating. Identical character
+    across episodes, at no cost. Character and style sheets are not
+    per-video assets.
+
 **Re-price after this round.** It normally buys back 15-25% of the budget.
 
 ---
@@ -175,13 +189,14 @@ This round exists purely to buy more video for the same money.
 
 Before creating anything, state back:
 
-```
+```text
 Genre        bushcraft documentary, handheld, ambient sound
 Character    one man, 9 of 14 shots, olive jacket with torn left cuff
 Story        empty ground -> finished shelter, 6 stages, 14 shots
 Look         bare winter forest, flat overcast, no green foliage
 Runtime      90s
 Model        Seedance 2.0 Mini (holds identity)
+Sheets       character pack (6) + 1 environment + 2 props + 1 style ≈ 1 credit
 Cost         about $14.11 of a $20 budget
 Efficiency   5 shots need no character reference; 1 still; single location
 ```
@@ -192,7 +207,8 @@ Ask for explicit confirmation. Then:
 npm run start -- --idea "<idea>" --runtime <seconds> --budget <usd>
 ```
 
-and continue with [[make-video]] from its planning step.
+and continue with [[make-video]] from its planning step, including its
+reference-sheet stage.
 
 ---
 

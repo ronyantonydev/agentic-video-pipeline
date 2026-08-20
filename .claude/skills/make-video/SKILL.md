@@ -68,8 +68,8 @@ npm run start -- --idea "<idea>" --runtime <seconds> --budget <usd>
 Write the planning JSON into `projects/<name>/planning/`. This is the part
 only Claude can do - the CLI validates, it never authors (architecture §2).
 
-Before writing any prompt, load [[verify-realism]] and follow all four rules.
-They come from a paid run the user rejected:
+Before writing any prompt, load [[verify-realism]] and follow every rule.
+They come from paid runs the user rejected:
 
 1. Identity needs a **reference image**, never a text description - including
    for shots of just hands or boots.
@@ -103,18 +103,87 @@ and exits rather than blocking. Show the user the estimate and wait.
 npm run approve -- <project> --gate cost
 ```
 
-## 7. Generate
+## 7. Generate reference sheets
 
-Character reference first, always:
+Build these BEFORE any shot, using `generate_image` directly. The whole set
+costs about **one credit** and every shot reuses it.
 
-- one image of the person, with **fixable** wardrobe details
-  ("torn left cuff", not "weathered jacket")
-- feed it into every shot showing them
+The alternative is re-describing the world in words on each shot and letting
+the model reinvent it. That is exactly how one shot in a bare-winter-forest
+video came back with green summer ferns - a 20-credit retry that a
+0.12-credit environment sheet would have prevented.
+
+### Character pack - 6 images
+
+Only when a person appears.
+
+- **3 face shots**: front, three-quarter, profile → locks identity
+- **3 body shots**: front, three-quarter, back → locks wardrobe
+- Body shots **must still show the face**, even small. Cropping the head
+  stops the reference teaching identity at all.
+- Plain **grey background** - clutter competes for the model's attention
+- Wardrobe details must be **reproducible**: "torn left cuff, grey thermal
+  collar, mud at the knees" - not "weathered jacket"
+
+Save to `references/character/`.
+
+**Then run the drift test.** Generate 5-10 cheap samples from the pack in
+varied settings and check identity holds (`runDriftTest` in
+`src/qa/identity.ts`). About one credit to find out.
+
+If it drifts, regenerate the pack with more distinctive detail - do NOT start
+the run. Committing blind to an unverified reference is what cost 20 credits
+on shot_006.
+
+### Environment sheet - one per location
+
+One image of the place, in the right season, weather and light. Every shot
+set there references it.
+
+Save to `references/environment/`.
+
+### Prop sheets - one per recurring object
+
+The shovel, the axe, the timber. Front and three-quarter on one sheet, on
+grey. One angle is not enough - the model will hallucinate the parts it
+cannot see.
+
+Save to `references/props/`.
+
+### Style sheet - one per project
+
+One image carrying the overall look: grade, grain, contrast, mood. Keeps
+fourteen shots feeling like one video.
+
+Save to `references/style/`.
+
+### Reuse across videos
+
+These are not per-video assets:
+
+| Sheet | Regenerate when |
+|---|---|
+| Character | the person or their outfit changes |
+| Style | the channel's look changes |
+| Props | a new object appears |
+| Environment | a new location appears |
+
+Same character in a new story? Reuse the pack. It costs nothing and
+guarantees they look identical across episodes.
+
+## 8. Generate the shots
+
+Anchor frames come from the sheets, not from fresh descriptions. Pass the
+character pack as `image_references` on **every** shot showing that person -
+including shots of only their hands, boots or clothing.
+
+`image_references` costs nothing extra. Verified against the live API: a
+Seedance generation is 12.5 credits with the pack attached and 12.5 without.
 
 **Prove the look on ONE shot before generating the set.** All three clips in
 the rejected run shared the same defect because none was checked first.
 
-## 8. Finish
+## 9. Finish
 
 ```bash
 npm run qa:machine -- <project>    # free, deterministic
