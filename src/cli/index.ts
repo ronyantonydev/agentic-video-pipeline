@@ -11,14 +11,18 @@ import { runDoctor } from './doctor.js';
 import { log } from '../util/logger.js';
 import { HardStop, PipelineError, GatePending } from '../util/errors.js';
 import {
-  cmdInit, cmdPlan, cmdCost, cmdApprove, cmdStatus, type PlanStage,
+  cmdInit, cmdPlan, cmdCost, cmdApprove, cmdStatus,
+  cmdQaMachine, cmdQaFinal, cmdRender, cmdThumbnail, cmdReport,
+  type PlanStage,
 } from './commands.js';
 import type { GateNameT } from '../schemas/state.js';
 import { runWizard } from './wizard.js';
 import { buildDebugBundle } from '../reports/debug-bundle.js';
 import { attachProjectLog } from '../util/logger.js';
 import { paths } from '../state/paths.js';
-import { existsSync } from 'node:fs';
+import { existsSync, readdirSync } from 'node:fs';
+import { join } from 'node:path';
+import { checkReferences, formatReferenceCheck } from '../qa/reference-gate.js';
 import { fitToBudget, formatFit } from '../budget/budget-fit.js';
 
 const program = new Command();
@@ -45,8 +49,14 @@ program
   .argument('<project>', 'project name (kebab-case)')
   .requiredOption('--idea <text>', 'the idea, in plain language')
   .option('--mode <mode>', 'full | proof | dry-run', 'full')
-  .action((project: string, opts: { idea: string; mode: string }) => {
-    cmdInit(project, opts.idea, opts.mode as 'full' | 'proof' | 'dry-run');
+  .option('--budget <usd>', 'budget ceiling for this project (overrides MAX_BUDGET_USD)')
+  .action((project: string, opts: { idea: string; mode: string; budget?: string }) => {
+    cmdInit(
+      project,
+      opts.idea,
+      opts.mode as 'full' | 'proof' | 'dry-run',
+      opts.budget !== undefined ? Number(opts.budget) : undefined,
+    );
   });
 
 /**
@@ -138,10 +148,15 @@ program
   .argument('<project>', 'project name')
   .option('--dry-run', 'print the report without requesting approval')
   .option('--no-api', 'do not call the estimate endpoint')
-  .action(async (project: string, opts: { dryRun?: boolean; api?: boolean }) => {
+  .option('--require-approval', 'stop for approval even when the estimate fits the budget')
+  .action(async (
+    project: string,
+    opts: { dryRun?: boolean; api?: boolean; requireApproval?: boolean },
+  ) => {
     withLog(project);
     await cmdCost(project, {
       ...(opts.dryRun !== undefined ? { dryRun: opts.dryRun } : {}),
+      ...(opts.requireApproval !== undefined ? { requireApproval: opts.requireApproval } : {}),
       allowApi: opts.api !== false,
     });
   });
@@ -161,6 +176,46 @@ program
       opts.reject ? 'rejected' : 'approved',
       opts.note,
     );
+  });
+
+/* ---------------------------------------------------------- reference gate */
+
+program
+  .command('refcheck')
+  .description('Verify the reference pack and drift samples (free - hashing and ffmpeg only)')
+  .argument('<project>', 'project name')
+  .option('--samples <dir>', 'directory of drift samples generated from the pack')
+  .option('--no-character', 'this video contains no recurring person')
+  .option(
+    '--override-drift <reason>',
+    'accept a FAILING drift test on a stated human judgement. Clears only the ' +
+      'drift blocker; a missing pack or corrupt image still blocks. The failure ' +
+      'and the reason are both recorded in reference-check.json.',
+  )
+  .action(async (
+    project: string,
+    opts: { samples?: string; character?: boolean; overrideDrift?: string },
+  ) => {
+    withLog(project);
+    const p = paths(project);
+    const sampleDir = opts.samples ?? join(p.references, 'drift-samples');
+    const driftSamples = existsSync(sampleDir)
+      ? readdirSync(sampleDir)
+          .filter((f) => /\.(png|jpe?g|webp)$/i.test(f))
+          .sort()
+          .map((f) => join(sampleDir, f))
+      : [];
+
+    const check = await checkReferences(project, {
+      needsCharacter: opts.character !== false,
+      driftSamples,
+      ...(opts.overrideDrift !== undefined ? { driftOverrideReason: opts.overrideDrift } : {}),
+    });
+
+    process.stdout.write(`\n${formatReferenceCheck(check)}\n\n`);
+    // Non-zero so a scripted run stops here rather than generating against a
+    // reference that was never going to work.
+    if (!check.pass) process.exitCode = 4;
   });
 
 /* --------------------------------------------------------------- generation */
@@ -183,21 +238,61 @@ gen
 
 const qa = program.command('qa').description('Quality assurance stages');
 
-for (const tier of ['machine', 'vision', 'final'] as const) {
-  qa.command(tier)
-    .description(`Run ${tier} QA`)
-    .argument('<project>', 'project name')
-    .action((project: string) => notImplemented(`qa:${tier}`, `project=${project}`));
-}
+qa.command('machine')
+  .description('Run machine QA (free, deterministic)')
+  .argument('<project>', 'project name')
+  .action(async (project: string) => {
+    withLog(project);
+    await cmdQaMachine(project);
+  });
+
+qa.command('final')
+  .description('Run final QA on the render (report only)')
+  .argument('<project>', 'project name')
+  .action(async (project: string) => {
+    withLog(project);
+    await cmdQaFinal(project);
+  });
+
+// Vision QA needs a human or a vision model to judge the extracted frames,
+// so it stays outside the deterministic CLI.
+qa.command('vision')
+  .description('Run vision QA')
+  .argument('<project>', 'project name')
+  .action((project: string) => notImplemented('qa:vision', `project=${project}`));
 
 /* ------------------------------------------------------------ post / output */
 
+program
+  .command('render')
+  .description('Normalise clips, compile the edit plan, and render via HyperFrames')
+  .argument('<project>', 'project name')
+  .action(async (project: string) => {
+    withLog(project);
+    await cmdRender(project);
+  });
+
+program
+  .command('thumbnail')
+  .description('Produce thumbnail.png from the final render')
+  .argument('<project>', 'project name')
+  .action(async (project: string) => {
+    withLog(project);
+    await cmdThumbnail(project);
+  });
+
+program
+  .command('report')
+  .description('Write cost.md from actual manifest spend')
+  .argument('<project>', 'project name')
+  .action((project: string) => {
+    withLog(project);
+    cmdReport(project);
+  });
+
 for (const [name, desc] of [
   ['review', 'Human accept/retry/fallback decisions'],
-  ['render', 'Compile edit plan and render via HyperFrames'],
   ['upscale', 'Optional upscale of the final render'],
-  ['thumbnail', 'Produce thumbnail.png'],
-  ['report', 'Write cost.md and qa-report.json'],
 ] as const) {
   program
     .command(name)

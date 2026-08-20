@@ -61,27 +61,20 @@ export async function runWizard(preset: Partial<WizardAnswers> = {}): Promise<vo
       return;
     }
 
+    // Trim to fit, and say what was cut. The budget is a ceiling the plan
+    // fits itself into, so a shorter video is the answer to "this costs more
+    // than you have" - not a question. Asking here re-confirms a number the
+    // user already chose two prompts ago.
     if (!fit.recommended.fitsRequestedRuntime) {
-      const shorter = await askYesNo(
-        rl,
-        `  Continue with ${fit.recommended.plannedSeconds}s instead of ` +
-          `${runtimeSeconds}s? [Y/n] `,
-        true,
+      stdout.write(
+        `  ! ${runtimeSeconds}s requested; $${budgetUSD.toFixed(2)} buys ` +
+          `${fit.recommended.plannedSeconds}s. Building ${fit.recommended.plannedSeconds}s.\n\n`,
       );
-      if (!shorter) {
-        stdout.write('\n  Nothing created. Raise the budget and run again.\n\n');
-        return;
-      }
     }
 
     for (const w of fit.recommended.warnings) log.warn(w);
 
     const projectName = preset.projectName ?? slugify(idea);
-    const proceed = await askYesNo(rl, `\n  Create project "${projectName}"? [Y/n] `, true);
-    if (!proceed) {
-      stdout.write('\n  Nothing created.\n\n');
-      return;
-    }
 
     rl.close();
     createProject({ idea, budgetUSD, runtimeSeconds, needsCharacterConsistency, projectName }, fit);
@@ -91,7 +84,8 @@ export async function runWizard(preset: Partial<WizardAnswers> = {}): Promise<vo
 }
 
 function createProject(answers: WizardAnswers, fit: FitResult): void {
-  cmdInit(answers.projectName, answers.idea, 'full');
+  // The budget the user just stated is the ceiling - not MAX_BUDGET_USD.
+  cmdInit(answers.projectName, answers.idea, 'full', answers.budgetUSD);
 
   const chosen = fit.recommended!;
 

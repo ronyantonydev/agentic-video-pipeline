@@ -46,17 +46,29 @@ export function requestApproval(
   throw new GatePending(gate, `npm run approve -- ${project} --gate ${gate}`);
 }
 
-/** Record a decision. Called by `npm run approve`. */
+/**
+ * Record a decision. Called by `npm run approve`.
+ *
+ * @param by Who decided. 'human' is a person answering a gate that was
+ *        already requested, so a not-reached gate is a mistake worth
+ *        refusing. 'system' is the pipeline deciding at the moment the gate
+ *        is reached - an estimate that fits the stated budget approves
+ *        itself (section 5), and that decision is necessarily taken while
+ *        the gate is still not-reached. Refusing it there made the
+ *        auto-approve path unreachable: it always threw instead of
+ *        continuing.
+ */
 export function decideGate(
   project: string,
   gate: GateNameT,
   decision: 'approved' | 'rejected',
   note?: string,
+  by: 'human' | 'system' = 'human',
 ): State {
   const state = readState(project);
   const current = state.gates[gate];
 
-  if (current.status === 'not-reached') {
+  if (current.status === 'not-reached' && by === 'human') {
     throw new GatePending(
       gate,
       `Gate "${gate}" has not been reached yet - nothing to approve.`,
@@ -76,7 +88,7 @@ export function decideGate(
         ...s.gates[gate],
         status: decision,
         decidedAt: new Date().toISOString(),
-        decidedBy: 'human',
+        decidedBy: by,
         ...(note !== undefined ? { note } : {}),
       },
     },
