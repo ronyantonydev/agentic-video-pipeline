@@ -1,0 +1,656 @@
+{
+  "tier": "machine",
+  "ranAt": "2026-08-20T07:29:10.817Z",
+  "summary": {
+    "passed": 14,
+    "failed": 0,
+    "unknown": 0,
+    "failedShots": []
+  },
+  "results": [
+    {
+      "shotId": "shot_001",
+      "pass": true,
+      "checks": [
+        {
+          "name": "readable",
+          "status": "pass",
+          "detail": "16.8MB"
+        },
+        {
+          "name": "video-stream",
+          "status": "pass",
+          "detail": "h264 1920x1080 @30.00fps"
+        },
+        {
+          "name": "duration",
+          "status": "pass",
+          "detail": "7.10s vs expected 7s (±0.35s)"
+        },
+        {
+          "name": "project-format",
+          "status": "pass",
+          "detail": "matches locked settings"
+        },
+        {
+          "name": "audio",
+          "status": "pass",
+          "detail": "aac 2ch"
+        },
+        {
+          "name": "black-frames",
+          "status": "pass",
+          "detail": "0.0% dark frames (limit 10%)"
+        },
+        {
+          "name": "not-blank",
+          "status": "pass",
+          "detail": "median in-frame contrast 0.451"
+        },
+        {
+          "name": "not-frozen",
+          "status": "pass",
+          "detail": "longest still run 0.0s (limit 1.5s)"
+        }
+      ]
+    },
+    {
+      "shotId": "shot_002",
+      "pass": true,
+      "checks": [
+        {
+          "name": "readable",
+          "status": "pass",
+          "detail": "11.9MB"
+        },
+        {
+          "name": "video-stream",
+          "status": "pass",
+          "detail": "h264 1920x1080 @30.00fps"
+        },
+        {
+          "name": "duration",
+          "status": "pass",
+          "detail": "6.08s vs expected 6s (±0.30s)"
+        },
+        {
+          "name": "project-format",
+          "status": "pass",
+          "detail": "matches locked settings"
+        },
+        {
+          "name": "audio",
+          "status": "pass",
+          "detail": "aac 2ch"
+        },
+        {
+          "name": "black-frames",
+          "status": "pass",
+          "detail": "0.0% dark frames (limit 10%)"
+        },
+        {
+          "name": "not-blank",
+          "status": "pass",
+          "detail": "median in-frame contrast 0.310"
+        },
+        {
+          "name": "not-frozen",
+          "status": "pass",
+          "detail": "longest still run 0.0s (limit 1.5s)"
+        }
+      ]
+    },
+    {
+      "shotId": "shot_003",
+      "pass": true,
+      "checks": [
+        {
+          "name": "readable",
+          "status": "pass",
+          "detail": "6.3MB"
+        },
+        {
+          "name": "video-stream",
+          "status": "pass",
+          "detail": "h264 1920x1080 @30.00fps"
+        },
+        {
+          "name": "duration",
+          "status": "pass",
+          "detail": "5.09s vs expected 5s (±0.25s)"
+        },
+        {
+          "name": "project-format",
+          "status": "pass",
+          "detail": "matches locked settings"
+        },
+        {
+          "name": "audio",
+          "status": "pass",
+          "detail": "aac 2ch"
+        },
+        {
+          "name": "black-frames",
+          "status": "pass",
+          "detail": "0.0% dark frames (limit 10%)"
+        },
+        {
+          "name": "not-blank",
+          "status": "pass",
+          "detail": "median in-frame contrast 0.698"
+        },
+        {
+          "name": "not-frozen",
+          "status": "pass",
+          "detail": "longest still run 0.0s (limit 1.5s)"
+        }
+      ]
+    },
+    {
+      "shotId": "shot_004",
+      "pass": true,
+      "checks": [
+        {
+          "name": "readable",
+          "status": "pass",
+          "detail": "7.4MB"
+        },
+        {
+          "name": "video-stream",
+          "status": "pass",
+          "detail": "h264 1920x1080 @30.00fps"
+        },
+        {
+          "name": "duration",
+          "status": "pass",
+          "detail": "6.08s vs expected 6s (±0.30s)"
+        },
+        {
+          "name": "project-format",
+          "status": "pass",
+          "detail": "matches locked settings"
+        },
+        {
+          "name": "audio",
+          "status": "pass",
+          "detail": "aac 2ch"
+        },
+        {
+          "name": "black-frames",
+          "status": "pass",
+          "detail": "0.0% dark frames (limit 10%)"
+        },
+        {
+          "name": "not-blank",
+          "status": "pass",
+          "detail": "median in-frame contrast 0.380"
+        },
+        {
+          "name": "not-frozen",
+          "status": "pass",
+          "detail": "longest still run 0.0s (limit 1.5s)"
+        }
+      ]
+    },
+    {
+      "shotId": "shot_005",
+      "pass": true,
+      "checks": [
+        {
+          "name": "readable",
+          "status": "pass",
+          "detail": "5.8MB"
+        },
+        {
+          "name": "video-stream",
+          "status": "pass",
+          "detail": "h264 1920x1080 @30.00fps"
+        },
+        {
+          "name": "duration",
+          "status": "pass",
+          "detail": "5.09s vs expected 5s (±0.25s)"
+        },
+        {
+          "name": "project-format",
+          "status": "pass",
+          "detail": "matches locked settings"
+        },
+        {
+          "name": "audio",
+          "status": "pass",
+          "detail": "aac 2ch"
+        },
+        {
+          "name": "black-frames",
+          "status": "pass",
+          "detail": "0.0% dark frames (limit 10%)"
+        },
+        {
+          "name": "not-blank",
+          "status": "pass",
+          "detail": "median in-frame contrast 0.294"
+        },
+        {
+          "name": "not-frozen",
+          "status": "pass",
+          "detail": "longest still run 0.0s (limit 1.5s)"
+        }
+      ]
+    },
+    {
+      "shotId": "shot_006",
+      "pass": true,
+      "checks": [
+        {
+          "name": "readable",
+          "status": "pass",
+          "detail": "3.2MB"
+        },
+        {
+          "name": "video-stream",
+          "status": "pass",
+          "detail": "h264 1920x1080 @30.00fps"
+        },
+        {
+          "name": "duration",
+          "status": "pass",
+          "detail": "4.10s vs expected 4s (±0.20s)"
+        },
+        {
+          "name": "project-format",
+          "status": "pass",
+          "detail": "matches locked settings"
+        },
+        {
+          "name": "audio",
+          "status": "pass",
+          "detail": "aac 2ch"
+        },
+        {
+          "name": "black-frames",
+          "status": "pass",
+          "detail": "0.0% dark frames (limit 10%)"
+        },
+        {
+          "name": "not-blank",
+          "status": "pass",
+          "detail": "median in-frame contrast 0.392"
+        },
+        {
+          "name": "not-frozen",
+          "status": "pass",
+          "detail": "longest still run 0.0s (limit 1.5s)"
+        }
+      ]
+    },
+    {
+      "shotId": "shot_007",
+      "pass": true,
+      "checks": [
+        {
+          "name": "readable",
+          "status": "pass",
+          "detail": "9.0MB"
+        },
+        {
+          "name": "video-stream",
+          "status": "pass",
+          "detail": "h264 1920x1080 @30.00fps"
+        },
+        {
+          "name": "duration",
+          "status": "pass",
+          "detail": "7.10s vs expected 7s (±0.35s)"
+        },
+        {
+          "name": "project-format",
+          "status": "pass",
+          "detail": "matches locked settings"
+        },
+        {
+          "name": "audio",
+          "status": "pass",
+          "detail": "aac 2ch"
+        },
+        {
+          "name": "black-frames",
+          "status": "pass",
+          "detail": "0.0% dark frames (limit 10%)"
+        },
+        {
+          "name": "not-blank",
+          "status": "pass",
+          "detail": "median in-frame contrast 0.506"
+        },
+        {
+          "name": "not-frozen",
+          "status": "pass",
+          "detail": "longest still run 0.0s (limit 1.5s)"
+        }
+      ]
+    },
+    {
+      "shotId": "shot_008",
+      "pass": true,
+      "checks": [
+        {
+          "name": "readable",
+          "status": "pass",
+          "detail": "11.4MB"
+        },
+        {
+          "name": "video-stream",
+          "status": "pass",
+          "detail": "h264 1920x1080 @30.00fps"
+        },
+        {
+          "name": "duration",
+          "status": "pass",
+          "detail": "8.10s vs expected 8s (±0.40s)"
+        },
+        {
+          "name": "project-format",
+          "status": "pass",
+          "detail": "matches locked settings"
+        },
+        {
+          "name": "audio",
+          "status": "pass",
+          "detail": "aac 2ch"
+        },
+        {
+          "name": "black-frames",
+          "status": "pass",
+          "detail": "0.0% dark frames (limit 10%)"
+        },
+        {
+          "name": "not-blank",
+          "status": "pass",
+          "detail": "median in-frame contrast 0.263"
+        },
+        {
+          "name": "not-frozen",
+          "status": "pass",
+          "detail": "longest still run 0.0s (limit 1.5s)"
+        }
+      ]
+    },
+    {
+      "shotId": "shot_009",
+      "pass": true,
+      "checks": [
+        {
+          "name": "readable",
+          "status": "pass",
+          "detail": "9.3MB"
+        },
+        {
+          "name": "video-stream",
+          "status": "pass",
+          "detail": "h264 1920x1080 @30.00fps"
+        },
+        {
+          "name": "duration",
+          "status": "pass",
+          "detail": "6.08s vs expected 6s (±0.30s)"
+        },
+        {
+          "name": "project-format",
+          "status": "pass",
+          "detail": "matches locked settings"
+        },
+        {
+          "name": "audio",
+          "status": "pass",
+          "detail": "aac 2ch"
+        },
+        {
+          "name": "black-frames",
+          "status": "pass",
+          "detail": "0.0% dark frames (limit 10%)"
+        },
+        {
+          "name": "not-blank",
+          "status": "pass",
+          "detail": "median in-frame contrast 0.318"
+        },
+        {
+          "name": "not-frozen",
+          "status": "pass",
+          "detail": "longest still run 0.0s (limit 1.5s)"
+        }
+      ]
+    },
+    {
+      "shotId": "shot_010",
+      "pass": true,
+      "checks": [
+        {
+          "name": "readable",
+          "status": "pass",
+          "detail": "5.3MB"
+        },
+        {
+          "name": "video-stream",
+          "status": "pass",
+          "detail": "h264 1920x1080 @30.00fps"
+        },
+        {
+          "name": "duration",
+          "status": "pass",
+          "detail": "5.09s vs expected 5s (±0.25s)"
+        },
+        {
+          "name": "project-format",
+          "status": "pass",
+          "detail": "matches locked settings"
+        },
+        {
+          "name": "audio",
+          "status": "pass",
+          "detail": "aac 2ch"
+        },
+        {
+          "name": "black-frames",
+          "status": "pass",
+          "detail": "0.0% dark frames (limit 10%)"
+        },
+        {
+          "name": "not-blank",
+          "status": "pass",
+          "detail": "median in-frame contrast 0.392"
+        },
+        {
+          "name": "not-frozen",
+          "status": "pass",
+          "detail": "longest still run 0.0s (limit 1.5s)"
+        }
+      ]
+    },
+    {
+      "shotId": "shot_011",
+      "pass": true,
+      "checks": [
+        {
+          "name": "readable",
+          "status": "pass",
+          "detail": "7.5MB"
+        },
+        {
+          "name": "video-stream",
+          "status": "pass",
+          "detail": "h264 1920x1080 @30.00fps"
+        },
+        {
+          "name": "duration",
+          "status": "pass",
+          "detail": "6.08s vs expected 6s (±0.30s)"
+        },
+        {
+          "name": "project-format",
+          "status": "pass",
+          "detail": "matches locked settings"
+        },
+        {
+          "name": "audio",
+          "status": "pass",
+          "detail": "aac 2ch"
+        },
+        {
+          "name": "black-frames",
+          "status": "pass",
+          "detail": "0.0% dark frames (limit 10%)"
+        },
+        {
+          "name": "not-blank",
+          "status": "pass",
+          "detail": "median in-frame contrast 0.435"
+        },
+        {
+          "name": "not-frozen",
+          "status": "pass",
+          "detail": "longest still run 0.0s (limit 1.5s)"
+        }
+      ]
+    },
+    {
+      "shotId": "shot_012",
+      "pass": true,
+      "checks": [
+        {
+          "name": "readable",
+          "status": "pass",
+          "detail": "5.4MB"
+        },
+        {
+          "name": "video-stream",
+          "status": "pass",
+          "detail": "h264 1920x1080 @30.00fps"
+        },
+        {
+          "name": "duration",
+          "status": "pass",
+          "detail": "5.09s vs expected 5s (±0.25s)"
+        },
+        {
+          "name": "project-format",
+          "status": "pass",
+          "detail": "matches locked settings"
+        },
+        {
+          "name": "audio",
+          "status": "pass",
+          "detail": "aac 2ch"
+        },
+        {
+          "name": "black-frames",
+          "status": "pass",
+          "detail": "0.0% dark frames (limit 10%)"
+        },
+        {
+          "name": "not-blank",
+          "status": "pass",
+          "detail": "median in-frame contrast 0.612"
+        },
+        {
+          "name": "not-frozen",
+          "status": "pass",
+          "detail": "longest still run 0.0s (limit 1.5s)"
+        }
+      ]
+    },
+    {
+      "shotId": "shot_013",
+      "pass": true,
+      "checks": [
+        {
+          "name": "readable",
+          "status": "pass",
+          "detail": "9.8MB"
+        },
+        {
+          "name": "video-stream",
+          "status": "pass",
+          "detail": "h264 1920x1080 @30.00fps"
+        },
+        {
+          "name": "duration",
+          "status": "pass",
+          "detail": "6.08s vs expected 6s (±0.30s)"
+        },
+        {
+          "name": "project-format",
+          "status": "pass",
+          "detail": "matches locked settings"
+        },
+        {
+          "name": "audio",
+          "status": "pass",
+          "detail": "aac 2ch"
+        },
+        {
+          "name": "black-frames",
+          "status": "pass",
+          "detail": "0.0% dark frames (limit 10%)"
+        },
+        {
+          "name": "not-blank",
+          "status": "pass",
+          "detail": "median in-frame contrast 0.294"
+        },
+        {
+          "name": "not-frozen",
+          "status": "pass",
+          "detail": "longest still run 0.0s (limit 1.5s)"
+        }
+      ]
+    },
+    {
+      "shotId": "shot_014",
+      "pass": true,
+      "checks": [
+        {
+          "name": "readable",
+          "status": "pass",
+          "detail": "6.0MB"
+        },
+        {
+          "name": "video-stream",
+          "status": "pass",
+          "detail": "h264 1920x1080 @30.00fps"
+        },
+        {
+          "name": "duration",
+          "status": "pass",
+          "detail": "6.08s vs expected 6s (±0.30s)"
+        },
+        {
+          "name": "project-format",
+          "status": "pass",
+          "detail": "matches locked settings"
+        },
+        {
+          "name": "audio",
+          "status": "pass",
+          "detail": "aac 2ch"
+        },
+        {
+          "name": "black-frames",
+          "status": "pass",
+          "detail": "0.0% dark frames (limit 10%)"
+        },
+        {
+          "name": "not-blank",
+          "status": "pass",
+          "detail": "median in-frame contrast 0.341"
+        },
+        {
+          "name": "not-frozen",
+          "status": "pass",
+          "detail": "longest still run 0.0s (limit 1.5s)"
+        }
+      ]
+    }
+  ]
+}

@@ -1,11 +1,11 @@
 {
-  "totalDurationSeconds": 87.0,
+  "totalDurationSeconds": 79.54,
   "items": [
     {
       "shotId": "shot_001",
       "startSeconds": 0.0,
-      "screenDurationSeconds": 8.0,
-      "motionSeconds": 6.8,
+      "screenDurationSeconds": 7.1,
+      "motionSeconds": 6.04,
       "speedFactor": 1.0,
       "transitionIn": "fade",
       "transitionOut": "cut",
@@ -13,7 +13,7 @@
     },
     {
       "shotId": "shot_002",
-      "startSeconds": 8.0,
+      "startSeconds": 7.1,
       "screenDurationSeconds": 6.0,
       "motionSeconds": 5.1,
       "speedFactor": 1.0,
@@ -23,7 +23,7 @@
     },
     {
       "shotId": "shot_003",
-      "startSeconds": 14.0,
+      "startSeconds": 13.1,
       "screenDurationSeconds": 5.0,
       "motionSeconds": 4.25,
       "speedFactor": 1.0,
@@ -33,7 +33,7 @@
     },
     {
       "shotId": "shot_004",
-      "startSeconds": 19.0,
+      "startSeconds": 18.1,
       "screenDurationSeconds": 6.0,
       "motionSeconds": 5.1,
       "speedFactor": 1.0,
@@ -43,7 +43,7 @@
     },
     {
       "shotId": "shot_005",
-      "startSeconds": 25.0,
+      "startSeconds": 24.1,
       "screenDurationSeconds": 3.0,
       "motionSeconds": 2.55,
       "speedFactor": 1.0,
@@ -53,7 +53,7 @@
     },
     {
       "shotId": "shot_006",
-      "startSeconds": 28.0,
+      "startSeconds": 27.1,
       "screenDurationSeconds": 3.0,
       "motionSeconds": 2.55,
       "speedFactor": 1.0,
@@ -63,7 +63,7 @@
     },
     {
       "shotId": "shot_007",
-      "startSeconds": 31.0,
+      "startSeconds": 30.1,
       "screenDurationSeconds": 7.0,
       "motionSeconds": 5.95,
       "speedFactor": 1.0,
@@ -73,9 +73,9 @@
     },
     {
       "shotId": "shot_008",
-      "startSeconds": 38.0,
-      "screenDurationSeconds": 9.0,
-      "motionSeconds": 7.65,
+      "startSeconds": 37.1,
+      "screenDurationSeconds": 8.1,
+      "motionSeconds": 6.88,
       "speedFactor": 1.0,
       "transitionIn": "cut",
       "transitionOut": "cut",
@@ -83,9 +83,9 @@
     },
     {
       "shotId": "shot_009",
-      "startSeconds": 47.0,
-      "screenDurationSeconds": 7.0,
-      "motionSeconds": 5.95,
+      "startSeconds": 45.2,
+      "screenDurationSeconds": 6.08,
+      "motionSeconds": 5.17,
       "speedFactor": 1.0,
       "transitionIn": "cut",
       "transitionOut": "cut",
@@ -93,9 +93,9 @@
     },
     {
       "shotId": "shot_010",
-      "startSeconds": 54.0,
-      "screenDurationSeconds": 8.0,
-      "motionSeconds": 6.8,
+      "startSeconds": 51.28,
+      "screenDurationSeconds": 5.09,
+      "motionSeconds": 4.32,
       "speedFactor": 1.0,
       "transitionIn": "cut",
       "transitionOut": "cut",
@@ -103,9 +103,9 @@
     },
     {
       "shotId": "shot_011",
-      "startSeconds": 62.0,
-      "screenDurationSeconds": 7.0,
-      "motionSeconds": 5.95,
+      "startSeconds": 56.37,
+      "screenDurationSeconds": 6.08,
+      "motionSeconds": 5.17,
       "speedFactor": 1.0,
       "transitionIn": "cut",
       "transitionOut": "cut",
@@ -113,9 +113,9 @@
     },
     {
       "shotId": "shot_012",
-      "startSeconds": 69.0,
-      "screenDurationSeconds": 6.0,
-      "motionSeconds": 5.1,
+      "startSeconds": 62.45,
+      "screenDurationSeconds": 5.09,
+      "motionSeconds": 4.32,
       "speedFactor": 1.0,
       "transitionIn": "cut",
       "transitionOut": "cut",
@@ -123,7 +123,7 @@
     },
     {
       "shotId": "shot_013",
-      "startSeconds": 75.0,
+      "startSeconds": 67.54,
       "screenDurationSeconds": 6.0,
       "motionSeconds": 5.1,
       "speedFactor": 1.0,
@@ -133,7 +133,7 @@
     },
     {
       "shotId": "shot_014",
-      "startSeconds": 81.0,
+      "startSeconds": 73.54,
       "screenDurationSeconds": 6.0,
       "motionSeconds": 5.1,
       "speedFactor": 1.0,
