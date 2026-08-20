@@ -1,3 +1,16 @@
+> **Historical.** This is the original design, written before implementation.
+> It is kept because the reasoning is still sound and the section numbers are
+> referenced throughout the code.
+>
+> For how the system actually works, see **[architecture.md](architecture.md)**.
+>
+> Where the two differ, the built version is right and records why — usually
+> because something failed and cost credits to discover. The main divergences:
+> Higgsfield bills API and subscription from separate wallets; models expose
+> durations as either discrete values or ranges, not just discrete; identity
+> requires a six-image reference pack rather than one; and anchor images are
+> validated before generation, which section 15 did not anticipate.
+
 # Final V1 Video Automation Architecture
 
 ## 1. Product Goal
