@@ -4,8 +4,12 @@ How the pipeline is built, and why each part is the shape it is.
 
 This describes the system **as built**, not as originally planned. Where the
 two differ, the reason is recorded — usually because something failed and
-cost credits to discover. The original design document is preserved at
-[video-automation-architecture.md](video-automation-architecture.md).
+cost credits to discover.
+
+Code comments cite this document by section number (`section 22`, `§13`).
+Those numbers come from the original design and are preserved in
+[§ Design reference](#15-design-reference) at the end, so a citation in the
+code resolves to a rule stated here.
 
 ---
 
@@ -25,6 +29,7 @@ cost credits to discover. The original design document is preserved at
 12. [Skills](#12-skills)
 13. [What we learned the expensive way](#13-what-we-learned-the-expensive-way)
 14. [Known limitations](#14-known-limitations)
+15. [Design reference](#15-design-reference) — the numbered rules the code cites
 
 ---
 
@@ -492,3 +497,296 @@ retries so far. `failureClass` is collecting it.
 
 **Per-second pricing is a wall.** Roughly `$0.20` per second of finished
 video. A 20-minute video is about `$188`. No prompt technique moves this.
+
+---
+
+## 15. Design reference
+
+Code comments cite these numbers. They come from the original design
+document, and are preserved here so a citation resolves to a rule rather than
+to a deleted file.
+
+Each entry states the rule, then how it was actually implemented — including
+where the built version departs from the design.
+
+### §2 — Claude plans, code spends
+
+Claude is responsible for understanding the idea, story, hooks, progression,
+storyboard, prompts, edit decisions, and QA interpretation. Deterministic
+code owns JSON validation, cost calculation, budget checks, paid submission,
+polling, download, FFmpeg, machine QA, state, resume, and rendering.
+
+**Claude must never improvise a paid API call.**
+
+*Built:* `verify-spend-safety` fails any MCP call appearing in `src/`.
+Verified: zero present.
+
+### §6 — Three distinct planning artifacts
+
+- `storyboard.json` — *what should the viewer see?*
+- `edit-plan.json` — *how will the timeline present it?*
+- `generation-plan.json` — *what paid assets do we actually need?*
+
+Screen time is not generation time. A shot may occupy 6 seconds of timeline
+while needing 3 seconds of motion and billing 5.
+
+### §7 — Billable duration
+
+Never assume arbitrary durations. If the edit needs 3.2s and the model bills
+in 5s units, generate 5s and trim. **Rounding down is forbidden** — it would
+leave the edit short of footage it planned for.
+
+*Departure from the design:* §7 assumed every model exposes
+`allowedDurations: [5, 10]`. The live API shows two shapes — discrete
+(Seedance `[4, 8, 12]`) and continuous ranges (Kling 3–15). Discrete models
+snap up; range models clamp to their floor. A sweep test asserts
+`billableSeconds >= requiredSeconds` for both.
+
+### §8 — Model configuration and selection
+
+Each model records provider, cost, allowed durations, frame support, native
+audio, resolution, fps, quality tier, enabled.
+
+Selection stays deliberately simple: cheaper model for normal shots, quality
+model for anchors, escalate on capability failure.
+
+*Built:* escalation that raises cost **requires approval**. Auto-switching is
+permitted only when free or cheaper. Where a price is unknown, tier ranking
+decides — erring toward asking.
+
+### §9 — Anchor shots
+
+Roughly 2–4 shots per video carry the most weight: opening reveal, major
+transformation, climax, final reveal. These get quality treatment; supporting
+shots can use cheaper models.
+
+### §12 — Three continuity modes
+
+| Mode | Meaning | Execution |
+|---|---|---|
+| `independent` | no dependency | parallel |
+| `reference-only` | same look, not the same frame | parallel |
+| `previous-shot` | needs the prior clip's end frame | **serial** |
+
+### §13 — Chain rules
+
+A `previous-shot` sequence runs strictly in order, and **a bad shot_04 must
+never cause paid generation of shot_05**. Graph validation checks for cycles,
+missing references, and invalid shot ids before anything runs. Long chains
+warn rather than fail — drift is a quality risk, not a correctness failure.
+
+*Built:* `runChain` stops at the first failure and marks everything
+downstream `skipped`.
+
+### §14 — Independent-shot processing
+
+Independent and reference-only shots run concurrently, capped. Polling uses
+exponential backoff, a global job timeout, and retry-safe state.
+
+*Built:* one failure does not abort the batch — other shots may already be
+paid for.
+
+### §15 — QA architecture
+
+**Tier 1, free machine QA**, run before any expensive judgement: corrupt
+file, wrong duration, black frames, blank video, frozen video, unexpected
+fps, resolution mismatch, missing audio.
+
+**Tier 2, vision QA**: extract frames and check intent, character, wardrobe,
+environment, progression, morphing, anatomy, object consistency, start and
+end similarity.
+
+Vision QA **flags**. It does not autonomously spend retry credits.
+
+*Built:* `autoSpendOnRetry: false` in `quality-policy.json`, asserted by a
+test. Two additions the design did not anticipate: identity drift **within**
+a clip (end frame vs first), and **tier 0 anchor validation** before any
+spend at all.
+
+### §16 — Human retry decision
+
+A flagged shot goes to a human: **accept / retry / fallback**. The failure
+class is recorded — `prompt-issue`, `bad-random-generation`,
+`model-capability-issue`, `continuity-issue`, `unusable` — so that after the
+first few videos the decision can be automated from real data.
+
+*Built:* classes are validated against `quality-policy.json`, not free text.
+Free-text labels would make the accumulated data useless.
+
+### §17 — Fallback strategy
+
+When a retry is not worth the cost, use a high-quality still with a subtle
+move. One difficult shot must not block the whole project.
+
+*Built:* `applyFallbacks` does not mutate the caller's plan, and the second
+motion lint catches the case where several fallbacks together break the ratio.
+
+### §18 — Motion-ratio policy
+
+Cost optimisation must not produce a slideshow:
+
+- real motion ≥ 55% of runtime
+- no still longer than 3 seconds
+- no more than 2 consecutive non-motion shots
+- opening and closing shots must move
+
+Run the lint **twice** — after edit planning, and again after failures and
+fallbacks.
+
+*Built:* a Ken Burns move on a still does **not** count as motion. That
+substitution is exactly what the lint exists to detect.
+
+### §19 — Budget protection
+
+Before **every** paid call — first generation, retries, escalated models,
+paid images, paid audio — check:
+
+```text
+current spend + expected call cost ≤ maxBudgetUSD
+```
+
+Otherwise **hard stop**. Not only at the approval gate.
+
+*Built:* four guards — per-call ceiling, project budget, reservations so
+parallel jobs cannot both claim the last dollar, and refusal when a cost
+cannot be established. `HardStop` is never caught and continued.
+
+### §20 — Dry run
+
+Plan, storyboard, edit plan, generation plan, billable durations, model
+choices and estimated cost, with **$0 spent**. Writes
+`reports/cost-estimate.md`.
+
+### §21 — Gates are resumable
+
+Never keep the CLI waiting for interactive input. A gate writes state, prints
+what the human needs, and exits. Approval is a separate invocation.
+
+This makes a run safe against a closed terminal, a sleeping laptop, an SSH
+disconnect, or an ended Claude session.
+
+*Built:* gates are independent — approving `cost` does not unlock `look`. The
+only stdin read is the setup wizard, where nothing has been spent and there
+is no run to resume.
+
+### §22 — Paid asset protection
+
+**Never overwrite a paid asset.** Each generation gets an identity hashed
+from prompt, model, start/end frame contents, duration and settings. An
+identical asset is reused, never repaid.
+
+*Built:* adding a new provider parameter **requires** adding it to
+`computeAssetHash`, or two different generations collide and the second
+silently reuses the first.
+
+### §23 — Manifest
+
+Every paid generation is written to `manifest.json` **before** polling and
+download finish, so a crash after submission still leaves the job
+recoverable.
+
+Records: shot, asset hash, provider, model, prompt, seed, job id, remote URL,
+submission time, billable duration, estimated and actual cost, status, local
+file, accepted.
+
+*Built:* entries are never deleted, and `updateEntry` cannot rewrite
+`assetHash`, `prompt`, `model`, `provider` or `submittedAt`.
+
+### §24 — Prompt library
+
+No separate prompt-library workflow. An accepted shot already carries its
+prompt, model, seed and quality result in the manifest, so the library is a
+**query over historical manifests** and improves automatically.
+
+### §25 — Proof mode
+
+About 15 seconds and 3 shots, using the **actual** production model,
+resolution, prompt process, references, QA and render path. Proof assets live
+in the same project and manifest, so accepted proof shots are reused in the
+full video rather than regenerated.
+
+### §26 — FFmpeg normalisation
+
+Project settings are locked at initialisation — width, height, fps,
+colorspace. Every clip is downloaded, normalised, and only then enters the
+timeline. Different model outputs never go in directly.
+
+*Built:* scaling **pads rather than crops**, so nothing composed into the
+frame is silently discarded. A silent source is given a generated audio
+track, without which concatenation drops audio from every later clip.
+
+### §27 — HyperFrames role
+
+HyperFrames is the creative editing layer: cuts, timing, transitions, Ken
+Burns, zoom, pan, speed, overlays, captions, music, SFX, mixing, final
+composition. FFmpeg stays the technical layer beneath it.
+
+*Built:* lint before render. On the first real run it caught six errors, two
+fatal — a `<video>` without an `id` renders frozen, and `muted` alongside
+`data-has-audio` silences the clip.
+
+### §29 — Final QA is report only
+
+Checks runtime, resolution, fps, audio presence, black frames, render
+corruption, motion ratio and suspicious shots. It writes `qa-report.json` and
+**does not trigger paid regeneration**. The human decides whether further
+spending is worthwhile.
+
+### §30 — Thumbnail
+
+An explicit stage, taken from the **final-resolution output** so it matches
+what a viewer sees.
+
+*Built:* the strongest frame is chosen by in-frame contrast across 12
+candidates, sampled away from the edges where fades live.
+
+### §33 — Project layout
+
+```text
+projects/<name>/
+├── idea.md
+├── state.json          where the run is
+├── manifest.json       what has been paid for
+├── planning/           the ten artifacts
+├── references/         character, environment, props, style, progression
+├── storyboard/         contact sheet and frames
+├── shots/              original.mp4, normalized.mp4, frames
+├── stills/  audio/  checkpoints/  logs/
+├── reports/            cost-estimate.md, cost.md, qa-report.json
+└── output/             final.mp4, thumbnail.png
+```
+
+*Built:* adds `hyperframes/` for the compiled composition.
+
+### §34 — CLI stages
+
+Each stage is a separate command that writes state and exits:
+
+```text
+plan:story · plan:audio · plan:storyboard · plan:edit · plan:generation
+cost · approve · gen:references · gen:shots
+qa:machine · qa:vision · review · render · upscale · thumbnail
+qa:final · report
+```
+
+Plus `--proof`, `--dry-run`, `--resume`.
+
+*Built:* adds `budget` (price a plan without creating anything), `start` (the
+setup wizard), `status`, and `doctor`.
+
+### §35 — Zod validation
+
+Every planning artifact is validated before it can drive execution: story,
+music, beat grid, progression, continuity, shotlist, storyboard, edit plan,
+generation plan, audio plan, state, manifest.
+
+**Invalid JSON must fail before any paid API call.**
+
+### The five rules that matter most
+
+1. Claude plans; deterministic code spends.
+2. Plan the timeline before paying for video generation.
+3. Check the budget before every single paid call.
+4. Never regenerate or overwrite a paid asset that can be reused.
+5. A continuity-chain shot must pass QA before the next dependent shot is
+   generated.

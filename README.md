@@ -332,9 +332,8 @@ no cost — real H.264 files, so QA and rendering run for real.
 
 | | |
 | --- | --- |
-| [docs/architecture.md](docs/architecture.md) | How it works and why — stages, budget guards, QA tiers, skills, and what we learned the expensive way |
+| [docs/architecture.md](docs/architecture.md) | How it works and why — stages, budget guards, QA tiers, skills, what we learned the expensive way, and the numbered design rules the code cites |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | Setup, the rules that matter, how to test |
-| [docs/video-automation-architecture.md](docs/video-automation-architecture.md) | The original design, kept for the reasoning and section numbers |
 
 ## Contributing
 

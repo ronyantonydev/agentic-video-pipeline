@@ -1,14 +1,14 @@
 ---
 name: verify-realism
-description: EMBEDDED CHECK - run before writing continuity.json, storyboard.json, or any generation prompt. Prevents the four failure modes that made the first paid run look like imagination instead of real documentary footage. Applies to every project, not just the one that produced them.
+description: EMBEDDED CHECK - run before writing continuity.json, storyboard.json, or any generation prompt. Prevents the failure modes that made the first paid run look like imagination instead of real documentary footage. Applies to every project, not just the one that produced them.
 allowed-tools: [Read, Grep, Glob]
 ---
 
 # Verify realism
 
-These rules come from a real paid run (2026-08-20, 32 credits, 3 clips) that
-the human rejected. Every rule below is a mistake that was actually made, not
-a hypothetical. Check planning artifacts against them BEFORE spending.
+These rules come from real paid runs that the human rejected. Every rule
+below is a mistake that was actually made, not a hypothetical. Check planning
+artifacts against them BEFORE spending.
 
 Report PASS/FAIL per check, quoting the offending prompt text.
 
@@ -22,13 +22,26 @@ face. Kling 3.0 accepts only `start_image` / `end_image` - it has no
 identity-reference input at all.
 
 **Rule:**
-- Generate ONE character reference image first, before any video.
-- Feed it into EVERY shot containing that character, via a model that
+- Generate a **six-image reference pack** before any video:
+  - **3 face shots** - front, three-quarter, profile. These lock *identity*.
+  - **3 body shots** - front, three-quarter, back. These lock *outfit and
+    proportions*.
+  - Body shots **must still show the face**, even small. Cropping or masking
+    the head stops the reference teaching the model who this is.
+  - Plain **grey background**. Clutter competes for the model's attention;
+    grey gives it nothing to fixate on but the subject.
+- Feed the pack into EVERY shot containing that character, via a model that
   accepts `image_references` (seedance_2_0, seedance_2_0_mini, wan2_7).
 - A model with no identity-reference slot must not be used for shots
   containing a recurring person.
 - FAIL if `continuity.json` describes a character but no reference image
   exists in `references/character/`.
+
+**Why six and not one:** a single front-facing reference held identity in
+wide shots and lost it in close-ups and unusual angles. Three face angles
+give the model something to interpolate between; three body shots stop the
+outfit drifting. Six Soul 2 images cost about 0.6 credits against 0.12 for
+one - noise against a 250-credit run.
 
 **"Contains the character" includes body parts.** This was missed on the
 second run: a macro shot of "dirty bare hands gripping a shovel shaft" was
@@ -83,6 +96,8 @@ For handmade / DIY / bushcraft / survival / build content:
   actually do the work, not the landscape.
 - Finish: muddy, rough, unpolished. NO colour grading, NO gloss.
 - Audio: native tool sounds. NOT a music bed.
+- Locations at a **three-quarter angle**. A head-on wall gives the model no
+  depth cue; three-quarter gives it geometry to work with.
 
 FAIL if the negative prompt does not exclude the wrong-genre vocabulary.
 
@@ -105,19 +120,63 @@ which is the word we WANT. Use `\b(polished|pristine|...)\b` and check the
 positive prompts only - these terms belong in `negativePrompt`, where their
 presence is correct rather than a violation.
 
+**When a model gets a specific detail wrong, correct the reference, not the
+prompt.** If it presses the wrong button on a remote, add a red arrow to the
+prop sheet pointing at the right one and re-upload. Arguing with the prompt
+costs a generation each time; fixing the reference fixes it once.
+
 ## 5. The negative prompt does real work
 
 Every generation prompt carries a negative prompt that excludes the failure
 modes above. Minimum for documentary/DIY content:
 
-```
+```text
 cinematic color grading, golden hour, lens flare, drone shot, aerial view,
 slow motion, time-lapse, modern machinery, power tools, architectural glass,
 designer interior, polished, glossy, oversaturated, film trailer look,
 text overlay, watermark, multiple people
 ```
 
-## 6. Prove the look on ONE shot before generating the set
+## 6. Prove the reference holds before committing to the run
+
+**What went wrong:** fourteen shots were generated against a character
+reference that had never been verified. One came back with a different
+person's hands and a different environment. Cost: 20 credits to discover,
+20 more to fix.
+
+**Rule:** before generating any shot, run the **drift test**:
+
+1. Generate 5-10 cheap sample images from the reference pack, in varied
+   settings ("the character in a forest", "the character indoors").
+2. Compare each against the master with `runDriftTest` in
+   `src/qa/identity.ts`.
+3. Identity holds across all samples → commit to the full run.
+4. Identity drifts → regenerate the reference with more distinctive,
+   reproducible detail. Do NOT start the run.
+
+The test costs about one credit. The mistake it catches costs the price of
+every shot generated against a reference that was never going to work.
+
+Applies whenever the reference changes - a new character, a new outfit, a
+new model.
+
+## 7. A clip can drift within itself
+
+A generation can start on-model and end as someone else. Every check in the
+pipeline looked at the start frame, so nothing would ever have seen it.
+
+**Rule:** machine QA compares the **last frame to the first** on any shot
+containing the character (`checkIdentityDrift: true` in `runMachineQa`).
+
+A low score WARNS for human review; it never triggers a paid retry on its
+own - this tier does not spend (architecture section 15). Perceptual hashing
+cannot prove two faces are the same person, only that the frame changed a
+lot, so the human decides.
+
+**Keep clips short.** Four to six seconds drifts less than ten. A long video
+is many short clips, not a few long ones. Do not stretch a shot to fill time.
+
+## 8. Prove the look on ONE shot before generating the set
 
 **What went wrong:** three shots were generated on an unvalidated style, and
 all three had the same defects.
@@ -132,12 +191,14 @@ one.
 Before any paid generation, read `planning/continuity.json` and
 `planning/storyboard.json` and check:
 
-1. Does a character reference image exist, and does the chosen model accept
-   `image_references`?
-2. Does any prompt compress time inside a single shot?
-3. Does the camera/light vocabulary match the stated genre?
-4. Do built objects read as handmade?
-5. Does every prompt carry a negative prompt excluding wrong-genre terms?
-6. Has one shot been approved before the batch?
+1. Does a six-image character reference pack exist, and does the chosen
+   model accept `image_references`?
+2. Has the drift test been run against that pack, and did it hold?
+3. Does any prompt compress time inside a single shot?
+4. Does the camera/light vocabulary match the stated genre?
+5. Do built objects read as handmade?
+6. Does every prompt carry a negative prompt excluding wrong-genre terms?
+7. Is `checkIdentityDrift` enabled for shots containing the character?
+8. Has one shot been approved before the batch?
 
 Any FAIL blocks generation. These mistakes cost real credits the first time.
