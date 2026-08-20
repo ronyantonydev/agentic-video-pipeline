@@ -20,6 +20,7 @@ import { setShotStatus } from '../state/store.js';
 import { paths } from '../state/paths.js';
 import { pollUntilSettled, isChargeableOutcome, PollTimeout } from './poller.js';
 import { validateShotAnchors } from '../qa/anchor.js';
+import { assertReferencesVerified } from '../qa/reference-gate.js';
 import { log } from '../util/logger.js';
 import { HardStop, ValidationError } from '../util/errors.js';
 import type { GenerationProvider } from '../higgsfield/provider.js';
@@ -35,6 +36,11 @@ export type GenerateOptions = {
   validateAnchors?: boolean;
   /** Character master, so anchors can be checked for identity drift. */
   characterMasterPath?: string;
+  /**
+   * Require a passing reference check before generating. Defaults to on.
+   * Turning it off means generating against references nothing verified.
+   */
+  requireVerifiedReferences?: boolean;
   stopOnCreditsBelow?: number;
   poll: {
     initialDelayMs: number;
@@ -86,7 +92,16 @@ export async function generateShot(
     settings: item.settings,
   });
 
-  // 0a. Validate the anchors BEFORE spending on video.
+  // 0a. The reference gate. Refuses to proceed unless a passing reference
+  // check exists on disk - the same shape as the cost gate, and for the same
+  // reason: an instruction Claude may skip is not a guarantee.
+  //
+  // Both failures on this project were reference problems, 20 credits each.
+  if (opts.requireVerifiedReferences !== false) {
+    assertReferencesVerified(project);
+  }
+
+  // 0b. Validate the anchors BEFORE spending on video.
   //
   // A video model given a start and end frame fills in the middle, so a bad
   // anchor guarantees a bad clip. An image costs 0.12 credits; the clip it
@@ -116,7 +131,7 @@ export async function generateShot(
     }
   }
 
-  // 0b. Never pay twice for an identical asset (section 22).
+  // 0c. Never pay twice for an identical asset (section 22).
   const reusable = findReusable(project, assetHash);
   if (reusable) {
     log.info(`${item.shotId}: reusing paid asset ${assetHash}`);

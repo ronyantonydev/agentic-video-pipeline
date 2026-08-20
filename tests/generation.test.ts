@@ -19,6 +19,10 @@ const PROJECT = 'gen-test';
 
 const OPTS = {
   maxSingleCallUSD: 3,
+  // These tests exercise the spend sequence - budget, manifest, recovery -
+  // not the reference gate, which has its own suite. Opting out explicitly
+  // keeps each test about one thing.
+  requireVerifiedReferences: false,
   poll: { initialDelayMs: 1, maxDelayMs: 5, backoffFactor: 2, timeoutMs: 5000, sleep: async () => {} },
 };
 

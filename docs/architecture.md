@@ -59,20 +59,22 @@ in `src/`.
 
 ## 2. Pipeline stages
 
-Thirty ordered stages in `src/schemas/state.ts`. Order matters — resume
+Thirty-one ordered stages in `src/schemas/state.ts`. Order matters — resume
 compares indexes, so a gate provably precedes the work it guards.
 
 ```text
 init → story → music → beat-grid → progression → continuity → shotlist
      → storyboard → edit-plan → motion-lint-1 → generation-plan
      → cost-estimate → 🛑 gate-cost
-     → references → target-frames → contact-sheet → 🛑 gate-look
+     → references → 🔒 reference-check → target-frames → contact-sheet → 🛑 gate-look
      → generate-shots → normalize → qa-machine → qa-vision → 🛑 review
      → motion-lint-2 → audio-finalize → render → upscale → thumbnail
      → qa-final → report → done
 ```
 
-Three human gates. Motion lint runs twice — once on the plan, once after
+Three human gates (🛑) plus one automatic gate (🔒 reference-check, which
+refuses to proceed unless references have been verified). Motion lint runs
+twice — once on the plan, once after
 fallbacks — because each fallback looks reasonable alone while three together
 produce a slideshow.
 
@@ -231,10 +233,46 @@ video came back with green summer ferns — a 20-credit retry that a
 something to draw twice. Body shots must still show the face — cropping the
 head stops the reference teaching identity at all.
 
-**The drift test gates the run.** Before committing to a full set of shots,
-generate 5–10 cheap samples from the character pack and check identity holds
-(`runDriftTest` in `src/qa/identity.ts`). About one credit to find out
-whether a reference works; 250 to discover it afterwards.
+### The reference gate
+
+**Enforced in code, not by instruction.** `generateShot` calls
+`assertReferencesVerified` before it prices or reserves anything, and refuses
+to proceed unless a passing `reference-check.json` exists on disk.
+
+This is the same shape as the cost gate: code holds the checkpoint, the human
+or Claude does the work behind it. The distinction matters because an
+instruction in a skill file is followed *most* of the time, which is the
+wrong bar when each miss costs 20 credits — and both real failures on this
+project were reference problems.
+
+```text
+Claude generates references     ← only Claude can; MCP is not reachable from code
+   ↓
+checkReferences()               ← free: hashing and FFmpeg, locally
+   ↓
+reference-check.json written
+   ↓
+🔒 generateShot refuses unless that file exists and passes
+```
+
+**Blocks:** no character reference, a corrupt or blank reference image, a
+failed drift test.
+**Warns:** fewer than six images, missing environment or style sheet, drift
+test not run.
+
+The split reflects what is actually fatal. A missing environment sheet
+degrades consistency; a broken character reference poisons every shot that
+uses it.
+
+**The drift test.** Generate 5–10 cheap samples from the character pack and
+check identity holds (`runDriftTest` in `src/qa/identity.ts`). About one
+credit to find out whether a reference works; 250 to discover it afterwards.
+Its result is recorded in the gate file, so a failed test blocks the run
+rather than merely warning.
+
+**Escape hatch:** `requireVerifiedReferences: false` exists for tests and for
+shots with no character, but it must be passed deliberately — the default is
+on.
 
 **Reuse across videos is where this compounds.** The character and style
 sheets are not per-video assets. Same person in a new story means reusing the

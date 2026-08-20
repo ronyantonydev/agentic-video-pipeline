@@ -30,6 +30,7 @@ export const STAGES = [
   'cost-estimate',
   'gate-cost',
   'references',
+  'reference-check',
   'target-frames',
   'contact-sheet',
   'gate-look',
