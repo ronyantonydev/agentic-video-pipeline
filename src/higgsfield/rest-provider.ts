@@ -224,26 +224,68 @@ export class RestProvider implements GenerationProvider {
 
   /* ------------------------------------------------------------ helpers */
 
+  /**
+   * HTTP with retry on transient transport failures.
+   *
+   * Observed in practice: an intermittent
+   * ERR_SSL_INVALID_SESSION_ID from the TLS handshake, which aborts the
+   * request before it reaches the server. A submit that dies this way has
+   * not created a job, so retrying is safe and does not risk double billing.
+   *
+   * HTTP responses are never retried here - a 4xx is a real answer, and a
+   * 5xx is surfaced to the caller as a retryable ProviderError so the
+   * decision stays where the job id is known.
+   */
   private async fetchJson(
     url: string,
     init: RequestInit,
+    attempts = 3,
   ): Promise<{ ok: boolean; status: number; body: unknown }> {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), this.timeoutMs);
-    try {
-      const res = await fetch(url, { ...init, signal: controller.signal });
-      const text = await res.text();
-      let body: unknown;
+    let lastError: Error | undefined;
+
+    for (let attempt = 1; attempt <= attempts; attempt++) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), this.timeoutMs);
       try {
-        body = JSON.parse(text);
-      } catch {
-        body = { detail: text.slice(0, 300) };
+        const res = await fetch(url, { ...init, signal: controller.signal });
+        const text = await res.text();
+        let body: unknown;
+        try {
+          body = JSON.parse(text);
+        } catch {
+          body = { detail: text.slice(0, 300) };
+        }
+        return { ok: res.ok, status: res.status, body };
+      } catch (err) {
+        lastError = err as Error;
+        if (controller.signal.aborted) {
+          throw new ProviderError(`Request to ${url} timed out after ${this.timeoutMs}ms`);
+        }
+        if (attempt < attempts) {
+          const backoffMs = 500 * 2 ** (attempt - 1);
+          log.warn(
+            `Transport error (attempt ${attempt}/${attempts}), retrying in ${backoffMs}ms: ` +
+              `${describeTransportError(err)}`,
+          );
+          await new Promise((r) => setTimeout(r, backoffMs));
+        }
+      } finally {
+        clearTimeout(timer);
       }
-      return { ok: res.ok, status: res.status, body };
-    } finally {
-      clearTimeout(timer);
     }
+
+    throw new ProviderError(
+      `Request to ${url} failed after ${attempts} attempts: ` +
+        `${describeTransportError(lastError)}`,
+      undefined,
+      true,
+    );
   }
+}
+
+function describeTransportError(err: unknown): string {
+  const cause = (err as { cause?: { code?: string } } | undefined)?.cause;
+  return cause?.code ?? (err as Error | undefined)?.message ?? 'unknown';
 }
 
 /** Map the API's vocabulary onto ours. Note "canceled" - US spelling. */
