@@ -22,7 +22,8 @@ import { readJsonIfExists, writeJsonAtomic } from '../util/atomic.js';
 import { paths } from '../state/paths.js';
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 export type CostSource = 'estimate-api' | 'learned' | 'catalogue' | 'config' | 'none';
 
@@ -304,17 +305,30 @@ function scaleByDuration(baseCredits: number, q: CostQuery): number {
   return Math.ceil(baseCredits * factor * 1000) / 1000;
 }
 
-/** Raw config read, for the restApi block the typed schema does not cover. */
+/**
+ * Raw config read, for the restApi block the typed schema does not cover.
+ *
+ * Resolved relative to this module rather than cwd: the config ships with
+ * the code, and a run invoked from another directory must still find it.
+ */
 function loadModelsRaw(): {
   restApi?: { models?: { slug: string; baseCredits: number }[] };
 } | null {
-  try {
-    return JSON.parse(
-      readFileSync(resolve(process.cwd(), 'config', 'models.json'), 'utf8'),
-    ) as { restApi?: { models?: { slug: string; baseCredits: number }[] } };
-  } catch {
-    return null;
+  const moduleDir = dirname(fileURLToPath(import.meta.url));
+  const candidates = [
+    resolve(process.cwd(), 'config', 'models.json'),
+    resolve(moduleDir, '..', '..', 'config', 'models.json'),
+  ];
+  for (const path of candidates) {
+    try {
+      return JSON.parse(readFileSync(path, 'utf8')) as {
+        restApi?: { models?: { slug: string; baseCredits: number }[] };
+      };
+    } catch {
+      // Try the next candidate.
+    }
   }
+  return null;
 }
 
 function findConfiguredCost(cfg: ModelsConfig, modelId: string): number | null {
