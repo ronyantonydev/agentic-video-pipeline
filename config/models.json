@@ -1,0 +1,185 @@
+{
+  "_comment": [
+    "Real Higgsfield model IDs, verified against models_explore on 2026-08-20.",
+    "costCredits is null until measured. Cost is resolved at runtime in this order:",
+    "  1. Higgsfield estimate endpoint (exact, authoritative)",
+    "  2. Learned cost from a prior identical config (measured via balance delta)",
+    "  3. sanityRangeCredits below (published third-party ranges, guard only)",
+    "A null costCredits NEVER becomes a silent assumption - see src/budget."
+  ],
+
+  "creditToUsd": {
+    "rate": 0.0627,
+    "source": "docs example: 1.500 credits = $0.094",
+    "verified": false,
+    "_comment": "Overwritten by the first estimate-endpoint response, which returns both units."
+  },
+
+  "sanityRangeCredits": {
+    "_comment": "If an estimate falls outside these bands, flag it rather than spend.",
+    "image": { "min": 0.25, "max": 8 },
+    "videoBudget": { "min": 10, "max": 30 },
+    "videoPremium": { "min": 30, "max": 80 },
+    "audio": { "min": 0.5, "max": 20 }
+  },
+
+  "video": [
+    {
+      "id": "veo3_1_lite",
+      "provider": "Google",
+      "name": "Veo 3.1 Lite",
+      "qualityTier": "budget",
+      "costCredits": null,
+      "durationMode": "discrete",
+      "allowedDurations": [4, 6, 8],
+      "supportsStartFrame": true,
+      "supportsEndFrame": true,
+      "supportsStartEndFrames": true,
+      "supportsNativeAudio": true,
+      "nativeAudioDefault": false,
+      "maxResolution": "1080p",
+      "aspectRatios": ["16:9", "9:16", "auto"],
+      "fps": 24,
+      "enabled": true,
+      "useFor": ["supporting", "fallback-motion"]
+    },
+    {
+      "id": "seedance1_5",
+      "provider": "Bytedance",
+      "name": "Seedance 1.5 Pro",
+      "qualityTier": "standard",
+      "costCredits": null,
+      "durationMode": "discrete",
+      "allowedDurations": [4, 8, 12],
+      "supportsStartFrame": true,
+      "supportsEndFrame": true,
+      "supportsStartEndFrames": true,
+      "supportsNativeAudio": true,
+      "nativeAudioDefault": true,
+      "maxResolution": "1080p",
+      "aspectRatios": ["auto", "16:9", "9:16", "4:3", "3:4", "1:1", "21:9"],
+      "fps": 24,
+      "enabled": true,
+      "useFor": ["normal", "continuity-chain"]
+    },
+    {
+      "id": "kling3_0",
+      "provider": "Kling",
+      "name": "Kling v3.0",
+      "qualityTier": "quality",
+      "costCredits": null,
+      "durationMode": "range",
+      "durationRange": { "min": 3, "max": 15 },
+      "supportsStartFrame": true,
+      "supportsEndFrame": true,
+      "supportsStartEndFrames": true,
+      "supportsNativeAudio": true,
+      "nativeAudioDefault": true,
+      "maxResolution": "4k",
+      "aspectRatios": ["16:9", "9:16", "1:1"],
+      "fps": 24,
+      "modes": ["std", "pro", "4k"],
+      "enabled": true,
+      "useFor": ["anchor", "escalation"]
+    },
+    {
+      "id": "seedance_2_0",
+      "provider": "Bytedance",
+      "name": "Seedance 2.0",
+      "qualityTier": "quality",
+      "costCredits": 45,
+      "costSource": "measured from transaction history 2026-07-24 (settings unknown)",
+      "durationMode": "range",
+      "durationRange": { "min": 4, "max": 15 },
+      "supportsStartFrame": true,
+      "supportsEndFrame": true,
+      "supportsStartEndFrames": true,
+      "supportsNativeAudio": true,
+      "nativeAudioDefault": true,
+      "maxResolution": "4k",
+      "aspectRatios": ["auto", "16:9", "9:16", "4:3", "3:4", "1:1", "21:9"],
+      "fps": 24,
+      "modes": ["std", "fast"],
+      "enabled": true,
+      "useFor": ["anchor", "identity-consistent"]
+    }
+  ],
+
+  "image": [
+    {
+      "id": "nano_banana",
+      "provider": "Google",
+      "name": "Nano Banana",
+      "qualityTier": "budget",
+      "costCredits": null,
+      "supportsImageReferences": true,
+      "aspectRatios": ["1:1", "3:2", "2:3", "4:3", "3:4", "4:5", "5:4", "9:16", "16:9", "21:9"],
+      "enabled": true,
+      "useFor": ["references", "progression", "props"]
+    },
+    {
+      "id": "nano_banana_2",
+      "provider": "Google",
+      "name": "Nano Banana 2",
+      "qualityTier": "standard",
+      "costCredits": null,
+      "supportsImageReferences": true,
+      "resolutions": ["1k", "2k", "4k"],
+      "aspectRatios": ["1:1", "3:2", "2:3", "4:3", "3:4", "4:5", "5:4", "9:16", "16:9", "21:9"],
+      "enabled": true,
+      "useFor": ["start-frame", "end-target-frame"]
+    },
+    {
+      "id": "nano_banana_pro",
+      "provider": "Google",
+      "name": "Nano Banana Pro",
+      "qualityTier": "quality",
+      "costCredits": 2,
+      "costSource": "measured from transaction history 2026-07-23/24 (settings unknown)",
+      "supportsImageReferences": true,
+      "resolutions": ["1k", "2k", "4k"],
+      "aspectRatios": ["1:1", "3:2", "2:3", "4:3", "3:4", "4:5", "5:4", "9:16", "16:9", "21:9"],
+      "enabled": true,
+      "useFor": ["anchor-still", "thumbnail", "contact-sheet"]
+    },
+    {
+      "id": "cinematic_studio_2_5",
+      "provider": "Higgsfield",
+      "name": "Cinema Studio Image 2.5",
+      "qualityTier": "quality",
+      "costCredits": null,
+      "supportsImageReferences": true,
+      "resolutions": ["1k", "2k", "4k"],
+      "aspectRatios": ["1:1", "3:2", "2:3", "4:3", "3:4", "4:5", "5:4", "16:9", "9:16", "21:9"],
+      "enabled": false,
+      "useFor": ["cinematic-still"]
+    }
+  ],
+
+  "audio": [
+    {
+      "id": "higgsfield_audio",
+      "provider": "Higgsfield",
+      "name": "Higgsfield Audio",
+      "costCredits": null,
+      "enabled": true,
+      "useFor": ["music", "sfx", "ambience"],
+      "_comment": "Concrete audio model IDs are resolved at runtime; generate_audio is a multi-model endpoint."
+    }
+  ],
+
+  "selectionPolicy": {
+    "_comment": "Architecture section 8. Deliberately simple for v1.",
+    "normal": "seedance1_5",
+    "anchor": "kling3_0",
+    "supporting": "veo3_1_lite",
+    "escalationOrder": ["veo3_1_lite", "seedance1_5", "kling3_0", "seedance_2_0"],
+    "requireApprovalOnEscalation": true,
+    "_escalationNote": "Auto-switch is allowed only when it does not increase cost. Any switch to a pricier model stops and asks the human."
+  },
+
+  "knownIncompatible": {
+    "_comment": "Verified via models_explore. These CANNOT satisfy previous-shot continuity chaining.",
+    "startFrameOnly": ["kling2_6", "veo3", "kling3_0_turbo", "happy_horse_video", "grok_video"]
+  }
+}

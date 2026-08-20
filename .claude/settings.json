@@ -1,0 +1,51 @@
+{
+  "permissions": {
+    "defaultMode": "dontAsk",
+    "allow": [
+      "Bash",
+      "Edit",
+      "Write",
+      "WebFetch",
+      "WebSearch",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3001)",
+      "WebFetch(domain:localhost)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3001/en)",
+      "Bash(curl -sL http://localhost:3001/en)",
+      "Bash(grep -v '^$')",
+      "Bash(curl -sL http://localhost:3001/de)",
+      "Read(//private/tmp/**)",
+      "Bash(lsof -ti:3002)",
+      "Bash(xargs kill:*)",
+      "Bash(PORT=3002 npm run dev)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3002/en)",
+      "Bash(curl -sL --max-time 10 http://localhost:3001/en)",
+      "Bash(grep -oP '\\(?<=>\\)[^<]{10,}')",
+      "Bash(kill 3696 3860)",
+      "Bash(curl -s --max-time 5 -H 'Accept: text/html' http://localhost:3001/en)",
+      "Bash(curl -sL --max-time 5 http://localhost:3002/de)",
+      "Bash(curl -sL --max-time 5 http://localhost:3002/de/changelog)",
+      "Bash(curl -sL --max-time 5 http://localhost:3002/de/pricing)",
+      "Bash(curl -sL --max-time 5 http://localhost:3002/de/auth/login)",
+      "Bash(python3 -c \":*)",
+      "Bash(curl -sL --max-time 5 http://localhost:3002/de/auth/register)",
+      "Bash(curl -sL --max-time 5 http://localhost:3002/en)",
+      "Bash(git reset:*)",
+      "Bash(git checkout:*)",
+      "Bash(echo \"Exit: $?\")",
+      "Bash(find /Users/luxomattic/Developer/worqable/internal/qrabl/supabase/seed* -type f)",
+      "Bash(find /Users/luxomattic/Developer/worqable/internal/qrabl/supabase/seed* -type f)",
+      "mcp__claude_ai_Higgsfield__balance",
+      "mcp__claude_ai_Higgsfield__models_explore",
+      "mcp__claude_ai_Higgsfield__show_plans_and_credits",
+      "mcp__claude_ai_Higgsfield__job_status",
+      "mcp__claude_ai_Higgsfield__jobs_wait",
+      "mcp__claude_ai_Higgsfield__show_generation_by_ids",
+      "mcp__claude_ai_Higgsfield__show_generations",
+      "mcp__claude_ai_Higgsfield__transactions"
+    ],
+    "additionalDirectories": [
+      "/private/tmp",
+      "/Users/luxomattic/Developer/worqable/internal/qrabl/.git"
+    ]
+  }
+}

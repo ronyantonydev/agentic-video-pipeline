@@ -1,0 +1,72 @@
+{
+  "_comment": "Motion-ratio and QA thresholds. Architecture sections 15 and 18.",
+
+  "motionRatio": {
+    "_comment": "Cost optimisation must not produce a slideshow. Linted twice: after edit planning, and again after fallbacks.",
+    "minRealMotionRatio": 0.55,
+    "maxStillDurationSeconds": 3.0,
+    "maxConsecutiveNonMotionShots": 2,
+    "openingMustBeMotion": true,
+    "closingMustBeMotion": true
+  },
+
+  "continuity": {
+    "maxChainLength": 5,
+    "warnOnChainLengthAbove": 3,
+    "_comment": "Long previous-shot chains accumulate visual drift. Warning, not a hard failure."
+  },
+
+  "machineQa": {
+    "_comment": "Tier 1. Free, deterministic, runs before any paid retry decision.",
+    "durationTolerancePercent": 5,
+    "maxBlackFrameRatio": 0.10,
+    "blackFrameLumaThreshold": 0.10,
+    "frozenFrameSimilarityThreshold": 0.995,
+    "maxFrozenRunSeconds": 1.5,
+    "requireAudioWhenExpected": true,
+    "allowedFpsDeviation": 1,
+    "requireExactResolution": true
+  },
+
+  "visionQa": {
+    "_comment": "Tier 2. Flags problems only - never autonomously spends retry credits in v1.",
+    "framesPerShot": 5,
+    "frameSamplingStrategy": "even",
+    "checks": [
+      "matches-intent",
+      "correct-character",
+      "correct-wardrobe",
+      "correct-environment",
+      "progression-plausible",
+      "no-severe-morphing",
+      "no-anatomy-failure",
+      "object-consistency",
+      "start-frame-similarity",
+      "end-target-similarity"
+    ],
+    "autoSpendOnRetry": false
+  },
+
+  "failureClasses": [
+    "prompt-issue",
+    "bad-random-generation",
+    "model-capability-issue",
+    "continuity-issue",
+    "unusable"
+  ],
+
+  "finalQa": {
+    "_comment": "Report only. Never triggers paid regeneration. Architecture section 29.",
+    "reportOnly": true,
+    "checks": [
+      "runtime",
+      "resolution",
+      "fps",
+      "audio-presence",
+      "black-frames",
+      "render-corruption",
+      "motion-ratio",
+      "suspicious-shots"
+    ]
+  }
+}

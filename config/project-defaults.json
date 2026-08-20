@@ -1,0 +1,48 @@
+{
+  "_comment": "Locked at project init and never changed mid-project. Architecture section 26.",
+
+  "video": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "colorspace": "bt709",
+    "pixelFormat": "yuv420p",
+    "aspectRatio": "16:9"
+  },
+
+  "audio": {
+    "sampleRate": 48000,
+    "channels": 2,
+    "codec": "aac",
+    "bitrate": "192k",
+    "targetLoudnessLufs": -14
+  },
+
+  "encoding": {
+    "videoCodec": "libx264",
+    "crf": 18,
+    "preset": "medium"
+  },
+
+  "budget": {
+    "maxBudgetUSD": 20,
+    "maxSingleCallUSD": 3,
+    "stopOnCreditsBelow": 50
+  },
+
+  "execution": {
+    "maxConcurrency": 3,
+    "jobTimeoutSeconds": 900,
+    "pollInitialDelayMs": 5000,
+    "pollMaxDelayMs": 60000,
+    "pollBackoffFactor": 1.5,
+    "maxRetriesPerShot": 2
+  },
+
+  "proof": {
+    "_comment": "Architecture section 25. Real models, real quality, tiny scope.",
+    "targetDurationSeconds": 15,
+    "shotCount": 3,
+    "useProductionModels": true
+  }
+}
