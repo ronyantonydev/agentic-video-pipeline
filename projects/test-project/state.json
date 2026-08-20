@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "projectName": "test-project",
+  "createdAt": "2026-08-20T03:31:29.280Z",
+  "updatedAt": "2026-08-20T03:31:29.285Z",
+  "idea": "a man builds an underground house",
+  "mode": "full",
+  "stage": "init",
+  "completedStages": [],
+  "gates": {
+    "cost": {
+      "status": "not-reached"
+    },
+    "look": {
+      "status": "not-reached"
+    },
+    "review": {
+      "status": "not-reached"
+    }
+  },
+  "budget": {
+    "maxBudgetUSD": 20,
+    "spentUSD": 0,
+    "reservedUSD": 0,
+    "creditsStart": null,
+    "creditsUsed": 0,
+    "creditsRemaining": null
+  },
+  "projectSettings": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "colorspace": "bt709",
+    "aspectRatio": "16:9"
+  },
+  "shots": {},
+  "warnings": []
+}

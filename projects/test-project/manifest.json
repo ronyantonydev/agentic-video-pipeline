@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "projectName": "test-project",
+  "entries": [
+    {
+      "assetHash": "1a69b83c0f8aee62",
+      "shotId": "shot_001",
+      "kind": "video",
+      "provider": "Kling",
+      "model": "kling3_0",
+      "prompt": "digging",
+      "settings": {},
+      "submittedAt": "2026-08-20T03:31:11.262Z",
+      "estimatedCredits": 45,
+      "estimatedUSD": 2.82,
+      "actualCredits": null,
+      "actualUSD": null,
+      "status": "submitted",
+      "accepted": null
+    },
+    {
+      "assetHash": "aaaaaaaaaaaaaaaa",
+      "shotId": "shot_001",
+      "kind": "video",
+      "provider": "Kling",
+      "model": "kling3_0",
+      "prompt": "digging",
+      "settings": {},
+      "submittedAt": "2026-08-20T03:31:11.314Z",
+      "estimatedCredits": 45,
+      "estimatedUSD": 2.82,
+      "actualCredits": null,
+      "actualUSD": null,
+      "status": "completed",
+      "accepted": null
+    },
+    {
+      "assetHash": "bbbbbbbbbbbbbbbb",
+      "shotId": "shot_002",
+      "kind": "video",
+      "provider": "Kling",
+      "model": "kling3_0",
+      "prompt": "digging",
+      "settings": {},
+      "submittedAt": "2026-08-20T03:31:11.314Z",
+      "estimatedCredits": 45,
+      "estimatedUSD": 2.82,
+      "actualCredits": null,
+      "actualUSD": null,
+      "status": "submitted",
+      "accepted": null
+    }
+  ]
+}
