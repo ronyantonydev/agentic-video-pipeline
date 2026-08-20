@@ -21,6 +21,7 @@ code resolves to a rule stated here.
 4. [Budget protection](#4-budget-protection)
 5. [Cost resolution](#5-cost-resolution)
 6. [Planning artifacts](#6-planning-artifacts)
+   - [Reference sheets](#6a-reference-sheets)
 7. [Continuity and scheduling](#7-continuity-and-scheduling)
 8. [Quality assurance](#8-quality-assurance)
 9. [Gates and resumability](#9-gates-and-resumability)
@@ -205,6 +206,47 @@ Discrete models snap **up** to the next allowed value; range models clamp to
 their floor. Rounding down is forbidden — it would leave the edit short of
 footage it already planned for. A sweep test asserts
 `billableSeconds >= requiredSeconds` across every model shape.
+
+---
+
+## 6a. Reference sheets
+
+Generated once, reused by every shot. About **one credit** for a full set,
+against ~20 credits for a single clip.
+
+| Sheet | Contents | Regenerate when |
+|---|---|---|
+| **Character pack** | 6 images — 3 face angles, 3 body angles, grey background | the person or outfit changes |
+| **Environment** | one image per location, correct season and light | a new location appears |
+| **Props** | front + three-quarter per recurring object | a new object appears |
+| **Style** | one image carrying grade, grain, mood | the channel's look changes |
+
+**Why they exist.** Without a sheet, each shot re-describes its subject in
+text and the model reinvents it. That is how one shot in a bare-winter-forest
+video came back with green summer ferns — a 20-credit retry that a
+0.12-credit environment sheet would have prevented.
+
+**Character detail must be reproducible.** "Weathered jacket" is unusable;
+"torn left cuff, grey thermal collar, mud at the knees" gives the model
+something to draw twice. Body shots must still show the face — cropping the
+head stops the reference teaching identity at all.
+
+**The drift test gates the run.** Before committing to a full set of shots,
+generate 5–10 cheap samples from the character pack and check identity holds
+(`runDriftTest` in `src/qa/identity.ts`). About one credit to find out
+whether a reference works; 250 to discover it afterwards.
+
+**Reuse across videos is where this compounds.** The character and style
+sheets are not per-video assets. Same person in a new story means reusing the
+pack at no cost, and the character looks identical across episodes.
+
+**`image_references` is free.** Verified against the live API: a Seedance
+generation costs 12.5 credits with the six-image pack attached and 12.5
+without. There is no reason to omit it.
+
+Claude generates these directly with `generate_image` — there is no CLI
+command, because the user types an idea and Claude does the rest. The
+`make-video` and `grill-video` skills carry the instruction.
 
 ---
 
