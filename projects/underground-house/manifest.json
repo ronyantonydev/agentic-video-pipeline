@@ -1,5 +1,213 @@
 {
   "version": 1,
   "projectName": "underground-house",
-  "entries": []
+  "entries": [
+    {
+      "assetHash": "a42cfa2494f77590",
+      "shotId": "shot_001",
+      "kind": "image",
+      "provider": "higgsfield-mcp",
+      "model": "soul_2",
+      "prompt": "aerial dawn hillside",
+      "settings": {
+        "role": "start",
+        "aspect_ratio": "16:9",
+        "quality": "2k"
+      },
+      "jobId": "804017ad-c8a1-4a06-bf34-8a818d4df4dd",
+      "submittedAt": "2026-08-20T06:25:40.887Z",
+      "completedAt": "2026-08-20T06:25:40.887Z",
+      "estimatedCredits": 0.12,
+      "estimatedUSD": 0.01,
+      "actualCredits": 0.12,
+      "actualUSD": 0.01,
+      "status": "completed",
+      "localFile": "/Users/ronyantony/Desktop/Workspace/RonyDev/agentic-video-pipeline/projects/underground-house/shots/shot_001/start.png",
+      "accepted": null
+    },
+    {
+      "assetHash": "415a930cb4affb24",
+      "shotId": "shot_001",
+      "kind": "image",
+      "provider": "higgsfield-mcp",
+      "model": "soul_2",
+      "prompt": "aerial dawn hillside warmer",
+      "settings": {
+        "role": "end",
+        "aspect_ratio": "16:9",
+        "quality": "2k"
+      },
+      "jobId": "a2e610c6-c20c-4bf9-9a79-2f2d9b97a454",
+      "submittedAt": "2026-08-20T06:25:40.887Z",
+      "completedAt": "2026-08-20T06:25:40.887Z",
+      "estimatedCredits": 0.12,
+      "estimatedUSD": 0.01,
+      "actualCredits": 0.12,
+      "actualUSD": 0.01,
+      "status": "completed",
+      "localFile": "/Users/ronyantony/Desktop/Workspace/RonyDev/agentic-video-pipeline/projects/underground-house/shots/shot_001/end_target.png",
+      "accepted": null
+    },
+    {
+      "assetHash": "00d40cb8476ee1bf",
+      "shotId": "shot_008",
+      "kind": "image",
+      "provider": "higgsfield-mcp",
+      "model": "soul_2",
+      "prompt": "man waist-deep in pit",
+      "settings": {
+        "role": "start",
+        "aspect_ratio": "16:9",
+        "quality": "2k"
+      },
+      "jobId": "86285b25-e6f0-4665-8a08-754ee426591b",
+      "submittedAt": "2026-08-20T06:25:40.887Z",
+      "completedAt": "2026-08-20T06:25:40.887Z",
+      "estimatedCredits": 0.12,
+      "estimatedUSD": 0.01,
+      "actualCredits": 0.12,
+      "actualUSD": 0.01,
+      "status": "completed",
+      "localFile": "/Users/ronyantony/Desktop/Workspace/RonyDev/agentic-video-pipeline/projects/underground-house/shots/shot_008/start.png",
+      "accepted": null
+    },
+    {
+      "assetHash": "c835b313aaf06079",
+      "shotId": "shot_008",
+      "kind": "image",
+      "provider": "higgsfield-mcp",
+      "model": "soul_2",
+      "prompt": "man in deeper pit",
+      "settings": {
+        "role": "end",
+        "aspect_ratio": "16:9",
+        "quality": "2k"
+      },
+      "jobId": "39aa9ba1-ec17-46d6-8337-7f80ee95eda3",
+      "submittedAt": "2026-08-20T06:25:40.887Z",
+      "completedAt": "2026-08-20T06:25:40.887Z",
+      "estimatedCredits": 0.12,
+      "estimatedUSD": 0.01,
+      "actualCredits": 0.12,
+      "actualUSD": 0.01,
+      "status": "completed",
+      "localFile": "/Users/ronyantony/Desktop/Workspace/RonyDev/agentic-video-pipeline/projects/underground-house/shots/shot_008/end_target.png",
+      "accepted": null
+    },
+    {
+      "assetHash": "c8ecd74283024661",
+      "shotId": "shot_014",
+      "kind": "image",
+      "provider": "higgsfield-mcp",
+      "model": "soul_2",
+      "prompt": "lit window in hillside",
+      "settings": {
+        "role": "start",
+        "aspect_ratio": "16:9",
+        "quality": "2k"
+      },
+      "jobId": "dcb4afb8-6cdd-4ebd-9d58-ed44ef67e09a",
+      "submittedAt": "2026-08-20T06:25:40.887Z",
+      "completedAt": "2026-08-20T06:25:40.887Z",
+      "estimatedCredits": 0.12,
+      "estimatedUSD": 0.01,
+      "actualCredits": 0.12,
+      "actualUSD": 0.01,
+      "status": "completed",
+      "localFile": "/Users/ronyantony/Desktop/Workspace/RonyDev/agentic-video-pipeline/projects/underground-house/shots/shot_014/start.png",
+      "accepted": null
+    },
+    {
+      "assetHash": "0e438f88b9fff892",
+      "shotId": "shot_014",
+      "kind": "image",
+      "provider": "higgsfield-mcp",
+      "model": "soul_2",
+      "prompt": "lit window deeper dusk",
+      "settings": {
+        "role": "end",
+        "aspect_ratio": "16:9",
+        "quality": "2k"
+      },
+      "jobId": "e5978e53-c301-4cd3-adb0-36688f6bab80",
+      "submittedAt": "2026-08-20T06:25:40.887Z",
+      "completedAt": "2026-08-20T06:25:40.887Z",
+      "estimatedCredits": 0.12,
+      "estimatedUSD": 0.01,
+      "actualCredits": 0.12,
+      "actualUSD": 0.01,
+      "status": "completed",
+      "localFile": "/Users/ronyantony/Desktop/Workspace/RonyDev/agentic-video-pipeline/projects/underground-house/shots/shot_014/end_target.png",
+      "accepted": null
+    },
+    {
+      "assetHash": "256ea001aa166ccb",
+      "shotId": "shot_001",
+      "kind": "video",
+      "provider": "higgsfield-mcp",
+      "model": "kling3_0",
+      "prompt": "aerial dawn push",
+      "settings": {
+        "aspect_ratio": "16:9",
+        "sound": "off"
+      },
+      "jobId": "19b723a0-b61f-4a89-b291-7392ba931518",
+      "submittedAt": "2026-08-20T06:29:07.223Z",
+      "completedAt": "2026-08-20T06:29:07.223Z",
+      "billableDuration": 7,
+      "estimatedCredits": 10.5,
+      "estimatedUSD": 0.66,
+      "actualCredits": 10.5,
+      "actualUSD": 0.66,
+      "status": "completed",
+      "localFile": "/Users/ronyantony/Desktop/Workspace/RonyDev/agentic-video-pipeline/projects/underground-house/shots/shot_001/original.mp4",
+      "accepted": null
+    },
+    {
+      "assetHash": "97b9cb9568a881d2",
+      "shotId": "shot_008",
+      "kind": "video",
+      "provider": "higgsfield-mcp",
+      "model": "kling3_0",
+      "prompt": "man digging in pit",
+      "settings": {
+        "aspect_ratio": "16:9",
+        "sound": "off"
+      },
+      "jobId": "32dfb83f-7236-4acd-80fa-204f393f1028",
+      "submittedAt": "2026-08-20T06:29:07.223Z",
+      "completedAt": "2026-08-20T06:29:07.223Z",
+      "billableDuration": 8,
+      "estimatedCredits": 12,
+      "estimatedUSD": 0.75,
+      "actualCredits": 12,
+      "actualUSD": 0.75,
+      "status": "completed",
+      "localFile": "/Users/ronyantony/Desktop/Workspace/RonyDev/agentic-video-pipeline/projects/underground-house/shots/shot_008/original.mp4",
+      "accepted": null
+    },
+    {
+      "assetHash": "dd4afa136a1a24bf",
+      "shotId": "shot_014",
+      "kind": "video",
+      "provider": "higgsfield-mcp",
+      "model": "kling3_0",
+      "prompt": "push to lit window",
+      "settings": {
+        "aspect_ratio": "16:9",
+        "sound": "off"
+      },
+      "jobId": "3b3d0897-a3e3-49ae-b602-b45386dfb592",
+      "submittedAt": "2026-08-20T06:29:07.223Z",
+      "completedAt": "2026-08-20T06:29:07.223Z",
+      "billableDuration": 6,
+      "estimatedCredits": 9,
+      "estimatedUSD": 0.56,
+      "actualCredits": 9,
+      "actualUSD": 0.56,
+      "status": "completed",
+      "localFile": "/Users/ronyantony/Desktop/Workspace/RonyDev/agentic-video-pipeline/projects/underground-house/shots/shot_014/original.mp4",
+      "accepted": null
+    }
+  ]
 }

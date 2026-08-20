@@ -2,10 +2,10 @@
   "version": 1,
   "projectName": "underground-house",
   "createdAt": "2026-08-20T04:02:45.372Z",
-  "updatedAt": "2026-08-20T04:23:10.275Z",
+  "updatedAt": "2026-08-20T06:29:07.284Z",
   "idea": "A 90-second cinematic video of a man building an underground house",
   "mode": "full",
-  "stage": "references",
+  "stage": "qa-machine",
   "completedStages": [
     "init",
     "story",
@@ -32,11 +32,11 @@
   },
   "budget": {
     "maxBudgetUSD": 20,
-    "spentUSD": 0,
+    "spentUSD": 2.02,
     "reservedUSD": 0,
-    "creditsStart": null,
-    "creditsUsed": 0,
-    "creditsRemaining": null
+    "creditsStart": 1385,
+    "creditsUsed": 32.22,
+    "creditsRemaining": 1352.78
   },
   "projectSettings": {
     "width": 1920,
@@ -45,6 +45,19 @@
     "colorspace": "bt709",
     "aspectRatio": "16:9"
   },
-  "shots": {},
+  "shots": {
+    "shot_001": {
+      "status": "downloaded",
+      "attempts": 0
+    },
+    "shot_008": {
+      "status": "downloaded",
+      "attempts": 0
+    },
+    "shot_014": {
+      "status": "downloaded",
+      "attempts": 0
+    }
+  },
   "warnings": []
 }
