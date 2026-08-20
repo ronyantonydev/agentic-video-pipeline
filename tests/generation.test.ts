@@ -11,7 +11,8 @@ import { readManifest, findInFlight, totalSpend, appendEntry } from '../src/mani
 import { recordLearnedCost } from '../src/budget/cost.js';
 import { budgetSnapshot, recordCreditBaseline } from '../src/budget/guard.js';
 import { emptyState, type ManifestEntry } from '../src/schemas/state.js';
-import { HardStop } from '../src/util/errors.js';
+import { decideGate } from '../src/gates/gates.js';
+import { HardStop, GatePending } from '../src/util/errors.js';
 import type { GenerationItem } from '../src/schemas/planning.js';
 
 const SETTINGS = { width: 1920, height: 1080, fps: 30, colorspace: 'bt709', aspectRatio: '16:9' };
@@ -23,6 +24,9 @@ const OPTS = {
   // not the reference gate, which has its own suite. Opting out explicitly
   // keeps each test about one thing.
   requireVerifiedReferences: false,
+  // Likewise the human gates: their enforcement is pinned by
+  // 'refuses to generate on an unapproved gate' below and by gates.test.ts.
+  requireApprovedGates: false,
   poll: { initialDelayMs: 1, maxDelayMs: 5, backoffFactor: 2, timeoutMs: 5000, sleep: async () => {} },
 };
 
@@ -87,6 +91,51 @@ function makeFrame(name: string, hue = 0): string {
   ], { stdio: 'ignore' });
   return p;
 }
+
+describe('the human gates guard paid generation', () => {
+  // Regression: `requireApproval` was correct but unreachable - its only
+  // caller was an `assertGateApproved` wrapper that nothing invoked. A gate
+  // whose input stage never ran stayed 'not-reached' and was skipped, so
+  // oak-stool rendered and reported success with gate-look and review still
+  // not-reached, having spent real money. These tests keep the call wired.
+
+  it('refuses to generate on an unapproved gate, and spends nothing', async () => {
+    const provider = new FakeProvider({ stubMedia: true });
+    // Everything else is in order - only the gates are outstanding.
+    const opts = { ...OPTS, requireApprovedGates: true };
+
+    await expect(generateShot(PROJECT, item(), provider, opts)).rejects.toThrow(GatePending);
+
+    // The point of the gate is the money, not the status field.
+    expect(budgetSnapshot(PROJECT).spentUSD).toBe(0);
+    expect(budgetSnapshot(PROJECT).reservedUSD).toBe(0);
+    expect(readManifest(PROJECT).entries).toHaveLength(0);
+  }, 60_000);
+
+  it('still refuses when cost is approved but look is not', async () => {
+    // Gates are independent: clearing the cheap one must not unlock the rest.
+    decideGate(PROJECT, 'cost', 'approved', 'fits budget', 'system');
+    const provider = new FakeProvider({ stubMedia: true });
+
+    await expect(
+      generateShot(PROJECT, item(), provider, { ...OPTS, requireApprovedGates: true }),
+    ).rejects.toThrow(GatePending);
+    expect(budgetSnapshot(PROJECT).spentUSD).toBe(0);
+  }, 60_000);
+
+  it('proceeds once both gates are approved', async () => {
+    decideGate(PROJECT, 'cost', 'approved', 'fits budget', 'system');
+    decideGate(PROJECT, 'look', 'approved', 'looks right', 'system');
+    const provider = new FakeProvider({ stubMedia: true });
+
+    const r = await generateShot(
+      PROJECT, item(), provider, { ...OPTS, requireApprovedGates: true },
+    );
+
+    expect(r.reused).toBe(false);
+    expect(budgetSnapshot(PROJECT).spentUSD).toBeGreaterThan(0);
+  }, 120_000);
+});
 
 describe('generation sequence', () => {
   it('completes a shot and records it end to end', async () => {

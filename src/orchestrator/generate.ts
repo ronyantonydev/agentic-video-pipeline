@@ -21,6 +21,7 @@ import { paths } from '../state/paths.js';
 import { pollUntilSettled, isChargeableOutcome, PollTimeout } from './poller.js';
 import { validateShotAnchors } from '../qa/anchor.js';
 import { assertReferencesVerified } from '../qa/reference-gate.js';
+import { requireApproval } from '../gates/gates.js';
 import { log } from '../util/logger.js';
 import { HardStop, ValidationError } from '../util/errors.js';
 import type { GenerationProvider } from '../higgsfield/provider.js';
@@ -41,6 +42,13 @@ export type GenerateOptions = {
    * Turning it off means generating against references nothing verified.
    */
   requireVerifiedReferences?: boolean;
+  /**
+   * Require the cost and look gates to be approved. Defaults to on.
+   *
+   * Off only for tests and for `--proof`, where the point is to see the look
+   * before there is a look to approve.
+   */
+  requireApprovedGates?: boolean;
   stopOnCreditsBelow?: number;
   poll: {
     initialDelayMs: number;
@@ -99,6 +107,21 @@ export async function generateShot(
   // Both failures on this project were reference problems, 20 credits each.
   if (opts.requireVerifiedReferences !== false) {
     assertReferencesVerified(project);
+  }
+
+  // 0a-ii. The human gates.
+  //
+  // `requireApproval` existed and was correct, but nothing called it: the
+  // only caller was `assertGateApproved`, a wrapper that was itself never
+  // invoked. So a gate whose input stage never ran stayed 'not-reached' and
+  // was simply skipped. oak-stool rendered and reported success with both
+  // gate-look and review still not-reached, having spent real money.
+  //
+  // A gate that quietly stops guarding is worse than no gate, because the
+  // run still looks complete. Paid generation now refuses without them.
+  if (opts.requireApprovedGates !== false) {
+    requireApproval(project, 'cost');
+    requireApproval(project, 'look');
   }
 
   // 0b. Validate the anchors BEFORE spending on video.

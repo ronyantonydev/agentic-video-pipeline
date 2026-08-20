@@ -28,7 +28,7 @@ import { lintMotionRatio, formatLintResult } from '../planning/motion-lint.js';
 import {
   estimateGenerationPlan, renderCostEstimateMarkdown, writeCostEstimate,
 } from '../reports/cost-estimate.js';
-import { requestApproval, decideGate, requireApproval } from '../gates/gates.js';
+import { requestApproval, decideGate } from '../gates/gates.js';
 import { ValidationError } from '../util/errors.js';
 import { log } from '../util/logger.js';
 import type { GateNameT } from '../schemas/state.js';
@@ -444,7 +444,7 @@ export function cmdStatus(project: string): void {
 
 /* ------------------------------------------------------------------- guard */
 
-/** Used by generation stages to refuse work on an unapproved gate. */
-export function assertGateApproved(project: string, gate: GateNameT): void {
-  requireApproval(project, gate);
-}
+// The former `assertGateApproved` wrapper lived here and was called by
+// nothing, so the gates it was meant to enforce were never enforced.
+// `generateShot` now calls `requireApproval` directly, at the point where
+// money is actually about to move.

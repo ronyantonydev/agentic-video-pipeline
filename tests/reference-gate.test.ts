@@ -69,6 +69,10 @@ const item = (over: Partial<GenerationItem> = {}): GenerationItem => ({
 
 const OPTS = {
   maxSingleCallUSD: 3,
+  // This suite is about the REFERENCE gate. The human approval gates are a
+  // separate guard with their own coverage, so opt out to keep the subject
+  // of each test to one thing.
+  requireApprovedGates: false,
   poll: { initialDelayMs: 1, maxDelayMs: 5, backoffFactor: 2, timeoutMs: 5000, sleep: async () => {} },
 };
 
