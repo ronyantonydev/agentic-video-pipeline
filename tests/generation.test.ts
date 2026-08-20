@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { mkdtempSync, rmSync, existsSync, writeFileSync, mkdirSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { generateShot, recoverInFlight } from '../src/orchestrator/generate.js';
@@ -63,11 +64,23 @@ const item = (over: Partial<GenerationItem> = {}): GenerationItem => ({
   ...over,
 });
 
-/** Stub start/end frames, so image2video requirements can be satisfied. */
-function makeFrame(name: string): string {
+/**
+ * Real start/end frames.
+ *
+ * These were text stubs until anchor validation landed, which correctly
+ * rejected them as unreadable - a text file is exactly the sort of broken
+ * anchor the check exists to stop. `hue` varies the content so two frames
+ * hash differently, which is what the asset-identity assertions rely on.
+ */
+function makeFrame(name: string, hue = 0): string {
   const p = join(tmp, name);
-  mkdirSync(join(tmp), { recursive: true });
-  writeFileSync(p, `frame:${name}`);
+  mkdirSync(tmp, { recursive: true });
+  execFileSync('ffmpeg', [
+    '-v', 'error', '-y',
+    '-f', 'lavfi', '-i', `testsrc2=size=1280x720:rate=1`,
+    '-vf', `hue=h=${hue}`,
+    '-frames:v', '1', p,
+  ], { stdio: 'ignore' });
   return p;
 }
 
@@ -153,9 +166,8 @@ describe('generation sequence', () => {
 
   it('treats a changed start frame as a different asset', async () => {
     const provider = new FakeProvider({ stubMedia: true });
-    const frameA = makeFrame('a.png');
-    const frameB = makeFrame('b.png');
-    writeFileSync(frameB, 'different content');
+    const frameA = makeFrame('a.png', 0);
+    const frameB = makeFrame('b.png', 180);
 
     const a = await generateShot(PROJECT, item(), provider, OPTS, { startImage: frameA });
     const b = await generateShot(

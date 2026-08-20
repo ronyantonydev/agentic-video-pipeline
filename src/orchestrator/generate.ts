@@ -19,14 +19,22 @@ import {
 import { setShotStatus } from '../state/store.js';
 import { paths } from '../state/paths.js';
 import { pollUntilSettled, isChargeableOutcome, PollTimeout } from './poller.js';
+import { validateShotAnchors } from '../qa/anchor.js';
 import { log } from '../util/logger.js';
-import { HardStop } from '../util/errors.js';
+import { HardStop, ValidationError } from '../util/errors.js';
 import type { GenerationProvider } from '../higgsfield/provider.js';
 import type { GenerationItem } from '../schemas/planning.js';
 import type { ManifestEntry } from '../schemas/state.js';
 
 export type GenerateOptions = {
   maxSingleCallUSD: number;
+  /**
+   * Check the anchor images before submitting. Defaults to on - turning it
+   * off means knowingly spending on an unverified input.
+   */
+  validateAnchors?: boolean;
+  /** Character master, so anchors can be checked for identity drift. */
+  characterMasterPath?: string;
   stopOnCreditsBelow?: number;
   poll: {
     initialDelayMs: number;
@@ -78,7 +86,37 @@ export async function generateShot(
     settings: item.settings,
   });
 
-  // 0. Never pay twice for an identical asset (section 22).
+  // 0a. Validate the anchors BEFORE spending on video.
+  //
+  // A video model given a start and end frame fills in the middle, so a bad
+  // anchor guarantees a bad clip. An image costs 0.12 credits; the clip it
+  // feeds costs 20. Both real failures on this project - wrong hands on
+  // shot_006, summer foliage on shot_005 - were visible in the anchor and
+  // cost a full clip each to discover.
+  //
+  // This throws rather than warns: proceeding would knowingly spend 20
+  // credits on an input already known to be wrong.
+  if (opts.validateAnchors !== false && (frames.startImage || frames.endImage)) {
+    const anchors = await validateShotAnchors(frames.startImage, frames.endImage, {
+      ...(opts.characterMasterPath !== undefined
+        ? { masterPath: opts.characterMasterPath }
+        : {}),
+    });
+    if (!anchors.pass) {
+      setShotStatus(project, item.shotId, 'failed', {
+        failureClass: 'continuity-issue',
+        lastError: anchors.blockers.join('; '),
+      });
+      throw new ValidationError(
+        `${item.shotId}: anchor images failed validation, refusing to spend on video.\n  ` +
+          anchors.blockers.join('\n  '),
+        'anchor-validation',
+        anchors.blockers,
+      );
+    }
+  }
+
+  // 0b. Never pay twice for an identical asset (section 22).
   const reusable = findReusable(project, assetHash);
   if (reusable) {
     log.info(`${item.shotId}: reusing paid asset ${assetHash}`);
