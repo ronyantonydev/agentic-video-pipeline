@@ -2,10 +2,10 @@
   "version": 1,
   "projectName": "underground-house",
   "createdAt": "2026-08-20T04:02:45.372Z",
-  "updatedAt": "2026-08-20T07:58:54.853Z",
+  "updatedAt": "2026-08-20T08:03:31.734Z",
   "idea": "A 90-second cinematic video of a man building an underground house",
   "mode": "full",
-  "stage": "render",
+  "stage": "done",
   "completedStages": [
     "init",
     "story",
@@ -15,7 +15,11 @@
     "generation-plan",
     "gate-cost",
     "qa-machine",
-    "motion-lint-2"
+    "motion-lint-2",
+    "render",
+    "thumbnail",
+    "qa-final",
+    "report"
   ],
   "gates": {
     "cost": {

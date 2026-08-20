@@ -138,19 +138,20 @@ export async function frameLuminance(
  * shot under constant light - it says nothing about whether the frame has
  * content in it.
  */
-export async function frameContrast(file: string, sampleFps = 2): Promise<number[]> {
+export async function frameContrast(file: string, sampleFps?: number): Promise<number[]> {
   const env = loadEnv();
   try {
-    // No `key=` filter here: restricting metadata=print to a single key
-    // suppresses every other stat, and the spread needs two of them.
+    // An `fps` filter on a single-frame image yields nothing, so a still is
+    // measured without one. Passing fps=1 to a PNG silently returned an empty
+    // array, which made every thumbnail candidate score zero.
+    const filters = ['signalstats', 'metadata=print'];
+    if (sampleFps !== undefined) filters.unshift(`fps=${sampleFps}`);
+
+    // No `key=` filter: restricting metadata=print to a single key suppresses
+    // every other stat, and the spread needs two of them.
     const { stderr } = await exec(
       env.ffmpegBin,
-      [
-        '-v', 'info',
-        '-i', file,
-        '-vf', `fps=${sampleFps},signalstats,metadata=print`,
-        '-f', 'null', '-',
-      ],
+      ['-v', 'info', '-i', file, '-vf', filters.join(','), '-f', 'null', '-'],
       { maxBuffer: 64 * 1024 * 1024 },
     );
 

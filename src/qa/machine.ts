@@ -128,7 +128,7 @@ export async function runMachineQa(
     // padded can still read as having content. Run this check on the
     // ORIGINAL download where possible; on a padded file it can only catch a
     // clip that is blank edge to edge.
-    const contrast = await frameContrast(file);
+    const contrast = await frameContrast(file, 2);
     if (contrast.length === 0) {
       checks.push({ name: 'not-blank', status: 'unknown', detail: 'could not sample contrast' });
     } else {

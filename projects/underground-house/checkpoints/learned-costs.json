@@ -30,8 +30,40 @@
       "modelId": "seedance_2_0_mini",
       "credits": 20,
       "usd": 1.25,
-      "measuredAt": "2026-08-20T06:55:17.118Z",
-      "note": "measured 2026-08-20"
+      "measuredAt": "2026-08-20T08:02:52.520Z",
+      "note": "measured from transaction log 2026-08-20"
+    },
+    {
+      "configHash": "6034f229b359066b",
+      "modelId": "seedance_2_0_mini",
+      "credits": 10,
+      "usd": 0.63,
+      "measuredAt": "2026-08-20T08:02:52.602Z",
+      "note": "measured from transaction log 2026-08-20"
+    },
+    {
+      "configHash": "c15bee814e52b664",
+      "modelId": "seedance_2_0_mini",
+      "credits": 17.5,
+      "usd": 1.1,
+      "measuredAt": "2026-08-20T08:02:52.610Z",
+      "note": "measured from transaction log 2026-08-20"
+    },
+    {
+      "configHash": "7ea73004a2d38668",
+      "modelId": "seedance_2_0_mini",
+      "credits": 15,
+      "usd": 0.94,
+      "measuredAt": "2026-08-20T08:02:52.681Z",
+      "note": "measured from transaction log 2026-08-20"
+    },
+    {
+      "configHash": "379b6ac94e16ef18",
+      "modelId": "seedance_2_0_mini",
+      "credits": 12.5,
+      "usd": 0.78,
+      "measuredAt": "2026-08-20T08:02:52.692Z",
+      "note": "measured from transaction log 2026-08-20"
     }
   ]
 }
