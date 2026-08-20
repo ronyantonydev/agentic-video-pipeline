@@ -84,7 +84,38 @@ Every line should be green before you continue.
 
 ## Making a video
 
-### Start with the budget
+### The easy way: ask Claude
+
+```bash
+cd agentic-video-pipeline
+claude
+```
+
+```
+> make a video about restoring an old motorcycle
+```
+
+Two skills handle this, and they differ in how hard they interrogate you:
+
+| | Questions | Use it for |
+|---|---:|---|
+| **`make-video`** | 4 | a quick test |
+| **`grill-video`** | up to 20 | a video worth real money |
+
+`grill-video` covers genre, character, story, look, budget and
+cost-efficiency, shows the cost estimate moving as you answer, and argues
+with you when the runtime and the budget do not fit. Its last round exists
+purely to buy back budget — which shots need no character reference, which
+could be a still, whether it is all one location. That normally recovers
+15–25%.
+
+Both stop and wait for you to choose before anything is generated.
+
+Force one explicitly with `/make-video` or `/grill-video`.
+
+### Or drive it yourself, one command at a time
+
+#### Start with the budget
 
 ```bash
 npm run budget -- --budget 20 --runtime 90
@@ -106,7 +137,7 @@ This spends nothing. It tells you which model your money buys:
 The arrow marks the recommendation. Cheaper models are always shown, with
 what they cost you in quality.
 
-### Then create the project
+#### Then create the project
 
 ```bash
 npm run start
@@ -122,7 +153,7 @@ npm run start -- --idea "a man building an underground shelter" \
                  --runtime 90 --budget 20
 ```
 
-### Then plan, price, approve, generate
+#### Then plan, price, approve, generate
 
 Claude writes the planning JSON into `projects/<name>/planning/`. Each command
 below **validates** it and moves the run forward:

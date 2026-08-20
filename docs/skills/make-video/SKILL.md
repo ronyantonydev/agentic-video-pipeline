@@ -9,6 +9,11 @@ allowed-tools: [Bash, Read, Write, Edit, Glob, Grep]
 Interview, price, recommend, confirm, then build. Never generate before the
 user has picked an option and seen the number.
 
+**This is the quick path - four questions.** For a video worth real money,
+[[grill-video]] asks up to twenty and normally buys back 15-25% of the
+budget by finding cheaper ways to shoot the same thing. Offer it when the
+budget is above about $10, or when a person appears in several shots.
+
 ## 1. Interview
 
 Ask these four, one at a time. Do not assume answers - a wrong guess here
