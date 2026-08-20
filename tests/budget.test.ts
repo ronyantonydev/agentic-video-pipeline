@@ -209,7 +209,14 @@ describe('cost resolution', () => {
   });
 
   it('converts credits to USD at the configured rate', () => {
-    expect(creditsToUsd(45)).toBeCloseTo(2.82, 2);
+    // 0.0625 USD/credit, verified against POST /estimate on 2026-08-20 - every
+    // model returns both units and they agree exactly (2cr=$0.125, 40cr=$2.50).
+    // The previous 0.0627 came from a single docs example and was never verified.
+    // creditsToUsd rounds to cents, so 45 * 0.0625 = 2.8125 lands on 2.81.
+    expect(creditsToUsd(45)).toBe(2.81);
+    // The API's own quotes, reproduced exactly at full precision.
+    expect(creditsToUsd(2)).toBe(0.13); // quoted $0.125, rounded to cents
+    expect(creditsToUsd(40)).toBe(2.5); // quoted $2.500 exactly
   });
 });
 

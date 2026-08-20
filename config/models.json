@@ -18,7 +18,6 @@
     "  4. refuse - never guess",
     "A null costCredits NEVER becomes a silent assumption. See src/budget/cost.ts."
   ],
-
   "restApi": {
     "_comment": [
       "Live catalogue from GET /models. base_credits is the API's own figure.",
@@ -30,19 +29,109 @@
     "authHeader": "Authorization: Key {HIGGSFIELD_API_KEY}:{HIGGSFIELD_API_SECRET}",
     "estimatePath": "/estimate/{slug}",
     "models": [
-      { "slug": "higgsfield-ai/dop/lite", "baseCredits": 2.0, "op": "image2video", "output": "video" },
-      { "slug": "higgsfield-ai/dop/lite/first-last-frame", "baseCredits": 2.0, "op": "image2video", "output": "video", "supportsStartEndFrames": true },
-      { "slug": "higgsfield-ai/dop/turbo", "baseCredits": 6.5, "op": "image2video", "output": "video" },
-      { "slug": "higgsfield-ai/dop/turbo/first-last-frame", "baseCredits": 6.5, "op": "image2video", "output": "video", "supportsStartEndFrames": true },
-      { "slug": "higgsfield-ai/dop/standard", "baseCredits": 9.0, "op": "image2video", "output": "video" },
-      { "slug": "higgsfield-ai/dop/standard/first-last-frame", "baseCredits": 9.0, "op": "image2video", "output": "video", "supportsStartEndFrames": true },
-      { "slug": "higgsfield-ai/soul/standard", "baseCredits": 1.0, "op": "text2image", "output": "image", "quotedCredits": 1.5, "quotedUsd": 0.094 },
-      { "slug": "higgsfield-ai/soul/character", "baseCredits": 1.0, "op": "text2image", "output": "image" },
-      { "slug": "higgsfield-ai/soul/reference", "baseCredits": 1.0, "op": "text2image", "output": "image" },
-      { "slug": "higgsfield-ai/soul/cinema", "baseCredits": 0.0, "op": "text2image", "output": "image" },
-      { "slug": "higgsfield-ai/soul/v2/standard", "baseCredits": 0.0, "op": "text2image", "output": "image" },
-      { "slug": "higgsfield-ai/popcorn/auto", "baseCredits": 1.472, "op": "text2image", "output": "image" },
-      { "slug": "soul-id", "baseCredits": 40.0, "op": "character", "output": "image" }
+      {
+        "slug": "higgsfield-ai/dop/lite",
+        "baseCredits": 2.0,
+        "op": "image2video",
+        "output": "video",
+        "quotedCredits": 2.0,
+        "quotedUsd": 0.125
+      },
+      {
+        "slug": "higgsfield-ai/dop/lite/first-last-frame",
+        "baseCredits": 2.0,
+        "op": "image2video",
+        "output": "video",
+        "supportsStartEndFrames": true,
+        "quotedCredits": 2.0,
+        "quotedUsd": 0.125
+      },
+      {
+        "slug": "higgsfield-ai/dop/turbo",
+        "baseCredits": 6.5,
+        "op": "image2video",
+        "output": "video",
+        "quotedCredits": 6.5,
+        "quotedUsd": 0.407
+      },
+      {
+        "slug": "higgsfield-ai/dop/turbo/first-last-frame",
+        "baseCredits": 6.5,
+        "op": "image2video",
+        "output": "video",
+        "supportsStartEndFrames": true,
+        "quotedCredits": 6.5,
+        "quotedUsd": 0.407
+      },
+      {
+        "slug": "higgsfield-ai/dop/standard",
+        "baseCredits": 9.0,
+        "op": "image2video",
+        "output": "video",
+        "quotedCredits": 9.0,
+        "quotedUsd": 0.563
+      },
+      {
+        "slug": "higgsfield-ai/dop/standard/first-last-frame",
+        "baseCredits": 9.0,
+        "op": "image2video",
+        "output": "video",
+        "supportsStartEndFrames": true,
+        "quotedCredits": 9.0,
+        "quotedUsd": 0.563
+      },
+      {
+        "slug": "higgsfield-ai/soul/standard",
+        "baseCredits": 1.0,
+        "op": "text2image",
+        "output": "image",
+        "quotedCredits": 1.5,
+        "quotedUsd": 0.094
+      },
+      {
+        "slug": "higgsfield-ai/soul/character",
+        "baseCredits": 1.0,
+        "op": "text2image",
+        "output": "image"
+      },
+      {
+        "slug": "higgsfield-ai/soul/reference",
+        "baseCredits": 1.0,
+        "op": "text2image",
+        "output": "image"
+      },
+      {
+        "slug": "higgsfield-ai/soul/cinema",
+        "baseCredits": 0.0,
+        "op": "text2image",
+        "output": "image",
+        "quotedCredits": 0.05,
+        "quotedUsd": 0.004
+      },
+      {
+        "slug": "higgsfield-ai/soul/v2/standard",
+        "baseCredits": 0.0,
+        "op": "text2image",
+        "output": "image",
+        "quotedCredits": 0.05,
+        "quotedUsd": 0.004
+      },
+      {
+        "slug": "higgsfield-ai/popcorn/auto",
+        "baseCredits": 1.472,
+        "op": "text2image",
+        "output": "image",
+        "quotedCredits": 1.472,
+        "quotedUsd": 0.092
+      },
+      {
+        "slug": "soul-id",
+        "baseCredits": 40.0,
+        "op": "character",
+        "output": "image",
+        "quotedCredits": 40.0,
+        "quotedUsd": 2.5
+      }
     ],
     "selectionPolicy": {
       "supporting": "higgsfield-ai/dop/lite",
@@ -51,16 +140,15 @@
       "chainCapable": "higgsfield-ai/dop/standard/first-last-frame",
       "referenceImage": "higgsfield-ai/soul/standard",
       "cinematicStill": "higgsfield-ai/soul/cinema"
-    }
+    },
+    "quotedAt": "2026-08-20 via POST /estimate/{slug} with live credentials",
+    "_estimateNote": "IMPORTANT: /estimate returns base_credits and does NOT vary with the duration parameter - dop/lite quoted 2.000 credits at every accepted duration (4,5,8,12,15,20,30). An out-of-range duration (999) is rejected outright. So the quote is a per-CALL price, not a per-second one; do not multiply it by seconds, and do not assume a longer clip is free until a real generation confirms the billed amount against the balance."
   },
-
   "creditToUsd": {
-    "rate": 0.0627,
-    "source": "docs example: 1.500 credits = $0.094",
-    "verified": false,
-    "_comment": "Overwritten by the first estimate-endpoint response, which returns both units."
+    "rate": 0.0625,
+    "source": "POST /estimate 2026-08-20: every model returns credits and usd; 2.000cr=$0.125, 6.500cr=$0.407, 9.000cr=$0.563, 40.000cr=$2.500 -> 0.0625 USD/credit",
+    "verified": true
   },
-
   "sanityRangeCredits": {
     "_comment": [
       "Bands widened on 2026-08-20 after verifying the REST catalogue.",
@@ -69,12 +157,23 @@
       "cheaper: 2-9 base credits, so a 10s generation lands around 4-18.",
       "The band must cover both catalogues or every dop shot false-alarms."
     ],
-    "image": { "min": 0.25, "max": 45 },
-    "videoBudget": { "min": 1, "max": 30 },
-    "videoPremium": { "min": 4, "max": 80 },
-    "audio": { "min": 0.5, "max": 20 }
+    "image": {
+      "min": 0.25,
+      "max": 45
+    },
+    "videoBudget": {
+      "min": 1,
+      "max": 30
+    },
+    "videoPremium": {
+      "min": 4,
+      "max": 80
+    },
+    "audio": {
+      "min": 0.5,
+      "max": 20
+    }
   },
-
   "video": [
     {
       "id": "veo3_1_lite",
@@ -83,17 +182,28 @@
       "qualityTier": "budget",
       "costCredits": null,
       "durationMode": "discrete",
-      "allowedDurations": [4, 6, 8],
+      "allowedDurations": [
+        4,
+        6,
+        8
+      ],
       "supportsStartFrame": true,
       "supportsEndFrame": true,
       "supportsStartEndFrames": true,
       "supportsNativeAudio": true,
       "nativeAudioDefault": false,
       "maxResolution": "1080p",
-      "aspectRatios": ["16:9", "9:16", "auto"],
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "auto"
+      ],
       "fps": 24,
       "enabled": true,
-      "useFor": ["supporting", "fallback-motion"]
+      "useFor": [
+        "supporting",
+        "fallback-motion"
+      ]
     },
     {
       "id": "seedance1_5",
@@ -102,17 +212,32 @@
       "qualityTier": "standard",
       "costCredits": null,
       "durationMode": "discrete",
-      "allowedDurations": [4, 8, 12],
+      "allowedDurations": [
+        4,
+        8,
+        12
+      ],
       "supportsStartFrame": true,
       "supportsEndFrame": true,
       "supportsStartEndFrames": true,
       "supportsNativeAudio": true,
       "nativeAudioDefault": true,
       "maxResolution": "1080p",
-      "aspectRatios": ["auto", "16:9", "9:16", "4:3", "3:4", "1:1", "21:9"],
+      "aspectRatios": [
+        "auto",
+        "16:9",
+        "9:16",
+        "4:3",
+        "3:4",
+        "1:1",
+        "21:9"
+      ],
       "fps": 24,
       "enabled": true,
-      "useFor": ["normal", "continuity-chain"]
+      "useFor": [
+        "normal",
+        "continuity-chain"
+      ]
     },
     {
       "id": "kling3_0",
@@ -121,18 +246,32 @@
       "qualityTier": "quality",
       "costCredits": null,
       "durationMode": "range",
-      "durationRange": { "min": 3, "max": 15 },
+      "durationRange": {
+        "min": 3,
+        "max": 15
+      },
       "supportsStartFrame": true,
       "supportsEndFrame": true,
       "supportsStartEndFrames": true,
       "supportsNativeAudio": true,
       "nativeAudioDefault": true,
       "maxResolution": "4k",
-      "aspectRatios": ["16:9", "9:16", "1:1"],
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1"
+      ],
       "fps": 24,
-      "modes": ["std", "pro", "4k"],
+      "modes": [
+        "std",
+        "pro",
+        "4k"
+      ],
       "enabled": true,
-      "useFor": ["anchor", "escalation"]
+      "useFor": [
+        "anchor",
+        "escalation"
+      ]
     },
     {
       "id": "seedance_2_0",
@@ -142,21 +281,590 @@
       "costCredits": 45,
       "costSource": "measured from transaction history 2026-07-24 (settings unknown)",
       "durationMode": "range",
-      "durationRange": { "min": 4, "max": 15 },
+      "durationRange": {
+        "min": 4,
+        "max": 15
+      },
       "supportsStartFrame": true,
       "supportsEndFrame": true,
       "supportsStartEndFrames": true,
       "supportsNativeAudio": true,
       "nativeAudioDefault": true,
       "maxResolution": "4k",
-      "aspectRatios": ["auto", "16:9", "9:16", "4:3", "3:4", "1:1", "21:9"],
+      "aspectRatios": [
+        "auto",
+        "16:9",
+        "9:16",
+        "4:3",
+        "3:4",
+        "1:1",
+        "21:9"
+      ],
       "fps": 24,
-      "modes": ["std", "fast"],
+      "modes": [
+        "std",
+        "fast"
+      ],
       "enabled": true,
-      "useFor": ["anchor", "identity-consistent"]
+      "useFor": [
+        "anchor",
+        "identity-consistent"
+      ]
+    },
+    {
+      "id": "seedance_2_0_mini",
+      "provider": "Bytedance",
+      "name": "Seedance 2.0 Mini",
+      "qualityTier": "budget",
+      "costCredits": 12.5,
+      "costSource": "measured from transaction history 2026-08-20: 16 generations billed 10/12.5/15/17.5/20 credits at 4/5/6/7/8s = 2.5 cr/s. 12.5 is the 5s figure. findConfiguredCost does not scale by duration, so a shot longer than 5s under-estimates unless a live estimate or learned cost resolves first - keep shots at 5s or measure again.",
+      "durationMode": "range",
+      "durationRange": {
+        "min": 4,
+        "max": 15
+      },
+      "supportsStartFrame": true,
+      "supportsEndFrame": true,
+      "supportsStartEndFrames": true,
+      "supportsNativeAudio": true,
+      "nativeAudioDefault": true,
+      "maxResolution": "720p",
+      "aspectRatios": [
+        "auto",
+        "16:9",
+        "9:16",
+        "4:3",
+        "3:4",
+        "1:1",
+        "21:9"
+      ],
+      "fps": 24,
+      "enabled": true,
+      "useFor": [
+        "normal",
+        "identity-consistent"
+      ]
+    },
+    {
+      "id": "minimax_h3",
+      "provider": "MiniMax",
+      "name": "MiniMax H3",
+      "qualityTier": "standard",
+      "costCredits": null,
+      "costSource": "UNMEASURED - catalogue exposes no price. Resolve via /estimate or a measured balance delta before use.",
+      "durationMode": "range",
+      "durationRange": {
+        "min": 4,
+        "max": 15
+      },
+      "supportsStartFrame": true,
+      "supportsEndFrame": true,
+      "supportsStartEndFrames": true,
+      "supportsNativeAudio": false,
+      "maxResolution": "2k",
+      "aspectRatios": [
+        "auto",
+        "21:9",
+        "16:9",
+        "4:3",
+        "1:1",
+        "3:4",
+        "9:16"
+      ],
+      "fps": 24,
+      "enabled": false,
+      "useFor": [
+        "normal",
+        "identity-consistent",
+        "continuity-chain"
+      ],
+      "_note": "Only MiniMax model with image_references, so the only one that can hold identity. 2K only. No native audio parameter."
+    },
+    {
+      "id": "minimax_hailuo",
+      "provider": "Hailuo",
+      "name": "Minimax Hailuo",
+      "qualityTier": "standard",
+      "costCredits": null,
+      "costSource": "UNMEASURED - catalogue exposes no price. Resolve via /estimate or a measured balance delta before use.",
+      "durationMode": "discrete",
+      "allowedDurations": [
+        6,
+        10
+      ],
+      "supportsStartFrame": true,
+      "supportsEndFrame": true,
+      "supportsStartEndFrames": true,
+      "supportsNativeAudio": false,
+      "maxResolution": "1080",
+      "aspectRatios": [],
+      "fps": 24,
+      "modes": [
+        "minimax",
+        "minimax-fast",
+        "minimax-2.3",
+        "minimax-2.3-fast"
+      ],
+      "enabled": false,
+      "useFor": [
+        "supporting"
+      ],
+      "_note": "NO image_references - cannot hold a recurring character (verify-realism rule 1). Start/end frames only. 512 res is incompatible with end_image and unsupported on 2.3 variants."
+    },
+    {
+      "id": "seedance_2_5",
+      "provider": "Bytedance",
+      "name": "Seedance 2.5",
+      "qualityTier": "quality",
+      "costCredits": null,
+      "costSource": "UNMEASURED - catalogue exposes no price. Resolve via /estimate or a measured balance delta before use.",
+      "durationMode": "range",
+      "durationRange": {
+        "min": 4,
+        "max": 30
+      },
+      "supportsStartFrame": true,
+      "supportsEndFrame": true,
+      "supportsStartEndFrames": true,
+      "supportsNativeAudio": true,
+      "nativeAudioDefault": true,
+      "maxResolution": "1080p",
+      "aspectRatios": [
+        "auto",
+        "21:9",
+        "16:9",
+        "4:3",
+        "1:1",
+        "3:4",
+        "9:16"
+      ],
+      "fps": 24,
+      "modes": [
+        "t2v",
+        "omni_reference",
+        "video_edit",
+        "video_extension"
+      ],
+      "enabled": false,
+      "useFor": [
+        "anchor",
+        "identity-consistent"
+      ],
+      "_note": "Longest single clip available (30s). video_edit/video_extension modes bill by the source video duration."
+    },
+    {
+      "id": "kling2_6",
+      "provider": "Kling",
+      "name": "Kling 2.6 Video",
+      "qualityTier": "standard",
+      "costCredits": null,
+      "costSource": "UNMEASURED - catalogue exposes no price. Resolve via /estimate or a measured balance delta before use.",
+      "durationMode": "discrete",
+      "allowedDurations": [
+        5,
+        10
+      ],
+      "supportsStartFrame": true,
+      "supportsEndFrame": false,
+      "supportsStartEndFrames": false,
+      "supportsNativeAudio": true,
+      "nativeAudioDefault": true,
+      "maxResolution": "1080p",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1"
+      ],
+      "fps": 24,
+      "enabled": false,
+      "useFor": [
+        "supporting"
+      ],
+      "_note": "Start frame only - already in knownIncompatible.startFrameOnly."
+    },
+    {
+      "id": "kling3_0_turbo",
+      "provider": "Kling",
+      "name": "Kling 3.0 Turbo",
+      "qualityTier": "budget",
+      "costCredits": null,
+      "costSource": "UNMEASURED - catalogue exposes no price. Resolve via /estimate or a measured balance delta before use.",
+      "durationMode": "range",
+      "durationRange": {
+        "min": 3,
+        "max": 15
+      },
+      "supportsStartFrame": true,
+      "supportsEndFrame": false,
+      "supportsStartEndFrames": false,
+      "supportsNativeAudio": false,
+      "maxResolution": "1080p",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1"
+      ],
+      "fps": 24,
+      "enabled": false,
+      "useFor": [
+        "supporting"
+      ],
+      "_note": "Start frame only - already in knownIncompatible.startFrameOnly."
+    },
+    {
+      "id": "veo3",
+      "provider": "Google",
+      "name": "Google Veo 3",
+      "qualityTier": "quality",
+      "costCredits": null,
+      "costSource": "UNMEASURED - catalogue exposes no price. Resolve via /estimate or a measured balance delta before use.",
+      "durationMode": "range",
+      "durationRange": {
+        "min": 4,
+        "max": 8
+      },
+      "supportsStartFrame": true,
+      "supportsEndFrame": false,
+      "supportsStartEndFrames": false,
+      "supportsNativeAudio": true,
+      "nativeAudioDefault": true,
+      "maxResolution": "1080p",
+      "aspectRatios": [
+        "16:9",
+        "9:16"
+      ],
+      "fps": 24,
+      "modes": [
+        "veo-3-preview",
+        "veo-3-fast"
+      ],
+      "enabled": false,
+      "useFor": [
+        "supporting"
+      ],
+      "_note": "Start frame only - already in knownIncompatible.startFrameOnly."
+    },
+    {
+      "id": "veo3_1",
+      "provider": "Google",
+      "name": "Google Veo 3.1",
+      "qualityTier": "quality",
+      "costCredits": null,
+      "costSource": "UNMEASURED - catalogue exposes no price. Resolve via /estimate or a measured balance delta before use.",
+      "durationMode": "discrete",
+      "allowedDurations": [
+        4,
+        6,
+        8
+      ],
+      "supportsStartFrame": true,
+      "supportsEndFrame": false,
+      "supportsStartEndFrames": false,
+      "supportsNativeAudio": true,
+      "nativeAudioDefault": true,
+      "maxResolution": "1080p",
+      "aspectRatios": [
+        "16:9",
+        "9:16"
+      ],
+      "fps": 24,
+      "modes": [
+        "veo-3-1-preview",
+        "veo-3-1-fast"
+      ],
+      "enabled": false,
+      "useFor": [
+        "anchor"
+      ],
+      "_note": "Start frame only - no end frame, so it cannot close a continuity chain."
+    },
+    {
+      "id": "gemini_omni",
+      "provider": "Google",
+      "name": "Gemini Omni Flash",
+      "qualityTier": "standard",
+      "costCredits": null,
+      "costSource": "UNMEASURED - catalogue exposes no price. Resolve via /estimate or a measured balance delta before use.",
+      "durationMode": "range",
+      "durationRange": {
+        "min": 4,
+        "max": 10
+      },
+      "supportsStartFrame": false,
+      "supportsEndFrame": false,
+      "supportsStartEndFrames": false,
+      "supportsNativeAudio": true,
+      "nativeAudioDefault": true,
+      "maxResolution": "720p",
+      "aspectRatios": [
+        "16:9",
+        "9:16"
+      ],
+      "fps": 24,
+      "enabled": false,
+      "useFor": [
+        "normal",
+        "identity-consistent"
+      ],
+      "_note": "Has image_references (identity-capable) but NO start/end frame, so it cannot chain shot-to-shot. supports_unlim."
+    },
+    {
+      "id": "flux_3_video",
+      "provider": "Black Forest Labs",
+      "name": "FLUX 3 Video",
+      "qualityTier": "standard",
+      "costCredits": null,
+      "costSource": "UNMEASURED - catalogue exposes no price. Resolve via /estimate or a measured balance delta before use.",
+      "durationMode": "range",
+      "durationRange": {
+        "min": 5,
+        "max": 20
+      },
+      "supportsStartFrame": true,
+      "supportsEndFrame": true,
+      "supportsStartEndFrames": true,
+      "supportsNativeAudio": true,
+      "nativeAudioDefault": true,
+      "maxResolution": "1080p",
+      "aspectRatios": [
+        "auto",
+        "21:9",
+        "2:1",
+        "16:9",
+        "4:3",
+        "1:1",
+        "3:4",
+        "9:16"
+      ],
+      "fps": 24,
+      "enabled": false,
+      "useFor": [
+        "normal",
+        "identity-consistent",
+        "continuity-chain"
+      ],
+      "_note": "image_references + start/end frames + 20s clips. Strong candidate for long-runtime work once priced."
+    },
+    {
+      "id": "wan2_6",
+      "provider": "Wan",
+      "name": "Wan 2.6 Video",
+      "qualityTier": "standard",
+      "costCredits": null,
+      "costSource": "UNMEASURED - catalogue exposes no price. Resolve via /estimate or a measured balance delta before use.",
+      "durationMode": "discrete",
+      "allowedDurations": [
+        5,
+        10,
+        15
+      ],
+      "supportsStartFrame": false,
+      "supportsEndFrame": false,
+      "supportsStartEndFrames": false,
+      "supportsNativeAudio": false,
+      "maxResolution": "1080p",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1"
+      ],
+      "fps": 24,
+      "enabled": false,
+      "useFor": [
+        "supporting"
+      ],
+      "_note": "image_references but NO start/end frame - cannot chain."
+    },
+    {
+      "id": "wan2_7",
+      "provider": "Wan",
+      "name": "Wan 2.7",
+      "qualityTier": "standard",
+      "costCredits": null,
+      "costSource": "UNMEASURED - catalogue exposes no price. Resolve via /estimate or a measured balance delta before use.",
+      "durationMode": "range",
+      "durationRange": {
+        "min": 2,
+        "max": 15
+      },
+      "supportsStartFrame": true,
+      "supportsEndFrame": true,
+      "supportsStartEndFrames": true,
+      "supportsNativeAudio": true,
+      "nativeAudioDefault": true,
+      "maxResolution": "1080p",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:3",
+        "3:4"
+      ],
+      "fps": 24,
+      "enabled": false,
+      "useFor": [
+        "normal",
+        "continuity-chain"
+      ],
+      "_note": "NO image_references despite the character-consistent tag; identity comes only from start/end frames."
+    },
+    {
+      "id": "grok_video_v15",
+      "provider": "xAI",
+      "name": "Grok Video 1.5",
+      "qualityTier": "standard",
+      "costCredits": null,
+      "costSource": "UNMEASURED - catalogue exposes no price. Resolve via /estimate or a measured balance delta before use.",
+      "durationMode": "range",
+      "durationRange": {
+        "min": 2,
+        "max": 15
+      },
+      "supportsStartFrame": true,
+      "supportsEndFrame": false,
+      "supportsStartEndFrames": false,
+      "supportsNativeAudio": true,
+      "nativeAudioDefault": true,
+      "maxResolution": "1080p",
+      "aspectRatios": [],
+      "fps": 24,
+      "enabled": false,
+      "useFor": [
+        "supporting"
+      ],
+      "_note": "image_references but start frame only - cannot close a chain."
+    },
+    {
+      "id": "grok_video",
+      "provider": "xAI",
+      "name": "Grok Video",
+      "qualityTier": "standard",
+      "costCredits": null,
+      "costSource": "UNMEASURED - catalogue exposes no price. Resolve via /estimate or a measured balance delta before use.",
+      "durationMode": "range",
+      "durationRange": {
+        "min": 1,
+        "max": 15
+      },
+      "supportsStartFrame": true,
+      "supportsEndFrame": false,
+      "supportsStartEndFrames": false,
+      "supportsNativeAudio": true,
+      "nativeAudioDefault": true,
+      "maxResolution": "720p",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1"
+      ],
+      "fps": 24,
+      "enabled": false,
+      "useFor": [
+        "supporting"
+      ],
+      "_note": "Start frame only - already in knownIncompatible.startFrameOnly."
+    },
+    {
+      "id": "happy_horse_video",
+      "provider": "Happy Horse",
+      "name": "Happy Horse Video",
+      "qualityTier": "budget",
+      "costCredits": null,
+      "costSource": "UNMEASURED - catalogue exposes no price. Resolve via /estimate or a measured balance delta before use.",
+      "durationMode": "range",
+      "durationRange": {
+        "min": 3,
+        "max": 15
+      },
+      "supportsStartFrame": true,
+      "supportsEndFrame": false,
+      "supportsStartEndFrames": false,
+      "supportsNativeAudio": false,
+      "maxResolution": "1080p",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:3",
+        "3:4"
+      ],
+      "fps": 24,
+      "enabled": false,
+      "useFor": [
+        "supporting"
+      ],
+      "_note": "Start frame only - already in knownIncompatible.startFrameOnly."
+    },
+    {
+      "id": "cinematic_studio_3_0",
+      "provider": "Higgsfield",
+      "name": "Cinema Studio Video 3.0",
+      "qualityTier": "quality",
+      "costCredits": null,
+      "costSource": "UNMEASURED - catalogue exposes no price. Resolve via /estimate or a measured balance delta before use.",
+      "durationMode": "range",
+      "durationRange": {
+        "min": 4,
+        "max": 15
+      },
+      "supportsStartFrame": true,
+      "supportsEndFrame": true,
+      "supportsStartEndFrames": true,
+      "supportsNativeAudio": true,
+      "nativeAudioDefault": false,
+      "maxResolution": "4k",
+      "aspectRatios": [
+        "auto",
+        "21:9",
+        "16:9",
+        "4:3",
+        "1:1",
+        "3:4",
+        "9:16"
+      ],
+      "fps": 24,
+      "enabled": false,
+      "useFor": [
+        "anchor"
+      ],
+      "_note": "4K capable. No image_references - identity via frames only."
+    },
+    {
+      "id": "cinematic_studio_video_v2",
+      "provider": "Higgsfield",
+      "name": "Cinema Studio Video v2",
+      "qualityTier": "quality",
+      "costCredits": null,
+      "costSource": "UNMEASURED - catalogue exposes no price. Resolve via /estimate or a measured balance delta before use.",
+      "durationMode": "range",
+      "durationRange": {
+        "min": 3,
+        "max": 12
+      },
+      "supportsStartFrame": true,
+      "supportsEndFrame": true,
+      "supportsStartEndFrames": true,
+      "supportsNativeAudio": true,
+      "nativeAudioDefault": true,
+      "maxResolution": "1080p",
+      "aspectRatios": [
+        "1:1",
+        "4:3",
+        "3:4",
+        "16:9",
+        "9:16"
+      ],
+      "fps": 24,
+      "modes": [
+        "pro",
+        "std"
+      ],
+      "enabled": false,
+      "useFor": [
+        "anchor"
+      ]
     }
   ],
-
   "image": [
     {
       "id": "nano_banana",
@@ -165,9 +873,24 @@
       "qualityTier": "budget",
       "costCredits": null,
       "supportsImageReferences": true,
-      "aspectRatios": ["1:1", "3:2", "2:3", "4:3", "3:4", "4:5", "5:4", "9:16", "16:9", "21:9"],
+      "aspectRatios": [
+        "1:1",
+        "3:2",
+        "2:3",
+        "4:3",
+        "3:4",
+        "4:5",
+        "5:4",
+        "9:16",
+        "16:9",
+        "21:9"
+      ],
       "enabled": true,
-      "useFor": ["references", "progression", "props"]
+      "useFor": [
+        "references",
+        "progression",
+        "props"
+      ]
     },
     {
       "id": "nano_banana_2",
@@ -176,10 +899,28 @@
       "qualityTier": "standard",
       "costCredits": null,
       "supportsImageReferences": true,
-      "resolutions": ["1k", "2k", "4k"],
-      "aspectRatios": ["1:1", "3:2", "2:3", "4:3", "3:4", "4:5", "5:4", "9:16", "16:9", "21:9"],
+      "resolutions": [
+        "1k",
+        "2k",
+        "4k"
+      ],
+      "aspectRatios": [
+        "1:1",
+        "3:2",
+        "2:3",
+        "4:3",
+        "3:4",
+        "4:5",
+        "5:4",
+        "9:16",
+        "16:9",
+        "21:9"
+      ],
       "enabled": true,
-      "useFor": ["start-frame", "end-target-frame"]
+      "useFor": [
+        "start-frame",
+        "end-target-frame"
+      ]
     },
     {
       "id": "nano_banana_pro",
@@ -189,10 +930,29 @@
       "costCredits": 2,
       "costSource": "measured from transaction history 2026-07-23/24 (settings unknown)",
       "supportsImageReferences": true,
-      "resolutions": ["1k", "2k", "4k"],
-      "aspectRatios": ["1:1", "3:2", "2:3", "4:3", "3:4", "4:5", "5:4", "9:16", "16:9", "21:9"],
+      "resolutions": [
+        "1k",
+        "2k",
+        "4k"
+      ],
+      "aspectRatios": [
+        "1:1",
+        "3:2",
+        "2:3",
+        "4:3",
+        "3:4",
+        "4:5",
+        "5:4",
+        "9:16",
+        "16:9",
+        "21:9"
+      ],
       "enabled": true,
-      "useFor": ["anchor-still", "thumbnail", "contact-sheet"]
+      "useFor": [
+        "anchor-still",
+        "thumbnail",
+        "contact-sheet"
+      ]
     },
     {
       "id": "cinematic_studio_2_5",
@@ -201,13 +961,358 @@
       "qualityTier": "quality",
       "costCredits": null,
       "supportsImageReferences": true,
-      "resolutions": ["1k", "2k", "4k"],
-      "aspectRatios": ["1:1", "3:2", "2:3", "4:3", "3:4", "4:5", "5:4", "16:9", "9:16", "21:9"],
+      "resolutions": [
+        "1k",
+        "2k",
+        "4k"
+      ],
+      "aspectRatios": [
+        "1:1",
+        "3:2",
+        "2:3",
+        "4:3",
+        "3:4",
+        "4:5",
+        "5:4",
+        "16:9",
+        "9:16",
+        "21:9"
+      ],
       "enabled": false,
-      "useFor": ["cinematic-still"]
+      "useFor": [
+        "cinematic-still"
+      ]
+    },
+    {
+      "id": "nano_banana_2_lite",
+      "provider": "Google",
+      "name": "Nano Banana 2 Lite",
+      "qualityTier": "budget",
+      "costCredits": null,
+      "costSource": "UNMEASURED - catalogue exposes no price. Resolve via /estimate or a measured balance delta before use.",
+      "supportsImageReferences": true,
+      "resolutions": [
+        "1k"
+      ],
+      "aspectRatios": [
+        "auto",
+        "1:1",
+        "3:2",
+        "2:3",
+        "4:3",
+        "3:4",
+        "4:5",
+        "5:4",
+        "9:16",
+        "16:9",
+        "21:9"
+      ],
+      "enabled": false,
+      "useFor": [
+        "references",
+        "props"
+      ]
+    },
+    {
+      "id": "seedream_v4_5",
+      "provider": "Bytedance",
+      "name": "Seedream 4.5",
+      "qualityTier": "quality",
+      "costCredits": null,
+      "costSource": "UNMEASURED - catalogue exposes no price. Resolve via /estimate or a measured balance delta before use.",
+      "supportsImageReferences": true,
+      "aspectRatios": [
+        "1:1",
+        "4:3",
+        "16:9",
+        "3:2",
+        "21:9",
+        "3:4",
+        "9:16",
+        "2:3"
+      ],
+      "enabled": false,
+      "useFor": [
+        "anchor-still"
+      ]
+    },
+    {
+      "id": "seedream_v5_pro",
+      "provider": "Bytedance",
+      "name": "Seedream 5.0 Pro",
+      "qualityTier": "quality",
+      "costCredits": null,
+      "costSource": "UNMEASURED - catalogue exposes no price. Resolve via /estimate or a measured balance delta before use.",
+      "supportsImageReferences": true,
+      "resolutions": [
+        "1k",
+        "1.5k",
+        "2k"
+      ],
+      "aspectRatios": [
+        "1:1",
+        "4:3",
+        "3:4",
+        "16:9",
+        "9:16",
+        "3:2",
+        "2:3",
+        "21:9"
+      ],
+      "enabled": false,
+      "useFor": [
+        "anchor-still"
+      ]
+    },
+    {
+      "id": "seedream_v5_lite",
+      "provider": "Bytedance",
+      "name": "Seedream 5.0 Lite",
+      "qualityTier": "standard",
+      "costCredits": null,
+      "costSource": "UNMEASURED - catalogue exposes no price. Resolve via /estimate or a measured balance delta before use.",
+      "supportsImageReferences": true,
+      "aspectRatios": [
+        "1:1",
+        "4:3",
+        "3:4",
+        "16:9",
+        "9:16",
+        "21:9"
+      ],
+      "enabled": false,
+      "useFor": [
+        "references"
+      ]
+    },
+    {
+      "id": "flux_2",
+      "provider": "Black Forest Labs",
+      "name": "FLUX.2",
+      "qualityTier": "quality",
+      "costCredits": null,
+      "costSource": "UNMEASURED - catalogue exposes no price. Resolve via /estimate or a measured balance delta before use.",
+      "supportsImageReferences": true,
+      "resolutions": [
+        "1k",
+        "2k"
+      ],
+      "aspectRatios": [
+        "1:1",
+        "4:3",
+        "3:4",
+        "16:9",
+        "9:16"
+      ],
+      "enabled": false,
+      "useFor": [
+        "anchor-still"
+      ]
+    },
+    {
+      "id": "flux_kontext",
+      "provider": "Black Forest Labs",
+      "name": "Flux Kontext",
+      "qualityTier": "standard",
+      "costCredits": null,
+      "costSource": "UNMEASURED - catalogue exposes no price. Resolve via /estimate or a measured balance delta before use.",
+      "supportsImageReferences": true,
+      "aspectRatios": [
+        "1:1",
+        "4:3",
+        "3:4",
+        "16:9",
+        "9:16"
+      ],
+      "enabled": false,
+      "useFor": [
+        "style-transfer"
+      ]
+    },
+    {
+      "id": "gpt_image_2",
+      "provider": "OpenAI",
+      "name": "GPT Image 2",
+      "qualityTier": "quality",
+      "costCredits": null,
+      "costSource": "UNMEASURED - catalogue exposes no price. Resolve via /estimate or a measured balance delta before use.",
+      "supportsImageReferences": true,
+      "resolutions": [
+        "1k",
+        "2k",
+        "4k"
+      ],
+      "aspectRatios": [
+        "1:1",
+        "4:3",
+        "3:4",
+        "16:9",
+        "21:9",
+        "9:16",
+        "3:2",
+        "2:3"
+      ],
+      "enabled": false,
+      "useFor": [
+        "thumbnail",
+        "text-rendering"
+      ]
+    },
+    {
+      "id": "openai_hazel",
+      "provider": "OpenAI",
+      "name": "OpenAI Hazel",
+      "qualityTier": "quality",
+      "costCredits": null,
+      "costSource": "UNMEASURED - catalogue exposes no price. Resolve via /estimate or a measured balance delta before use.",
+      "supportsImageReferences": true,
+      "aspectRatios": [
+        "1:1",
+        "3:2",
+        "2:3",
+        "auto"
+      ],
+      "enabled": false,
+      "useFor": [
+        "thumbnail",
+        "text-rendering"
+      ]
+    },
+    {
+      "id": "kling_omni_image",
+      "provider": "Kling",
+      "name": "Kling O1 Image",
+      "qualityTier": "standard",
+      "costCredits": null,
+      "costSource": "UNMEASURED - catalogue exposes no price. Resolve via /estimate or a measured balance delta before use.",
+      "supportsImageReferences": true,
+      "resolutions": [
+        "1k",
+        "2k"
+      ],
+      "aspectRatios": [
+        "1:1",
+        "auto",
+        "16:9",
+        "9:16",
+        "4:3",
+        "3:4",
+        "3:2",
+        "2:3",
+        "21:9"
+      ],
+      "enabled": false,
+      "useFor": [
+        "references"
+      ]
+    },
+    {
+      "id": "grok_image_2_0",
+      "provider": "xAI",
+      "name": "Grok Image 2.0",
+      "qualityTier": "standard",
+      "costCredits": null,
+      "costSource": "UNMEASURED - catalogue exposes no price. Resolve via /estimate or a measured balance delta before use.",
+      "supportsImageReferences": true,
+      "resolutions": [
+        "1k",
+        "2k"
+      ],
+      "aspectRatios": [
+        "1:1",
+        "auto",
+        "1:2",
+        "2:1",
+        "3:2",
+        "2:3",
+        "4:3",
+        "3:4",
+        "16:9",
+        "9:16"
+      ],
+      "enabled": false,
+      "useFor": [
+        "references"
+      ]
+    },
+    {
+      "id": "z_image",
+      "provider": "Tongyi-MAI",
+      "name": "Z Image",
+      "qualityTier": "budget",
+      "costCredits": null,
+      "costSource": "UNMEASURED - catalogue exposes no price. Resolve via /estimate or a measured balance delta before use.",
+      "supportsImageReferences": false,
+      "aspectRatios": [
+        "1:1",
+        "4:3",
+        "3:4",
+        "16:9",
+        "9:16"
+      ],
+      "enabled": false,
+      "useFor": [
+        "style"
+      ],
+      "_note": "Text-to-image only, no references - cannot carry identity."
+    },
+    {
+      "id": "soul_cinematic",
+      "provider": "Higgsfield",
+      "name": "Soul Cinema",
+      "qualityTier": "quality",
+      "costCredits": null,
+      "costSource": "UNMEASURED - catalogue exposes no price. Resolve via /estimate or a measured balance delta before use.",
+      "supportsImageReferences": false,
+      "resolutions": [
+        "1.5k",
+        "2k"
+      ],
+      "aspectRatios": [
+        "1:1",
+        "4:3",
+        "3:4",
+        "16:9",
+        "9:16",
+        "3:2",
+        "2:3",
+        "21:9"
+      ],
+      "enabled": false,
+      "useFor": [
+        "style"
+      ]
+    },
+    {
+      "id": "recraft_v4_1",
+      "provider": "Recraft",
+      "name": "Recraft V4.1",
+      "qualityTier": "standard",
+      "costCredits": null,
+      "costSource": "UNMEASURED - catalogue exposes no price. Resolve via /estimate or a measured balance delta before use.",
+      "supportsImageReferences": false,
+      "resolutions": [
+        "1k",
+        "2k"
+      ],
+      "aspectRatios": [
+        "1:1",
+        "3:4",
+        "4:3",
+        "4:5",
+        "5:4",
+        "3:2",
+        "2:3",
+        "16:9",
+        "9:16"
+      ],
+      "enabled": false,
+      "useFor": [
+        "graphics"
+      ],
+      "_note": "Vector/logo/icon work. model_type: standard|vector|utility|utility_vector."
     }
   ],
-
   "audio": [
     {
       "id": "higgsfield_audio",
@@ -215,23 +1320,37 @@
       "name": "Higgsfield Audio",
       "costCredits": null,
       "enabled": true,
-      "useFor": ["music", "sfx", "ambience"],
+      "useFor": [
+        "music",
+        "sfx",
+        "ambience"
+      ],
       "_comment": "Concrete audio model IDs are resolved at runtime; generate_audio is a multi-model endpoint."
     }
   ],
-
   "selectionPolicy": {
     "_comment": "Architecture section 8. Deliberately simple for v1.",
     "normal": "seedance1_5",
     "anchor": "kling3_0",
     "supporting": "veo3_1_lite",
-    "escalationOrder": ["veo3_1_lite", "seedance1_5", "kling3_0", "seedance_2_0"],
+    "escalationOrder": [
+      "veo3_1_lite",
+      "seedance1_5",
+      "kling3_0",
+      "seedance_2_0"
+    ],
     "requireApprovalOnEscalation": true,
     "_escalationNote": "Auto-switch is allowed only when it does not increase cost. Any switch to a pricier model stops and asks the human."
   },
-
   "knownIncompatible": {
     "_comment": "Verified via models_explore. These CANNOT satisfy previous-shot continuity chaining.",
-    "startFrameOnly": ["kling2_6", "veo3", "kling3_0_turbo", "happy_horse_video", "grok_video"]
-  }
+    "startFrameOnly": [
+      "kling2_6",
+      "veo3",
+      "kling3_0_turbo",
+      "happy_horse_video",
+      "grok_video"
+    ]
+  },
+  "_catalogueVerifiedAt": "2026-08-20 (MCP connector, models_explore list)"
 }
