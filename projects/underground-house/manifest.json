@@ -208,6 +208,28 @@
       "status": "completed",
       "localFile": "/Users/ronyantony/Desktop/Workspace/RonyDev/agentic-video-pipeline/projects/underground-house/shots/shot_014/original.mp4",
       "accepted": null
+    },
+    {
+      "assetHash": "a59290ec675c0eee",
+      "kind": "image",
+      "provider": "higgsfield-mcp",
+      "model": "soul_2",
+      "prompt": "character reference sheet: man, olive-drab jacket torn left cuff, grey thermal collar, muddy knees",
+      "settings": {
+        "role": "character-reference",
+        "aspect_ratio": "3:4",
+        "quality": "2k"
+      },
+      "jobId": "3b4be27b-6619-4d97-84cd-f0c1c315263c",
+      "submittedAt": "2026-08-20T06:52:48.544Z",
+      "completedAt": "2026-08-20T06:52:48.544Z",
+      "estimatedCredits": 0.12,
+      "estimatedUSD": 0.01,
+      "actualCredits": 0.12,
+      "actualUSD": 0.01,
+      "status": "completed",
+      "localFile": "projects/underground-house/references/character/main.png",
+      "accepted": true
     }
   ]
 }
