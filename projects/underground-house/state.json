@@ -2,10 +2,10 @@
   "version": 1,
   "projectName": "underground-house",
   "createdAt": "2026-08-20T04:02:45.372Z",
-  "updatedAt": "2026-08-20T06:29:07.284Z",
+  "updatedAt": "2026-08-20T06:40:55.945Z",
   "idea": "A 90-second cinematic video of a man building an underground house",
   "mode": "full",
-  "stage": "qa-machine",
+  "stage": "generation-plan",
   "completedStages": [
     "init",
     "story",

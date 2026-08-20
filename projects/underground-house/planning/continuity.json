@@ -1,23 +1,35 @@
 {
   "character": {
-    "description": "A weathered man in his late 30s, lean and strong, short dark hair, stubble",
-    "wardrobe": "Faded green canvas work jacket, brown trousers, worn leather boots, no hat",
-    "distinguishingFeatures": ["dirt on forearms", "leather work gloves", "silver ring on right hand"]
+    "description": "An ordinary man in his mid-30s, medium build, short dark brown hair, three-day stubble, plain unremarkable face. Looks like a real person, not a model. Dirt on his hands and forearms, sweat on his brow.",
+    "wardrobe": "Olive-drab work jacket with a torn left cuff, grey thermal shirt underneath, dark brown canvas trousers with mud at the knees, scuffed brown leather boots. Same clothes in every single shot, progressively dirtier.",
+    "distinguishingFeatures": [
+      "torn left cuff on the jacket",
+      "grey thermal collar always visible at the neck",
+      "mud line on trousers at the knee",
+      "bare hands, no gloves",
+      "no hat, no sunglasses, no modern branding"
+    ]
   },
   "environment": {
-    "description": "Remote grassy hillside in temperate woodland, treeline to the north",
-    "timeOfDay": "golden hour, low warm sun",
-    "weather": "clear with occasional light mist"
+    "description": "A dense temperate forest clearing on a gentle slope. Bare deciduous trees, leaf litter, exposed roots, moss on fallen logs. Damp brown earth. No buildings, roads, or machinery anywhere in frame.",
+    "timeOfDay": "flat overcast daylight, no direct sun",
+    "weather": "cold, damp, occasional light drizzle, breath faintly visible"
   },
-  "lighting": "Natural low-angle sunlight, long shadows, warm highlights against cool earth shadow",
-  "cameraStyle": "Handheld documentary with deliberate slow moves; no crash zooms",
-  "lensStyle": "35mm and 50mm, shallow depth on close work, deep focus on landscape",
-  "colorPalette": ["#C88A4A", "#4A5D3A", "#8B7355", "#2E2A24"],
+  "lighting": "Flat natural overcast light. Soft shadows, no golden hour, no dramatic rim light, no lens flare. The light of an ordinary grey afternoon in a forest.",
+  "cameraStyle": "Handheld POV-adjacent bushcraft documentary. Camera sits low and close, often at arm's length. Small natural shake. No drone, no crane, no sweeping aerials, no slow-motion.",
+  "lensStyle": "24mm to 35mm, close to the work. Hands and tools fill the frame. Shallow depth only on macro detail shots.",
+  "colorPalette": ["#4A4034", "#6B6B5A", "#3E4A32", "#8A7A66", "#2A2622"],
   "props": [
-    { "name": "shovel", "description": "Long-handled steel spade, worn wooden shaft" },
-    { "name": "timber", "description": "Rough-sawn pine beams, pale cut ends" },
-    { "name": "lantern", "description": "Brass oil lantern with warm flame" }
+    { "name": "shovel", "description": "Worn steel spade, chipped paint on the blade, weathered wooden shaft, dirt caked in the socket" },
+    { "name": "axe", "description": "Small forest axe, scratched head, plain hickory handle" },
+    { "name": "logs", "description": "Rough debarked pine logs, hand-cut ends showing saw and axe marks, not milled timber" },
+    { "name": "bucket", "description": "Dented galvanised metal bucket for hauling soil" }
   ],
-  "styleKeywords": ["cinematic", "documentary realism", "natural light", "earthy", "patient"],
-  "negativePrompt": "cartoon, oversaturated, lens flare, text overlay, modern machinery, excavator"
+  "styleKeywords": [
+    "bushcraft", "survival documentary", "handheld", "raw footage",
+    "unpolished", "muddy", "real", "amateur camera", "no music",
+    "natural ambient sound", "overcast", "gritty"
+  ],
+  "negativePrompt": "cinematic color grading, golden hour, lens flare, drone shot, aerial view, slow motion, time-lapse, modern machinery, excavator, power tools, architectural glass, designer interior, polished, glossy, oversaturated, film trailer look, text overlay, watermark, multiple people",
+  "genreNote": "Reference: bushcraft/survival dugout channels. The appeal is watching one person actually do the work with hand tools. Shots are close, patient, and unglamorous. Progress is shown by CUTTING between stages, never by compressing time inside a single shot."
 }

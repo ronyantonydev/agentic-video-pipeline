@@ -2,171 +2,207 @@
   "items": [
     {
       "shotId": "shot_001",
-      "modelId": "higgsfield-ai/dop/standard/first-last-frame",
+      "modelId": "seedance_2_0",
       "requiredSeconds": 6.8,
       "billableSeconds": 7,
-      "prompt": "wide aerial push over an untouched grassy hillside at dawn, weathered man in faded green canvas work jacket and brown trousers, remote grassy hillside, golden hour low sun, extreme wide shot, 35mm, documentary realism, natural light, earthy palette",
-      "negativePrompt": "cartoon, oversaturated, lens flare, text overlay, modern machinery",
+      "prompt": "Static wide of an untouched forest clearing on a gentle slope, bare trees, leaf litter, damp brown earth, faint drizzle. Nothing happens except leaves stirring in the wind. handheld bushcraft documentary footage, flat overcast light, no sun, damp forest clearing, muddy and unpolished, close low camera, natural amateur camera shake, raw unedited look, wide shot, 24mm lens.",
+      "negativePrompt": "cinematic color grading, golden hour, lens flare, drone shot, aerial view, slow motion, time-lapse, modern machinery, excavator, power tools, architectural glass, designer interior, polished, glossy, oversaturated, film trailer look, text overlay, watermark, multiple people",
       "aspectRatio": "16:9",
       "resolution": "1080p",
       "usesStartFrame": true,
       "usesEndFrame": true,
-      "nativeAudio": false,
-      "settings": {}
+      "nativeAudio": true,
+      "settings": {
+        "mode": "std",
+        "genre": "auto"
+      }
     },
     {
       "shotId": "shot_002",
-      "modelId": "higgsfield-ai/dop/turbo",
+      "modelId": "seedance_2_0",
       "requiredSeconds": 5.1,
       "billableSeconds": 6,
-      "prompt": "man walks into frame carrying a shovel over his shoulder, weathered man in faded green canvas work jacket and brown trousers, remote grassy hillside, golden hour low sun, wide shot, 35mm, documentary realism, natural light, earthy palette",
-      "negativePrompt": "cartoon, oversaturated, lens flare, text overlay, modern machinery",
+      "prompt": "a man in an olive-drab work jacket with a torn left cuff, grey thermal collar visible, dark brown canvas trousers muddy at the knees, bare dirty hands walks into the clearing carrying a worn steel shovel over one shoulder, stops, and looks down at the ground. He does not dig yet. handheld bushcraft documentary footage, flat overcast light, no sun, damp forest clearing, muddy and unpolished, close low camera, natural amateur camera shake, raw unedited look, wide shot, 24mm lens.",
+      "negativePrompt": "cinematic color grading, golden hour, lens flare, drone shot, aerial view, slow motion, time-lapse, modern machinery, excavator, power tools, architectural glass, designer interior, polished, glossy, oversaturated, film trailer look, text overlay, watermark, multiple people",
       "aspectRatio": "16:9",
       "resolution": "1080p",
-      "usesStartFrame": true,
+      "usesStartFrame": false,
       "usesEndFrame": false,
-      "nativeAudio": false,
-      "settings": {}
+      "nativeAudio": true,
+      "settings": {
+        "mode": "std",
+        "genre": "auto"
+      }
     },
     {
       "shotId": "shot_003",
-      "modelId": "higgsfield-ai/dop/turbo",
+      "modelId": "seedance_2_0",
       "requiredSeconds": 4.25,
       "billableSeconds": 5,
-      "prompt": "close on boot pressing the spade into unbroken turf, weathered man in faded green canvas work jacket and brown trousers, remote grassy hillside, golden hour low sun, close shot, 35mm, documentary realism, natural light, earthy palette",
-      "negativePrompt": "cartoon, oversaturated, lens flare, text overlay, modern machinery",
+      "prompt": "Close on a worn steel spade blade being pushed into damp leaf litter by a muddy boot. The blade cuts through roots. Single continuous push. handheld bushcraft documentary footage, flat overcast light, no sun, damp forest clearing, muddy and unpolished, close low camera, natural amateur camera shake, raw unedited look, close shot, 24mm lens.",
+      "negativePrompt": "cinematic color grading, golden hour, lens flare, drone shot, aerial view, slow motion, time-lapse, modern machinery, excavator, power tools, architectural glass, designer interior, polished, glossy, oversaturated, film trailer look, text overlay, watermark, multiple people",
       "aspectRatio": "16:9",
       "resolution": "1080p",
-      "usesStartFrame": true,
+      "usesStartFrame": false,
       "usesEndFrame": false,
-      "nativeAudio": false,
-      "settings": {}
+      "nativeAudio": true,
+      "settings": {
+        "mode": "std",
+        "genre": "auto"
+      }
     },
     {
       "shotId": "shot_004",
-      "modelId": "higgsfield-ai/dop/turbo",
+      "modelId": "seedance_2_0",
       "requiredSeconds": 5.1,
       "billableSeconds": 6,
-      "prompt": "first slab of turf lifts away revealing dark soil, weathered man in faded green canvas work jacket and brown trousers, remote grassy hillside, golden hour low sun, close shot, 35mm, documentary realism, natural light, earthy palette",
-      "negativePrompt": "cartoon, oversaturated, lens flare, text overlay, modern machinery",
+      "prompt": "Close on hands levering a spade, one slab of turf and root lifting away to reveal dark wet soil underneath. One lift only. handheld bushcraft documentary footage, flat overcast light, no sun, damp forest clearing, muddy and unpolished, close low camera, natural amateur camera shake, raw unedited look, close shot, 24mm lens.",
+      "negativePrompt": "cinematic color grading, golden hour, lens flare, drone shot, aerial view, slow motion, time-lapse, modern machinery, excavator, power tools, architectural glass, designer interior, polished, glossy, oversaturated, film trailer look, text overlay, watermark, multiple people",
       "aspectRatio": "16:9",
       "resolution": "1080p",
-      "usesStartFrame": true,
+      "usesStartFrame": false,
       "usesEndFrame": false,
-      "nativeAudio": false,
-      "settings": {}
+      "nativeAudio": true,
+      "settings": {
+        "mode": "std",
+        "genre": "auto"
+      }
     },
     {
       "shotId": "shot_007",
-      "modelId": "higgsfield-ai/dop/turbo",
+      "modelId": "seedance_2_0",
       "requiredSeconds": 5.95,
       "billableSeconds": 6,
-      "prompt": "man waist-deep in the pit throwing soil upward, weathered man in faded green canvas work jacket and brown trousers, remote grassy hillside, golden hour low sun, medium shot, 35mm, documentary realism, natural light, earthy palette",
-      "negativePrompt": "cartoon, oversaturated, lens flare, text overlay, modern machinery",
+      "prompt": "a man in an olive-drab work jacket with a torn left cuff, grey thermal collar visible, dark brown canvas trousers muddy at the knees, bare dirty hands standing knee-deep in a shallow pit, lifting one shovelful of soil and tossing it over the rim. One throw, then he pauses to breathe. handheld bushcraft documentary footage, flat overcast light, no sun, damp forest clearing, muddy and unpolished, close low camera, natural amateur camera shake, raw unedited look, medium shot, 24mm lens.",
+      "negativePrompt": "cinematic color grading, golden hour, lens flare, drone shot, aerial view, slow motion, time-lapse, modern machinery, excavator, power tools, architectural glass, designer interior, polished, glossy, oversaturated, film trailer look, text overlay, watermark, multiple people",
       "aspectRatio": "16:9",
       "resolution": "1080p",
-      "usesStartFrame": true,
+      "usesStartFrame": false,
       "usesEndFrame": false,
-      "nativeAudio": false,
-      "settings": {}
+      "nativeAudio": true,
+      "settings": {
+        "mode": "std",
+        "genre": "auto"
+      }
     },
     {
       "shotId": "shot_008",
-      "modelId": "higgsfield-ai/dop/standard/first-last-frame",
+      "modelId": "seedance_2_0",
       "requiredSeconds": 7.65,
       "billableSeconds": 8,
-      "prompt": "time-lapse feel: pit deepens as light shifts across it, weathered man in faded green canvas work jacket and brown trousers, remote grassy hillside, golden hour low sun, wide shot, 35mm, documentary realism, natural light, earthy palette",
-      "negativePrompt": "cartoon, oversaturated, lens flare, text overlay, modern machinery",
+      "prompt": "a man in an olive-drab work jacket with a torn left cuff, grey thermal collar visible, dark brown canvas trousers muddy at the knees, bare dirty hands waist-deep in a raw earth pit, vertical soil walls around him, lifting one shovelful and throwing it up over the edge. Camera low at the pit rim looking down. One continuous action. handheld bushcraft documentary footage, flat overcast light, no sun, damp forest clearing, muddy and unpolished, close low camera, natural amateur camera shake, raw unedited look, medium shot, 24mm lens.",
+      "negativePrompt": "cinematic color grading, golden hour, lens flare, drone shot, aerial view, slow motion, time-lapse, modern machinery, excavator, power tools, architectural glass, designer interior, polished, glossy, oversaturated, film trailer look, text overlay, watermark, multiple people",
       "aspectRatio": "16:9",
       "resolution": "1080p",
       "usesStartFrame": true,
       "usesEndFrame": true,
-      "nativeAudio": false,
-      "settings": {}
+      "nativeAudio": true,
+      "settings": {
+        "mode": "std",
+        "genre": "auto"
+      }
     },
     {
       "shotId": "shot_009",
-      "modelId": "higgsfield-ai/dop/turbo",
+      "modelId": "seedance_2_0",
       "requiredSeconds": 5.95,
       "billableSeconds": 6,
-      "prompt": "man sets the first timber post against the earth wall, weathered man in faded green canvas work jacket and brown trousers, remote grassy hillside, golden hour low sun, medium shot, 35mm, documentary realism, natural light, earthy palette",
-      "negativePrompt": "cartoon, oversaturated, lens flare, text overlay, modern machinery",
+      "prompt": "a man in an olive-drab work jacket with a torn left cuff, grey thermal collar visible, dark brown canvas trousers muddy at the knees, bare dirty hands kneeling in the pit floor, setting a rough debarked pine log upright against the earth wall and steadying it with both hands. handheld bushcraft documentary footage, flat overcast light, no sun, damp forest clearing, muddy and unpolished, close low camera, natural amateur camera shake, raw unedited look, medium shot, 24mm lens.",
+      "negativePrompt": "cinematic color grading, golden hour, lens flare, drone shot, aerial view, slow motion, time-lapse, modern machinery, excavator, power tools, architectural glass, designer interior, polished, glossy, oversaturated, film trailer look, text overlay, watermark, multiple people",
       "aspectRatio": "16:9",
       "resolution": "1080p",
-      "usesStartFrame": true,
+      "usesStartFrame": false,
       "usesEndFrame": false,
-      "nativeAudio": false,
-      "settings": {}
+      "nativeAudio": true,
+      "settings": {
+        "mode": "std",
+        "genre": "auto"
+      }
     },
     {
       "shotId": "shot_010",
-      "modelId": "higgsfield-ai/dop/standard/first-last-frame",
+      "modelId": "seedance_2_0",
       "requiredSeconds": 6.8,
       "billableSeconds": 7,
-      "prompt": "timber frame rises along the pit walls, weathered man in faded green canvas work jacket and brown trousers, remote grassy hillside, golden hour low sun, wide shot, 35mm, documentary realism, natural light, earthy palette",
-      "negativePrompt": "cartoon, oversaturated, lens flare, text overlay, modern machinery",
+      "prompt": "Close on hands wedging a rough pine log tight against packed earth, tapping it with the flat of a small forest axe. Wood and soil contact in detail. handheld bushcraft documentary footage, flat overcast light, no sun, damp forest clearing, muddy and unpolished, close low camera, natural amateur camera shake, raw unedited look, close shot, 24mm lens.",
+      "negativePrompt": "cinematic color grading, golden hour, lens flare, drone shot, aerial view, slow motion, time-lapse, modern machinery, excavator, power tools, architectural glass, designer interior, polished, glossy, oversaturated, film trailer look, text overlay, watermark, multiple people",
       "aspectRatio": "16:9",
       "resolution": "1080p",
       "usesStartFrame": true,
       "usesEndFrame": true,
-      "nativeAudio": false,
-      "settings": {}
+      "nativeAudio": true,
+      "settings": {
+        "mode": "std",
+        "genre": "auto"
+      }
     },
     {
       "shotId": "shot_011",
-      "modelId": "higgsfield-ai/dop/standard/first-last-frame",
+      "modelId": "seedance_2_0",
       "requiredSeconds": 5.95,
       "billableSeconds": 6,
-      "prompt": "roof beams lowered across the finished walls, weathered man in faded green canvas work jacket and brown trousers, remote grassy hillside, golden hour low sun, medium shot, 35mm, documentary realism, natural light, earthy palette",
-      "negativePrompt": "cartoon, oversaturated, lens flare, text overlay, modern machinery",
+      "prompt": "a man in an olive-drab work jacket with a torn left cuff, grey thermal collar visible, dark brown canvas trousers muddy at the knees, bare dirty hands lowering one rough pine roof beam across the top of the log walls, sliding it into position with both hands. One beam only. handheld bushcraft documentary footage, flat overcast light, no sun, damp forest clearing, muddy and unpolished, close low camera, natural amateur camera shake, raw unedited look, medium shot, 24mm lens.",
+      "negativePrompt": "cinematic color grading, golden hour, lens flare, drone shot, aerial view, slow motion, time-lapse, modern machinery, excavator, power tools, architectural glass, designer interior, polished, glossy, oversaturated, film trailer look, text overlay, watermark, multiple people",
       "aspectRatio": "16:9",
       "resolution": "1080p",
       "usesStartFrame": true,
       "usesEndFrame": true,
-      "nativeAudio": false,
-      "settings": {}
+      "nativeAudio": true,
+      "settings": {
+        "mode": "std",
+        "genre": "auto"
+      }
     },
     {
       "shotId": "shot_012",
-      "modelId": "higgsfield-ai/dop/lite",
+      "modelId": "seedance_2_0",
       "requiredSeconds": 5.1,
       "billableSeconds": 6,
-      "prompt": "earth heaped over the roof until only a doorway remains, weathered man in faded green canvas work jacket and brown trousers, remote grassy hillside, golden hour low sun, wide shot, 35mm, documentary realism, natural light, earthy palette",
-      "negativePrompt": "cartoon, oversaturated, lens flare, text overlay, modern machinery",
+      "prompt": "Close on a shovel heaping damp soil onto rough log roof beams, soil falling between the gaps. One continuous heap. handheld bushcraft documentary footage, flat overcast light, no sun, damp forest clearing, muddy and unpolished, close low camera, natural amateur camera shake, raw unedited look, close shot, 24mm lens.",
+      "negativePrompt": "cinematic color grading, golden hour, lens flare, drone shot, aerial view, slow motion, time-lapse, modern machinery, excavator, power tools, architectural glass, designer interior, polished, glossy, oversaturated, film trailer look, text overlay, watermark, multiple people",
       "aspectRatio": "16:9",
       "resolution": "1080p",
-      "usesStartFrame": true,
+      "usesStartFrame": false,
       "usesEndFrame": false,
-      "nativeAudio": false,
-      "settings": {}
+      "nativeAudio": true,
+      "settings": {
+        "mode": "std",
+        "genre": "auto"
+      }
     },
     {
       "shotId": "shot_013",
-      "modelId": "higgsfield-ai/dop/turbo",
+      "modelId": "seedance_2_0",
       "requiredSeconds": 5.1,
       "billableSeconds": 6,
-      "prompt": "grass regrown over the mound, evening settling in, weathered man in faded green canvas work jacket and brown trousers, remote grassy hillside, golden hour low sun, wide shot, 35mm, documentary realism, natural light, earthy palette",
-      "negativePrompt": "cartoon, oversaturated, lens flare, text overlay, modern machinery",
+      "prompt": "Static wide of a low earth-covered mound in the forest clearing, dark timber-framed doorway cut into its side, loose soil and scattered tools still lying around. Overcast, damp. handheld bushcraft documentary footage, flat overcast light, no sun, damp forest clearing, muddy and unpolished, close low camera, natural amateur camera shake, raw unedited look, wide shot, 24mm lens.",
+      "negativePrompt": "cinematic color grading, golden hour, lens flare, drone shot, aerial view, slow motion, time-lapse, modern machinery, excavator, power tools, architectural glass, designer interior, polished, glossy, oversaturated, film trailer look, text overlay, watermark, multiple people",
       "aspectRatio": "16:9",
       "resolution": "1080p",
-      "usesStartFrame": true,
+      "usesStartFrame": false,
       "usesEndFrame": false,
-      "nativeAudio": false,
-      "settings": {}
+      "nativeAudio": true,
+      "settings": {
+        "mode": "std",
+        "genre": "auto"
+      }
     },
     {
       "shotId": "shot_014",
-      "modelId": "higgsfield-ai/dop/standard/first-last-frame",
+      "modelId": "seedance_2_0",
       "requiredSeconds": 5.1,
       "billableSeconds": 6,
-      "prompt": "warm lamplight glows from a window set into the hillside, weathered man in faded green canvas work jacket and brown trousers, remote grassy hillside, golden hour low sun, medium shot, 35mm, documentary realism, natural light, earthy palette",
-      "negativePrompt": "cartoon, oversaturated, lens flare, text overlay, modern machinery",
+      "prompt": "Handheld shot slowly approaching a rough timber-framed doorway set into an earth mound at dusk. Warm firelight flickers from inside, uneven and orange, spilling onto muddy ground. The timber is hand-cut and irregular, salvaged glass in a crooked frame beside the door. handheld bushcraft documentary footage, flat overcast light, no sun, damp forest clearing, muddy and unpolished, close low camera, natural amateur camera shake, raw unedited look, medium shot, 24mm lens.",
+      "negativePrompt": "cinematic color grading, golden hour, lens flare, drone shot, aerial view, slow motion, time-lapse, modern machinery, excavator, power tools, architectural glass, designer interior, polished, glossy, oversaturated, film trailer look, text overlay, watermark, multiple people",
       "aspectRatio": "16:9",
       "resolution": "1080p",
       "usesStartFrame": true,
       "usesEndFrame": true,
-      "nativeAudio": false,
-      "settings": {}
+      "nativeAudio": true,
+      "settings": {
+        "mode": "std",
+        "genre": "auto"
+      }
     }
   ]
 }

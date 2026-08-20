@@ -1,0 +1,23 @@
+{
+  "character": {
+    "description": "A weathered man in his late 30s, lean and strong, short dark hair, stubble",
+    "wardrobe": "Faded green canvas work jacket, brown trousers, worn leather boots, no hat",
+    "distinguishingFeatures": ["dirt on forearms", "leather work gloves", "silver ring on right hand"]
+  },
+  "environment": {
+    "description": "Remote grassy hillside in temperate woodland, treeline to the north",
+    "timeOfDay": "golden hour, low warm sun",
+    "weather": "clear with occasional light mist"
+  },
+  "lighting": "Natural low-angle sunlight, long shadows, warm highlights against cool earth shadow",
+  "cameraStyle": "Handheld documentary with deliberate slow moves; no crash zooms",
+  "lensStyle": "35mm and 50mm, shallow depth on close work, deep focus on landscape",
+  "colorPalette": ["#C88A4A", "#4A5D3A", "#8B7355", "#2E2A24"],
+  "props": [
+    { "name": "shovel", "description": "Long-handled steel spade, worn wooden shaft" },
+    { "name": "timber", "description": "Rough-sawn pine beams, pale cut ends" },
+    { "name": "lantern", "description": "Brass oil lantern with warm flame" }
+  ],
+  "styleKeywords": ["cinematic", "documentary realism", "natural light", "earthy", "patient"],
+  "negativePrompt": "cartoon, oversaturated, lens flare, text overlay, modern machinery, excavator"
+}
