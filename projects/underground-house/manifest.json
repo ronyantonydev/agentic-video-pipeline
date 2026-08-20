@@ -161,7 +161,7 @@
       "actualUSD": 0.66,
       "status": "completed",
       "localFile": "/Users/ronyantony/Desktop/Workspace/RonyDev/agentic-video-pipeline/projects/underground-house/shots/shot_001/original.mp4",
-      "accepted": null
+      "accepted": true
     },
     {
       "assetHash": "97b9cb9568a881d2",
@@ -184,7 +184,7 @@
       "actualUSD": 0.75,
       "status": "completed",
       "localFile": "/Users/ronyantony/Desktop/Workspace/RonyDev/agentic-video-pipeline/projects/underground-house/shots/shot_008/original.mp4",
-      "accepted": null
+      "accepted": true
     },
     {
       "assetHash": "dd4afa136a1a24bf",
@@ -207,7 +207,7 @@
       "actualUSD": 0.56,
       "status": "completed",
       "localFile": "/Users/ronyantony/Desktop/Workspace/RonyDev/agentic-video-pipeline/projects/underground-house/shots/shot_014/original.mp4",
-      "accepted": null
+      "accepted": true
     },
     {
       "assetHash": "a59290ec675c0eee",
@@ -299,7 +299,7 @@
       "actualUSD": 1.25,
       "status": "completed",
       "localFile": "projects/underground-house/shots/shot_002/original.mp4",
-      "accepted": null
+      "accepted": true
     },
     {
       "assetHash": "6e9e416cf8597ab9",
@@ -322,7 +322,7 @@
       "actualUSD": 1.25,
       "status": "completed",
       "localFile": "projects/underground-house/shots/shot_003/original.mp4",
-      "accepted": null
+      "accepted": true
     },
     {
       "assetHash": "1fd2d4b482527df7",
@@ -345,7 +345,7 @@
       "actualUSD": 1.25,
       "status": "completed",
       "localFile": "projects/underground-house/shots/shot_004/original.mp4",
-      "accepted": null
+      "accepted": true
     },
     {
       "assetHash": "e60c9fbebd0da4a7",
@@ -368,7 +368,8 @@
       "actualUSD": 1.25,
       "status": "completed",
       "localFile": "projects/underground-house/shots/shot_005/original.mp4",
-      "accepted": null
+      "accepted": true,
+      "qualityNote": "retry fixed the summer-foliage continuity break"
     },
     {
       "assetHash": "f8ae9ea75bb5b2ba",
@@ -391,7 +392,7 @@
       "actualUSD": 1.25,
       "status": "completed",
       "localFile": "projects/underground-house/shots/shot_006/original.mp4",
-      "accepted": false
+      "accepted": true
     },
     {
       "assetHash": "7a17096993b84bc6",
@@ -414,7 +415,7 @@
       "actualUSD": 1.25,
       "status": "completed",
       "localFile": "projects/underground-house/shots/shot_007/original.mp4",
-      "accepted": null
+      "accepted": true
     },
     {
       "assetHash": "ca17ee0d0fdaa116",
@@ -437,7 +438,7 @@
       "actualUSD": 1.25,
       "status": "completed",
       "localFile": "projects/underground-house/shots/shot_009/original.mp4",
-      "accepted": null
+      "accepted": true
     },
     {
       "assetHash": "2d102e0143a139a3",
@@ -460,7 +461,7 @@
       "actualUSD": 1.25,
       "status": "completed",
       "localFile": "projects/underground-house/shots/shot_010/original.mp4",
-      "accepted": null
+      "accepted": true
     },
     {
       "assetHash": "d86c854890015249",
@@ -483,7 +484,7 @@
       "actualUSD": 1.25,
       "status": "completed",
       "localFile": "projects/underground-house/shots/shot_011/original.mp4",
-      "accepted": null
+      "accepted": true
     },
     {
       "assetHash": "fa9e6fb5344d46ce",
@@ -506,7 +507,7 @@
       "actualUSD": 1.25,
       "status": "completed",
       "localFile": "projects/underground-house/shots/shot_012/original.mp4",
-      "accepted": null
+      "accepted": true
     },
     {
       "assetHash": "d07f995ec810265e",
@@ -529,7 +530,7 @@
       "actualUSD": 1.25,
       "status": "completed",
       "localFile": "projects/underground-house/shots/shot_013/original.mp4",
-      "accepted": null
+      "accepted": true
     },
     {
       "assetHash": "33443141d00f209b",
@@ -553,6 +554,29 @@
       "status": "completed",
       "localFile": "projects/underground-house/shots/shot_014/original.mp4",
       "accepted": null
+    },
+    {
+      "assetHash": "0c8664ae9dcb247f",
+      "shotId": "shot_005",
+      "kind": "video",
+      "provider": "higgsfield-mcp",
+      "model": "seedance_2_0_mini",
+      "prompt": "shot_005 v2: bare winter forest, no green foliage",
+      "settings": {
+        "resolution": "720p",
+        "generate_audio": true
+      },
+      "jobId": "ac734594-7b81-4a92-93a2-b26fb10811d1",
+      "submittedAt": "2026-08-20T07:38:49.279Z",
+      "completedAt": "2026-08-20T07:38:49.289Z",
+      "billableDuration": 5,
+      "estimatedCredits": 20,
+      "estimatedUSD": 1.25,
+      "actualCredits": 20,
+      "actualUSD": 1.25,
+      "status": "completed",
+      "localFile": "/Users/ronyantony/Desktop/Workspace/RonyDev/agentic-video-pipeline/projects/underground-house/shots/shot_005/original.mp4",
+      "accepted": true
     }
   ]
 }
