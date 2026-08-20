@@ -12,37 +12,31 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-
     "video": "tsx src/cli/index.ts video",
     "init": "tsx src/cli/index.ts init",
-
     "plan:story": "tsx src/cli/index.ts plan story",
     "plan:audio": "tsx src/cli/index.ts plan audio",
     "plan:storyboard": "tsx src/cli/index.ts plan storyboard",
     "plan:edit": "tsx src/cli/index.ts plan edit",
     "plan:generation": "tsx src/cli/index.ts plan generation",
-
     "cost": "tsx src/cli/index.ts cost",
     "approve": "tsx src/cli/index.ts approve",
-
     "gen:references": "tsx src/cli/index.ts gen references",
     "gen:shots": "tsx src/cli/index.ts gen shots",
-
     "qa:machine": "tsx src/cli/index.ts qa machine",
     "qa:vision": "tsx src/cli/index.ts qa vision",
     "qa:final": "tsx src/cli/index.ts qa final",
-
     "review": "tsx src/cli/index.ts review",
     "render": "tsx src/cli/index.ts render",
     "upscale": "tsx src/cli/index.ts upscale",
     "thumbnail": "tsx src/cli/index.ts thumbnail",
     "report": "tsx src/cli/index.ts report",
-
     "doctor": "tsx src/cli/index.ts doctor"
   },
   "dependencies": {
     "commander": "^12.1.0",
     "dotenv": "^16.4.5",
+    "hyperframes": "^0.8.4",
     "zod": "^3.23.8"
   },
   "devDependencies": {

@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Below - building an underground shelter by hand</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1920px;
+    height: 1080px;
+    background: #000;
+    overflow: hidden;
+    font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+  }
+  #root { position: relative; width: 1920px; height: 1080px; }
+  .shot, .still {
+    position: absolute; inset: 0;
+    width: 1920px; height: 1080px;
+    object-fit: cover;
+  }
+  .caption {
+    position: absolute; left: 0; right: 0; bottom: 8%;
+    text-align: center; color: #fff;
+    font-size: 42px; font-weight: 600;
+    text-shadow: 0 2px 12px rgba(0,0,0,.85);
+    padding: 0 8%;
+  }
+  .fade {
+    position: absolute; inset: 0; pointer-events: none;
+    background: #000;
+    animation: fade-seq 79.54s linear both;
+  }
+  @keyframes fade-seq {
+    0%   { opacity: 1 }
+    1.89% { opacity: 0 }
+    96.23% { opacity: 0 }
+    100% { opacity: 1 }
+  }
+</style>
+</head>
+<body>
+<div id="root"
+     data-composition-id="root"
+     data-start="0"
+     data-no-timeline
+     data-width="1920"
+     data-height="1080"
+     data-duration="79.54">
+  <video id="clip-shot_001" class="clip shot" data-shot-id="shot_001" data-start="0" data-duration="7.1" data-track-index="0" data-has-audio="true" data-volume="1" src="assets/shot_001.mp4" playsinline></video>
+  <video id="clip-shot_002" class="clip shot" data-shot-id="shot_002" data-start="7.1" data-duration="6" data-track-index="0" data-has-audio="true" data-volume="1" src="assets/shot_002.mp4" playsinline></video>
+  <video id="clip-shot_003" class="clip shot" data-shot-id="shot_003" data-start="13.1" data-duration="5" data-track-index="0" data-has-audio="true" data-volume="1" src="assets/shot_003.mp4" playsinline></video>
+  <video id="clip-shot_004" class="clip shot" data-shot-id="shot_004" data-start="18.1" data-duration="6" data-track-index="0" data-has-audio="true" data-volume="1" src="assets/shot_004.mp4" playsinline></video>
+  <video id="clip-shot_005" class="clip shot" data-shot-id="shot_005" data-start="24.1" data-duration="3" data-track-index="0" data-has-audio="true" data-volume="1" src="assets/shot_005.mp4" playsinline></video>
+  <video id="clip-shot_006" class="clip shot" data-shot-id="shot_006" data-start="27.1" data-duration="3" data-track-index="0" data-has-audio="true" data-volume="1" src="assets/shot_006.mp4" playsinline></video>
+  <video id="clip-shot_007" class="clip shot" data-shot-id="shot_007" data-start="30.1" data-duration="7" data-track-index="0" data-has-audio="true" data-volume="1" src="assets/shot_007.mp4" playsinline></video>
+  <video id="clip-shot_008" class="clip shot" data-shot-id="shot_008" data-start="37.1" data-duration="8.1" data-track-index="0" data-has-audio="true" data-volume="1" src="assets/shot_008.mp4" playsinline></video>
+  <video id="clip-shot_009" class="clip shot" data-shot-id="shot_009" data-start="45.2" data-duration="6.08" data-track-index="0" data-has-audio="true" data-volume="1" src="assets/shot_009.mp4" playsinline></video>
+  <video id="clip-shot_010" class="clip shot" data-shot-id="shot_010" data-start="51.28" data-duration="5.09" data-track-index="0" data-has-audio="true" data-volume="1" src="assets/shot_010.mp4" playsinline></video>
+  <video id="clip-shot_011" class="clip shot" data-shot-id="shot_011" data-start="56.37" data-duration="6.08" data-track-index="0" data-has-audio="true" data-volume="1" src="assets/shot_011.mp4" playsinline></video>
+  <video id="clip-shot_012" class="clip shot" data-shot-id="shot_012" data-start="62.45" data-duration="5.09" data-track-index="0" data-has-audio="true" data-volume="1" src="assets/shot_012.mp4" playsinline></video>
+  <video id="clip-shot_013" class="clip shot" data-shot-id="shot_013" data-start="67.54" data-duration="6" data-track-index="0" data-has-audio="true" data-volume="1" src="assets/shot_013.mp4" playsinline></video>
+  <video id="clip-shot_014" class="clip shot" data-shot-id="shot_014" data-start="73.54" data-duration="6" data-track-index="0" data-has-audio="true" data-volume="1" src="assets/shot_014.mp4" playsinline></video>
+  <div id="fade-overlay" class="clip fade" data-start="0" data-duration="79.54"
+       data-track-index="1"></div>
+</div>
+</body>
+</html>
