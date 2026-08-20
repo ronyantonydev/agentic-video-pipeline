@@ -1,12 +1,58 @@
 {
   "_comment": [
-    "Real Higgsfield model IDs, verified against models_explore on 2026-08-20.",
-    "costCredits is null until measured. Cost is resolved at runtime in this order:",
-    "  1. Higgsfield estimate endpoint (exact, authoritative)",
-    "  2. Learned cost from a prior identical config (measured via balance delta)",
-    "  3. sanityRangeCredits below (published third-party ranges, guard only)",
-    "A null costCredits NEVER becomes a silent assumption - see src/budget."
+    "TWO SEPARATE CATALOGUES - verified against both on 2026-08-20:",
+    "",
+    "  restApi[]  - what the API key can generate. GET /models returns 13 models",
+    "               with base_credits. Estimates: POST /estimate/{slug}.",
+    "               Auth: 'Authorization: Key {id}:{secret}'.",
+    "               THIS IS WHAT src/ SPENDS AGAINST.",
+    "",
+    "  video[]/image[] - the MCP connector catalogue (Kling, Veo, Seedance,",
+    "               Nano Banana...). Far larger, but only reachable through",
+    "               Claude's MCP tools, not the REST key.",
+    "",
+    "costCredits is null until measured. Resolution order at runtime:",
+    "  1. POST /estimate/{slug} (exact, authoritative)",
+    "  2. learned cost for an identical config (measured balance delta)",
+    "  3. costCredits below (measured previously, settings unknown)",
+    "  4. refuse - never guess",
+    "A null costCredits NEVER becomes a silent assumption. See src/budget/cost.ts."
   ],
+
+  "restApi": {
+    "_comment": [
+      "Live catalogue from GET /models. base_credits is the API's own figure.",
+      "dop = image2video, soul/popcorn = text2image.",
+      "Video estimates require image_url in the body, so a reference image must",
+      "exist before a video can be quoted - which the pipeline does anyway."
+    ],
+    "verifiedAt": "2026-08-20",
+    "authHeader": "Authorization: Key {HIGGSFIELD_API_KEY}:{HIGGSFIELD_API_SECRET}",
+    "estimatePath": "/estimate/{slug}",
+    "models": [
+      { "slug": "higgsfield-ai/dop/lite", "baseCredits": 2.0, "op": "image2video", "output": "video" },
+      { "slug": "higgsfield-ai/dop/lite/first-last-frame", "baseCredits": 2.0, "op": "image2video", "output": "video", "supportsStartEndFrames": true },
+      { "slug": "higgsfield-ai/dop/turbo", "baseCredits": 6.5, "op": "image2video", "output": "video" },
+      { "slug": "higgsfield-ai/dop/turbo/first-last-frame", "baseCredits": 6.5, "op": "image2video", "output": "video", "supportsStartEndFrames": true },
+      { "slug": "higgsfield-ai/dop/standard", "baseCredits": 9.0, "op": "image2video", "output": "video" },
+      { "slug": "higgsfield-ai/dop/standard/first-last-frame", "baseCredits": 9.0, "op": "image2video", "output": "video", "supportsStartEndFrames": true },
+      { "slug": "higgsfield-ai/soul/standard", "baseCredits": 1.0, "op": "text2image", "output": "image", "quotedCredits": 1.5, "quotedUsd": 0.094 },
+      { "slug": "higgsfield-ai/soul/character", "baseCredits": 1.0, "op": "text2image", "output": "image" },
+      { "slug": "higgsfield-ai/soul/reference", "baseCredits": 1.0, "op": "text2image", "output": "image" },
+      { "slug": "higgsfield-ai/soul/cinema", "baseCredits": 0.0, "op": "text2image", "output": "image" },
+      { "slug": "higgsfield-ai/soul/v2/standard", "baseCredits": 0.0, "op": "text2image", "output": "image" },
+      { "slug": "higgsfield-ai/popcorn/auto", "baseCredits": 1.472, "op": "text2image", "output": "image" },
+      { "slug": "soul-id", "baseCredits": 40.0, "op": "character", "output": "image" }
+    ],
+    "selectionPolicy": {
+      "supporting": "higgsfield-ai/dop/lite",
+      "normal": "higgsfield-ai/dop/turbo",
+      "anchor": "higgsfield-ai/dop/standard",
+      "chainCapable": "higgsfield-ai/dop/standard/first-last-frame",
+      "referenceImage": "higgsfield-ai/soul/standard",
+      "cinematicStill": "higgsfield-ai/soul/cinema"
+    }
+  },
 
   "creditToUsd": {
     "rate": 0.0627,
