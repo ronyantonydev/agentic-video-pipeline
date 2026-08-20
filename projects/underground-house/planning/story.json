@@ -1,0 +1,18 @@
+{
+  "idea": "A 90-second cinematic video of a man building an underground house",
+  "title": "Below",
+  "logline": "One man, one shovel, one year beneath the earth.",
+  "hook": "Everyone said it couldn't be done with bare hands.",
+  "targetDurationSeconds": 90,
+  "tone": "cinematic, patient, earned triumph",
+  "audience": "documentary and build-story viewers",
+  "narrationRequired": false,
+  "beats": [
+    { "id": "b1", "summary": "Empty field at dawn; a man arrives with a shovel", "purpose": "hook - establish impossible scale" },
+    { "id": "b2", "summary": "First cuts into the earth; the hole begins", "purpose": "commitment" },
+    { "id": "b3", "summary": "The pit deepens; seasons turn; exhaustion", "purpose": "cost of the work" },
+    { "id": "b4", "summary": "Walls rise from timber and stone", "purpose": "turn - it becomes a structure" },
+    { "id": "b5", "summary": "The roof closes over; earth covers it", "purpose": "transformation" },
+    { "id": "b6", "summary": "Warm light from a window set into the hillside", "purpose": "payoff" }
+  ]
+}

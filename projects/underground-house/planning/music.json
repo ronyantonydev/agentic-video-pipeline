@@ -1,0 +1,9 @@
+{
+  "mood": "patient, building, resolute",
+  "genre": "cinematic ambient with low percussion",
+  "bpm": 80,
+  "energyCurve": "build",
+  "source": "generated",
+  "generationPrompt": "Slow cinematic ambient build, low strings and soft percussion, 80 BPM, patient and resolute, resolving warm at the end",
+  "durationSeconds": 90
+}

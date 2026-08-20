@@ -1,0 +1,80 @@
+{
+  "frames": [
+    {
+      "shotId": "shot_001",
+      "description": "wide aerial push over an untouched grassy hillside at dawn",
+      "imagePrompt": "wide aerial push over an untouched grassy hillside at dawn, weathered man in faded green canvas work jacket and brown trousers, remote grassy hillside, golden hour low sun, extreme wide shot, 35mm, documentary realism, natural light, earthy palette",
+      "startFramePrompt": "opening frame: wide aerial push over an untouched grassy hillside at dawn, golden hour",
+      "endFramePrompt": "closing frame: wide aerial push over an untouched grassy hillside at dawn, light shifted slightly warmer"
+    },
+    {
+      "shotId": "shot_002",
+      "description": "man walks into frame carrying a shovel over his shoulder",
+      "imagePrompt": "man walks into frame carrying a shovel over his shoulder, weathered man in faded green canvas work jacket and brown trousers, remote grassy hillside, golden hour low sun, wide shot, 35mm, documentary realism, natural light, earthy palette"
+    },
+    {
+      "shotId": "shot_003",
+      "description": "close on boot pressing the spade into unbroken turf",
+      "imagePrompt": "close on boot pressing the spade into unbroken turf, weathered man in faded green canvas work jacket and brown trousers, remote grassy hillside, golden hour low sun, close shot, 35mm, documentary realism, natural light, earthy palette"
+    },
+    {
+      "shotId": "shot_004",
+      "description": "first slab of turf lifts away revealing dark soil",
+      "imagePrompt": "first slab of turf lifts away revealing dark soil, weathered man in faded green canvas work jacket and brown trousers, remote grassy hillside, golden hour low sun, close shot, 35mm, documentary realism, natural light, earthy palette"
+    },
+    {
+      "shotId": "shot_005",
+      "description": "wide of a shallow rectangular cut in the hillside",
+      "imagePrompt": "wide of a shallow rectangular cut in the hillside, weathered man in faded green canvas work jacket and brown trousers, remote grassy hillside, golden hour low sun, wide shot, 35mm, documentary realism, natural light, earthy palette"
+    },
+    {
+      "shotId": "shot_006",
+      "description": "hands gripping the shovel, dirt falling through fingers",
+      "imagePrompt": "hands gripping the shovel, dirt falling through fingers, weathered man in faded green canvas work jacket and brown trousers, remote grassy hillside, golden hour low sun, macro shot, 35mm, documentary realism, natural light, earthy palette"
+    },
+    {
+      "shotId": "shot_007",
+      "description": "man waist-deep in the pit throwing soil upward",
+      "imagePrompt": "man waist-deep in the pit throwing soil upward, weathered man in faded green canvas work jacket and brown trousers, remote grassy hillside, golden hour low sun, medium shot, 35mm, documentary realism, natural light, earthy palette"
+    },
+    {
+      "shotId": "shot_008",
+      "description": "time-lapse feel: pit deepens as light shifts across it",
+      "imagePrompt": "time-lapse feel: pit deepens as light shifts across it, weathered man in faded green canvas work jacket and brown trousers, remote grassy hillside, golden hour low sun, wide shot, 35mm, documentary realism, natural light, earthy palette",
+      "startFramePrompt": "opening frame: time-lapse feel: pit deepens as light shifts across it, golden hour",
+      "endFramePrompt": "closing frame: time-lapse feel: pit deepens as light shifts across it, light shifted slightly warmer"
+    },
+    {
+      "shotId": "shot_009",
+      "description": "man sets the first timber post against the earth wall",
+      "imagePrompt": "man sets the first timber post against the earth wall, weathered man in faded green canvas work jacket and brown trousers, remote grassy hillside, golden hour low sun, medium shot, 35mm, documentary realism, natural light, earthy palette"
+    },
+    {
+      "shotId": "shot_010",
+      "description": "timber frame rises along the pit walls",
+      "imagePrompt": "timber frame rises along the pit walls, weathered man in faded green canvas work jacket and brown trousers, remote grassy hillside, golden hour low sun, wide shot, 35mm, documentary realism, natural light, earthy palette"
+    },
+    {
+      "shotId": "shot_011",
+      "description": "roof beams lowered across the finished walls",
+      "imagePrompt": "roof beams lowered across the finished walls, weathered man in faded green canvas work jacket and brown trousers, remote grassy hillside, golden hour low sun, medium shot, 35mm, documentary realism, natural light, earthy palette"
+    },
+    {
+      "shotId": "shot_012",
+      "description": "earth heaped over the roof until only a doorway remains",
+      "imagePrompt": "earth heaped over the roof until only a doorway remains, weathered man in faded green canvas work jacket and brown trousers, remote grassy hillside, golden hour low sun, wide shot, 35mm, documentary realism, natural light, earthy palette"
+    },
+    {
+      "shotId": "shot_013",
+      "description": "grass regrown over the mound, evening settling in",
+      "imagePrompt": "grass regrown over the mound, evening settling in, weathered man in faded green canvas work jacket and brown trousers, remote grassy hillside, golden hour low sun, wide shot, 35mm, documentary realism, natural light, earthy palette"
+    },
+    {
+      "shotId": "shot_014",
+      "description": "warm lamplight glows from a window set into the hillside",
+      "imagePrompt": "warm lamplight glows from a window set into the hillside, weathered man in faded green canvas work jacket and brown trousers, remote grassy hillside, golden hour low sun, medium shot, 35mm, documentary realism, natural light, earthy palette",
+      "startFramePrompt": "opening frame: warm lamplight glows from a window set into the hillside, golden hour",
+      "endFramePrompt": "closing frame: warm lamplight glows from a window set into the hillside, light shifted slightly warmer"
+    }
+  ]
+}

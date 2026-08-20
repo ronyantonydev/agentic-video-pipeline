@@ -1,0 +1,161 @@
+{
+  "totalDurationSeconds": 87.0,
+  "items": [
+    {
+      "shotId": "shot_001",
+      "startSeconds": 0.0,
+      "screenDurationSeconds": 8.0,
+      "motionSeconds": 6.8,
+      "speedFactor": 1.0,
+      "transitionIn": "fade",
+      "transitionOut": "cut",
+      "isStill": false
+    },
+    {
+      "shotId": "shot_002",
+      "startSeconds": 8.0,
+      "screenDurationSeconds": 6.0,
+      "motionSeconds": 5.1,
+      "speedFactor": 1.0,
+      "transitionIn": "cut",
+      "transitionOut": "cut",
+      "isStill": false
+    },
+    {
+      "shotId": "shot_003",
+      "startSeconds": 14.0,
+      "screenDurationSeconds": 5.0,
+      "motionSeconds": 4.25,
+      "speedFactor": 1.0,
+      "transitionIn": "cut",
+      "transitionOut": "cut",
+      "isStill": false
+    },
+    {
+      "shotId": "shot_004",
+      "startSeconds": 19.0,
+      "screenDurationSeconds": 6.0,
+      "motionSeconds": 5.1,
+      "speedFactor": 1.0,
+      "transitionIn": "cut",
+      "transitionOut": "cut",
+      "isStill": false
+    },
+    {
+      "shotId": "shot_005",
+      "startSeconds": 25.0,
+      "screenDurationSeconds": 3.0,
+      "motionSeconds": 0.0,
+      "speedFactor": 1.0,
+      "transitionIn": "cut",
+      "transitionOut": "cut",
+      "isStill": true,
+      "kenBurns": {
+        "enabled": true,
+        "startScale": 1.0,
+        "endScale": 1.12
+      }
+    },
+    {
+      "shotId": "shot_006",
+      "startSeconds": 28.0,
+      "screenDurationSeconds": 3.0,
+      "motionSeconds": 0.0,
+      "speedFactor": 1.0,
+      "transitionIn": "cut",
+      "transitionOut": "cut",
+      "isStill": true,
+      "kenBurns": {
+        "enabled": true,
+        "startScale": 1.0,
+        "endScale": 1.12
+      }
+    },
+    {
+      "shotId": "shot_007",
+      "startSeconds": 31.0,
+      "screenDurationSeconds": 7.0,
+      "motionSeconds": 5.95,
+      "speedFactor": 1.0,
+      "transitionIn": "cut",
+      "transitionOut": "cut",
+      "isStill": false
+    },
+    {
+      "shotId": "shot_008",
+      "startSeconds": 38.0,
+      "screenDurationSeconds": 9.0,
+      "motionSeconds": 7.65,
+      "speedFactor": 1.0,
+      "transitionIn": "cut",
+      "transitionOut": "cut",
+      "isStill": false
+    },
+    {
+      "shotId": "shot_009",
+      "startSeconds": 47.0,
+      "screenDurationSeconds": 7.0,
+      "motionSeconds": 5.95,
+      "speedFactor": 1.0,
+      "transitionIn": "cut",
+      "transitionOut": "cut",
+      "isStill": false
+    },
+    {
+      "shotId": "shot_010",
+      "startSeconds": 54.0,
+      "screenDurationSeconds": 8.0,
+      "motionSeconds": 6.8,
+      "speedFactor": 1.0,
+      "transitionIn": "cut",
+      "transitionOut": "cut",
+      "isStill": false
+    },
+    {
+      "shotId": "shot_011",
+      "startSeconds": 62.0,
+      "screenDurationSeconds": 7.0,
+      "motionSeconds": 5.95,
+      "speedFactor": 1.0,
+      "transitionIn": "cut",
+      "transitionOut": "cut",
+      "isStill": false
+    },
+    {
+      "shotId": "shot_012",
+      "startSeconds": 69.0,
+      "screenDurationSeconds": 6.0,
+      "motionSeconds": 5.1,
+      "speedFactor": 1.0,
+      "transitionIn": "cut",
+      "transitionOut": "cut",
+      "isStill": false
+    },
+    {
+      "shotId": "shot_013",
+      "startSeconds": 75.0,
+      "screenDurationSeconds": 6.0,
+      "motionSeconds": 5.1,
+      "speedFactor": 1.0,
+      "transitionIn": "cut",
+      "transitionOut": "cut",
+      "isStill": false
+    },
+    {
+      "shotId": "shot_014",
+      "startSeconds": 81.0,
+      "screenDurationSeconds": 6.0,
+      "motionSeconds": 5.1,
+      "speedFactor": 1.0,
+      "transitionIn": "cut",
+      "transitionOut": "fade",
+      "isStill": false
+    }
+  ],
+  "music": {
+    "gainDb": -14,
+    "fadeInSeconds": 1.5,
+    "fadeOutSeconds": 3.0
+  },
+  "captions": []
+}

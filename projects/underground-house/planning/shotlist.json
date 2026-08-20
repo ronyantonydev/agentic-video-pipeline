@@ -1,0 +1,160 @@
+{
+  "shots": [
+    {
+      "id": "shot_001",
+      "index": 0,
+      "beatId": "b1",
+      "progressionStage": 0,
+      "intent": "wide aerial push over an untouched grassy hillside at dawn",
+      "importance": "anchor",
+      "continuityMode": "independent",
+      "cameraMove": "push-in",
+      "shotSize": "extreme wide"
+    },
+    {
+      "id": "shot_002",
+      "index": 1,
+      "beatId": "b1",
+      "progressionStage": 0,
+      "intent": "man walks into frame carrying a shovel over his shoulder",
+      "importance": "normal",
+      "continuityMode": "reference-only",
+      "cameraMove": "static",
+      "shotSize": "wide"
+    },
+    {
+      "id": "shot_003",
+      "index": 2,
+      "beatId": "b2",
+      "progressionStage": 1,
+      "intent": "close on boot pressing the spade into unbroken turf",
+      "importance": "normal",
+      "continuityMode": "reference-only",
+      "cameraMove": "static",
+      "shotSize": "close"
+    },
+    {
+      "id": "shot_004",
+      "index": 3,
+      "beatId": "b2",
+      "progressionStage": 1,
+      "intent": "first slab of turf lifts away revealing dark soil",
+      "importance": "normal",
+      "continuityMode": "reference-only",
+      "cameraMove": "slow tilt",
+      "shotSize": "close"
+    },
+    {
+      "id": "shot_005",
+      "index": 4,
+      "beatId": "b2",
+      "progressionStage": 1,
+      "intent": "wide of a shallow rectangular cut in the hillside",
+      "importance": "supporting",
+      "continuityMode": "reference-only",
+      "cameraMove": "static",
+      "shotSize": "wide"
+    },
+    {
+      "id": "shot_006",
+      "index": 5,
+      "beatId": "b3",
+      "progressionStage": 2,
+      "intent": "hands gripping the shovel, dirt falling through fingers",
+      "importance": "supporting",
+      "continuityMode": "reference-only",
+      "cameraMove": "static",
+      "shotSize": "macro"
+    },
+    {
+      "id": "shot_007",
+      "index": 6,
+      "beatId": "b3",
+      "progressionStage": 2,
+      "intent": "man waist-deep in the pit throwing soil upward",
+      "importance": "normal",
+      "continuityMode": "reference-only",
+      "cameraMove": "static",
+      "shotSize": "medium"
+    },
+    {
+      "id": "shot_008",
+      "index": 7,
+      "beatId": "b3",
+      "progressionStage": 2,
+      "intent": "time-lapse feel: pit deepens as light shifts across it",
+      "importance": "anchor",
+      "continuityMode": "independent",
+      "cameraMove": "slow push",
+      "shotSize": "wide"
+    },
+    {
+      "id": "shot_009",
+      "index": 8,
+      "beatId": "b4",
+      "progressionStage": 3,
+      "intent": "man sets the first timber post against the earth wall",
+      "importance": "normal",
+      "continuityMode": "reference-only",
+      "cameraMove": "static",
+      "shotSize": "medium"
+    },
+    {
+      "id": "shot_010",
+      "index": 9,
+      "beatId": "b4",
+      "progressionStage": 3,
+      "intent": "timber frame rises along the pit walls",
+      "importance": "normal",
+      "continuityMode": "previous-shot",
+      "cameraMove": "pan",
+      "shotSize": "wide",
+      "previousShot": "shot_009"
+    },
+    {
+      "id": "shot_011",
+      "index": 10,
+      "beatId": "b5",
+      "progressionStage": 4,
+      "intent": "roof beams lowered across the finished walls",
+      "importance": "normal",
+      "continuityMode": "previous-shot",
+      "cameraMove": "slow tilt",
+      "shotSize": "medium",
+      "previousShot": "shot_010"
+    },
+    {
+      "id": "shot_012",
+      "index": 11,
+      "beatId": "b5",
+      "progressionStage": 4,
+      "intent": "earth heaped over the roof until only a doorway remains",
+      "importance": "supporting",
+      "continuityMode": "reference-only",
+      "cameraMove": "static",
+      "shotSize": "wide"
+    },
+    {
+      "id": "shot_013",
+      "index": 12,
+      "beatId": "b6",
+      "progressionStage": 5,
+      "intent": "grass regrown over the mound, evening settling in",
+      "importance": "normal",
+      "continuityMode": "reference-only",
+      "cameraMove": "slow push",
+      "shotSize": "wide"
+    },
+    {
+      "id": "shot_014",
+      "index": 13,
+      "beatId": "b6",
+      "progressionStage": 5,
+      "intent": "warm lamplight glows from a window set into the hillside",
+      "importance": "anchor",
+      "continuityMode": "reference-only",
+      "cameraMove": "push-in",
+      "shotSize": "medium"
+    }
+  ]
+}

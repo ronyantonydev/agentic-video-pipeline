@@ -1,0 +1,11 @@
+{
+  "subject": "underground house built by hand",
+  "stages": [
+    { "index": 0, "name": "empty ground", "description": "Untouched grassy hillside at dawn", "visualMarkers": ["unbroken turf", "morning mist", "no structures"] },
+    { "index": 1, "name": "first cut", "description": "A shallow rectangular scar in the turf", "visualMarkers": ["exposed dark soil", "stacked turf", "shovel upright"] },
+    { "index": 2, "name": "deep pit", "description": "Pit deep enough to stand in, walls of raw earth", "visualMarkers": ["vertical earth walls", "spoil heaps", "ladder"] },
+    { "index": 3, "name": "timber walls", "description": "Timber frame and stone footings line the pit", "visualMarkers": ["timber posts", "stone base course", "sawdust"] },
+    { "index": 4, "name": "roof closed", "description": "Beams span the walls and earth is heaped over", "visualMarkers": ["roof beams", "soil covering", "only a doorway visible"] },
+    { "index": 5, "name": "finished home", "description": "A grass-covered mound with a warm lit window", "visualMarkers": ["regrown grass", "glowing window", "smoke from a flue"] }
+  ]
+}

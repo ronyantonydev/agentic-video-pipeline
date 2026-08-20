@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "projectName": "underground-house",
+  "createdAt": "2026-08-20T04:02:45.372Z",
+  "updatedAt": "2026-08-20T04:05:56.956Z",
+  "idea": "A 90-second cinematic video of a man building an underground house",
+  "mode": "full",
+  "stage": "references",
+  "completedStages": [
+    "init",
+    "story",
+    "beat-grid",
+    "storyboard",
+    "edit-plan",
+    "generation-plan",
+    "gate-cost"
+  ],
+  "gates": {
+    "cost": {
+      "status": "approved",
+      "requestedAt": "2026-08-20T04:05:45.242Z",
+      "decidedAt": "2026-08-20T04:05:56.947Z",
+      "decidedBy": "human",
+      "note": "reviewed, 109 credits acceptable"
+    },
+    "look": {
+      "status": "not-reached"
+    },
+    "review": {
+      "status": "not-reached"
+    }
+  },
+  "budget": {
+    "maxBudgetUSD": 20,
+    "spentUSD": 0,
+    "reservedUSD": 0,
+    "creditsStart": null,
+    "creditsUsed": 0,
+    "creditsRemaining": null
+  },
+  "projectSettings": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "colorspace": "bt709",
+    "aspectRatio": "16:9"
+  },
+  "shots": {},
+  "warnings": []
+}

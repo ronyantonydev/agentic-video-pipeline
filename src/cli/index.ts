@@ -10,6 +10,10 @@ import { Command } from 'commander';
 import { runDoctor } from './doctor.js';
 import { log } from '../util/logger.js';
 import { HardStop, PipelineError, GatePending } from '../util/errors.js';
+import {
+  cmdInit, cmdPlan, cmdCost, cmdApprove, cmdStatus, type PlanStage,
+} from './commands.js';
+import type { GateNameT } from '../schemas/state.js';
 
 const program = new Command();
 
@@ -33,10 +37,17 @@ program
   .command('init')
   .description('Create a new project skeleton')
   .argument('<project>', 'project name (kebab-case)')
-  .option('--idea <text>', 'one-line idea')
-  .action((project: string) => {
-    notImplemented('init', `project=${project}`);
+  .requiredOption('--idea <text>', 'the idea, in plain language')
+  .option('--mode <mode>', 'full | proof | dry-run', 'full')
+  .action((project: string, opts: { idea: string; mode: string }) => {
+    cmdInit(project, opts.idea, opts.mode as 'full' | 'proof' | 'dry-run');
   });
+
+program
+  .command('status')
+  .description('Show project stage, gates, budget and artifacts')
+  .argument('<project>', 'project name')
+  .action((project: string) => cmdStatus(project));
 
 /* -------------------------------------------------------------------- plan */
 
@@ -45,9 +56,9 @@ const plan = program.command('plan').description('Validate a planning artifact')
 for (const stage of ['story', 'audio', 'storyboard', 'edit', 'generation'] as const) {
   plan
     .command(stage)
-    .description(`Validate planning/${stage}*.json and advance state`)
+    .description(`Validate the artifacts for the ${stage} stage and advance state`)
     .argument('<project>', 'project name')
-    .action((project: string) => notImplemented(`plan:${stage}`, `project=${project}`));
+    .action((project: string) => cmdPlan(project, stage as PlanStage));
 }
 
 /* ------------------------------------------------------------- cost / gates */
@@ -56,16 +67,30 @@ program
   .command('cost')
   .description('Estimate cost from the generation plan')
   .argument('<project>', 'project name')
-  .action((project: string) => notImplemented('cost', `project=${project}`));
+  .option('--dry-run', 'print the report without requesting approval')
+  .option('--no-api', 'do not call the estimate endpoint')
+  .action(async (project: string, opts: { dryRun?: boolean; api?: boolean }) => {
+    await cmdCost(project, {
+      ...(opts.dryRun !== undefined ? { dryRun: opts.dryRun } : {}),
+      allowApi: opts.api !== false,
+    });
+  });
 
 program
   .command('approve')
-  .description('Approve a pending gate and resume')
+  .description('Approve or reject a pending gate and resume')
   .argument('<project>', 'project name')
   .requiredOption('--gate <gate>', 'cost | look | review')
-  .action((project: string, opts: { gate: string }) =>
-    notImplemented('approve', `project=${project} gate=${opts.gate}`),
-  );
+  .option('--reject', 'reject instead of approving')
+  .option('--note <text>', 'reason for the decision')
+  .action((project: string, opts: { gate: string; reject?: boolean; note?: string }) => {
+    cmdApprove(
+      project,
+      opts.gate as GateNameT,
+      opts.reject ? 'rejected' : 'approved',
+      opts.note,
+    );
+  });
 
 /* --------------------------------------------------------------- generation */
 
@@ -119,10 +144,52 @@ program
   .option('--dry-run', 'plan and estimate only, spend nothing')
   .option('--proof', 'short proof run using production models')
   .option('--resume <project>', 'resume an existing project')
-  .action((idea: string[], opts: Record<string, unknown>) => {
+  .option('--project <name>', 'project name (defaults to a slug of the idea)')
+  .action(async (idea: string[], opts: Record<string, unknown>) => {
     const mode = opts['dryRun'] ? 'dry-run' : opts['proof'] ? 'proof' : 'full';
-    notImplemented('video', `mode=${mode} idea="${idea.join(' ')}"`);
+    const resume = opts['resume'] as string | undefined;
+
+    if (resume) {
+      cmdStatus(resume);
+      return;
+    }
+
+    const text = idea.join(' ').trim();
+    if (!text) {
+      log.error('Provide an idea, or --resume <project>.');
+      process.exitCode = 1;
+      return;
+    }
+
+    const project = (opts['project'] as string | undefined) ?? slugify(text);
+    cmdInit(project, text, mode as 'full' | 'proof' | 'dry-run');
+
+    // Planning artifacts are written by Claude, not generated here
+    // (architecture section 2). Report what is still required.
+    log.stage('Next steps');
+    process.stdout.write(
+      `  Project "${project}" is ready.\n\n` +
+        `  Claude now writes the planning artifacts into\n` +
+        `  projects/${project}/planning/, validated stage by stage:\n\n` +
+        `    npm run plan:story      -- ${project}\n` +
+        `    npm run plan:audio      -- ${project}\n` +
+        `    npm run plan:storyboard -- ${project}\n` +
+        `    npm run plan:edit       -- ${project}\n` +
+        `    npm run plan:generation -- ${project}\n` +
+        `    npm run cost            -- ${project}${mode === 'dry-run' ? ' --dry-run' : ''}\n\n`,
+    );
   });
+
+function slugify(text: string): string {
+  return (
+    text
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '')
+      .slice(0, 48)
+      .replace(/-+$/g, '') || 'project'
+  );
+}
 
 /* --------------------------------------------------------------------- run */
 

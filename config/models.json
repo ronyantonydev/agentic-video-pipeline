@@ -62,10 +62,16 @@
   },
 
   "sanityRangeCredits": {
-    "_comment": "If an estimate falls outside these bands, flag it rather than spend.",
-    "image": { "min": 0.25, "max": 8 },
-    "videoBudget": { "min": 10, "max": 30 },
-    "videoPremium": { "min": 30, "max": 80 },
+    "_comment": [
+      "Bands widened on 2026-08-20 after verifying the REST catalogue.",
+      "The original figures came from third-party reporting on Kling/Veo",
+      "(15-70 credits). The dop models this key actually reaches are far",
+      "cheaper: 2-9 base credits, so a 10s generation lands around 4-18.",
+      "The band must cover both catalogues or every dop shot false-alarms."
+    ],
+    "image": { "min": 0.25, "max": 45 },
+    "videoBudget": { "min": 1, "max": 30 },
+    "videoPremium": { "min": 4, "max": 80 },
     "audio": { "min": 0.5, "max": 20 }
   },
 

@@ -2,13 +2,16 @@
  * Cost resolution. The single place a price is established.
  *
  * Resolution order, strictest first:
- *   1. Higgsfield estimate endpoint - exact, authoritative
+ *   1. Higgsfield estimate endpoint - exact quote for these exact settings
  *   2. Learned cost from a prior identical configuration - measured
- *   3. config costCredits - measured previously, settings unknown
- *   4. refuse
+ *   3. base_credits from GET /models - the API's published per-generation
+ *      figure, scaled by duration and rounded UP
+ *   4. config costCredits - measured previously, settings unknown
+ *   5. refuse
  *
- * There is deliberately no "guess" tier. An invented price that passes a
- * budget check spends real money.
+ * Every tier is a real price from a real source. There is deliberately no
+ * "guess" tier: an invented price that passes a budget check spends money.
+ * Where a tier is inexact it over-estimates, never under-estimates.
  */
 
 import { estimateCost } from '../higgsfield/client.js';
@@ -18,8 +21,10 @@ import { log } from '../util/logger.js';
 import { readJsonIfExists, writeJsonAtomic } from '../util/atomic.js';
 import { paths } from '../state/paths.js';
 import { createHash } from 'node:crypto';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 
-export type CostSource = 'estimate-api' | 'learned' | 'config' | 'none';
+export type CostSource = 'estimate-api' | 'learned' | 'catalogue' | 'config' | 'none';
 
 export type ResolvedCost = {
   credits: number;
@@ -211,7 +216,23 @@ export async function resolveCost(
     return { credits: learned.credits, usd, source: 'learned', exact: true };
   }
 
-  // 3. Config-level cost: measured, but settings were not recorded, so it is
+  // 3. base_credits from the REST catalogue. The API's own published figure
+  //    for the model, so it is a real price - but it does not account for
+  //    duration or resolution, so it is not exact.
+  const catalogue = lookupCatalogueCredits(project, q.modelId);
+  if (catalogue !== null) {
+    const credits = scaleByDuration(catalogue, q);
+    const warning = sanityCheck(q, credits, cfg);
+    return {
+      credits,
+      usd: creditsToUsd(credits, cfg),
+      source: 'catalogue',
+      exact: false,
+      ...(warning ? { sanityWarning: warning } : {}),
+    };
+  }
+
+  // 4. Config-level cost: measured, but settings were not recorded, so it is
   //    a weaker signal than a matching learned entry.
   const configured = findConfiguredCost(cfg, q.modelId);
   if (configured !== null) {
@@ -225,12 +246,75 @@ export async function resolveCost(
     };
   }
 
-  // 4. Refuse.
+  // 5. Refuse.
   throw new UnknownCostError(
     q.modelId,
     'no estimate from the API, no learned cost for this configuration, ' +
-      'and no measured cost in config/models.json',
+      'no base_credits in the REST catalogue, and no measured cost in config',
   );
+}
+
+/**
+ * base_credits for a REST slug, from the cached catalogue or config.
+ *
+ * Video estimates require an image_url, which does not exist during planning,
+ * so the catalogue is the only real price available at dry-run time.
+ */
+function lookupCatalogueCredits(project: string, modelId: string): number | null {
+  const cached = readCatalogueCache(project);
+  const hit = cached?.models.find((m) => m.slug === modelId);
+  if (hit) return hit.baseCredits;
+
+  // Fall back to the snapshot recorded in config/models.json.
+  const raw = loadModelsRaw();
+  const entry = raw?.restApi?.models?.find((m) => m.slug === modelId);
+  return entry?.baseCredits ?? null;
+}
+
+type CatalogueCache = { fetchedAt: string; models: { slug: string; baseCredits: number }[] };
+
+function cataloguePath(project: string): string {
+  return paths(project).planningFile('../checkpoints/model-catalogue.json');
+}
+
+export function readCatalogueCache(project: string): CatalogueCache | null {
+  return readJsonIfExists<CatalogueCache | null>(cataloguePath(project), null);
+}
+
+/** Cache GET /models so pricing works offline and stays reproducible. */
+export function writeCatalogueCache(
+  project: string,
+  models: { slug: string; baseCredits: number }[],
+): void {
+  writeJsonAtomic(cataloguePath(project), {
+    fetchedAt: new Date().toISOString(),
+    models,
+  });
+}
+
+/**
+ * base_credits is a per-generation figure. Duration scaling is unknown until
+ * measured, so scale linearly from the model's minimum and round UP - an
+ * over-estimate is safe, an under-estimate spends money it should not.
+ */
+function scaleByDuration(baseCredits: number, q: CostQuery): number {
+  if (q.kind !== 'video' || q.durationSeconds === undefined) return baseCredits;
+  const BASELINE_SECONDS = 5;
+  const factor = Math.max(1, q.durationSeconds / BASELINE_SECONDS);
+  return Math.ceil(baseCredits * factor * 1000) / 1000;
+}
+
+/** Raw config read, for the restApi block the typed schema does not cover. */
+function loadModelsRaw(): {
+  restApi?: { models?: { slug: string; baseCredits: number }[] };
+} | null {
+  try {
+    return JSON.parse(
+      readFileSync(resolve(process.cwd(), 'config', 'models.json'), 'utf8'),
+    ) as { restApi?: { models?: { slug: string; baseCredits: number }[] } };
+  } catch {
+    return null;
+  }
 }
 
 function findConfiguredCost(cfg: ModelsConfig, modelId: string): number | null {
