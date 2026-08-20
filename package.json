@@ -31,7 +31,9 @@
     "upscale": "tsx src/cli/index.ts upscale",
     "thumbnail": "tsx src/cli/index.ts thumbnail",
     "report": "tsx src/cli/index.ts report",
-    "doctor": "tsx src/cli/index.ts doctor"
+    "doctor": "tsx src/cli/index.ts doctor",
+    "start": "tsx src/cli/index.ts start",
+    "budget": "tsx src/cli/index.ts budget"
   },
   "dependencies": {
     "commander": "^12.1.0",

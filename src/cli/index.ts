@@ -14,6 +14,8 @@ import {
   cmdInit, cmdPlan, cmdCost, cmdApprove, cmdStatus, type PlanStage,
 } from './commands.js';
 import type { GateNameT } from '../schemas/state.js';
+import { runWizard } from './wizard.js';
+import { fitToBudget, formatFit } from '../budget/budget-fit.js';
 
 const program = new Command();
 
@@ -48,6 +50,37 @@ program
   .description('Show project stage, gates, budget and artifacts')
   .argument('<project>', 'project name')
   .action((project: string) => cmdStatus(project));
+
+program
+  .command('start')
+  .description('Interactive setup: asks for the idea and budget, then fits a model to it')
+  .option('--idea <text>', 'skip the idea prompt')
+  .option('--budget <usd>', 'skip the budget prompt')
+  .option('--runtime <seconds>', 'skip the runtime prompt')
+  .option('--project <name>', 'project name (defaults to a slug of the idea)')
+  .action(async (opts: Record<string, string>) => {
+    const preset: Parameters<typeof runWizard>[0] = {};
+    if (opts['idea']) preset.idea = opts['idea'];
+    if (opts['budget']) preset.budgetUSD = Number(opts['budget']);
+    if (opts['runtime']) preset.runtimeSeconds = Number(opts['runtime']);
+    if (opts['project']) preset.projectName = opts['project'];
+    await runWizard(preset);
+  });
+
+program
+  .command('budget')
+  .description('Show what a budget buys, without creating anything')
+  .requiredOption('--budget <usd>', 'budget in USD')
+  .option('--runtime <seconds>', 'target runtime in seconds', '90')
+  .option('--no-character', 'no recurring character, so identity drift is acceptable')
+  .action((opts: { budget: string; runtime: string; character?: boolean }) => {
+    const req = {
+      budgetUSD: Number(opts.budget),
+      runtimeSeconds: Number(opts.runtime),
+      needsCharacterConsistency: opts.character !== false,
+    };
+    process.stdout.write(`\n${formatFit(fitToBudget(req), req)}\n\n`);
+  });
 
 /* -------------------------------------------------------------------- plan */
 
