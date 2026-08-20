@@ -32,6 +32,9 @@ const EnvSchema = z.object({
   HIGGSFIELD_API_SECRET: z.string().default(''),
   HIGGSFIELD_API_BASE: z.string().url().default('https://platform.higgsfield.ai'),
 
+  /** Who spends: rest (code, default), mcp (Claude), fake (nothing). */
+  PROVIDER_MODE: z.enum(['rest', 'mcp', 'fake']).default('rest'),
+
   MAX_BUDGET_USD: numeric(20, 0),
   MAX_SINGLE_CALL_USD: numeric(3, 0),
 

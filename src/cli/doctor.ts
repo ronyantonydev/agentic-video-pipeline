@@ -47,8 +47,21 @@ export function runDoctor(): number {
   checks.push(env);
 
   checks.push(
+    check('Provider mode', true, () => {
+      const mode = loadEnv().PROVIDER_MODE;
+      const detail = {
+        rest: 'rest - Node pays, budget enforced in code (dop/soul models)',
+        mcp: 'mcp - Claude pays, budget check is advisory (premium models)',
+        fake: 'fake - nothing pays, synthesised media',
+      }[mode];
+      return detail;
+    }),
+  );
+
+  checks.push(
     check('Higgsfield credentials', false, () => {
       const e = loadEnv();
+      if (e.PROVIDER_MODE !== 'rest') return 'not required in this mode';
       if (!e.hasHiggsfieldCredentials) {
         throw new Error('key/secret not set - planning works, generation will not');
       }
