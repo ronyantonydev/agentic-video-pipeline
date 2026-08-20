@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# A newer push makes an in-flight run redundant.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # Several suites build real MP4 and PNG fixtures with ffmpeg rather than
+      # mocking them, so QA and normalisation are exercised against genuine
+      # media. Without this the whole qa suite fails.
+      - name: Install ffmpeg
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+          ffmpeg -version | head -1
+          ffprobe -version | head -1
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Test
+        run: npm test
+        env:
+          # No credentials in CI. PROVIDER_MODE=fake keeps every code path
+          # reachable while making a paid call impossible - the same guarantee
+          # the pipeline gives locally, enforced by the absence of a key.
+          PROVIDER_MODE: fake
+          MAX_BUDGET_USD: '20'
+          MAX_SINGLE_CALL_USD: '3'
+          LOG_LEVEL: error
+
+      # Runs the real CLI, so a broken command surfaces here rather than in
+      # someone's terminal after they clone it.
+      - name: Doctor
+        run: npx tsx src/cli/index.ts doctor
+        env:
+          PROVIDER_MODE: fake
+          LOG_LEVEL: error
+
+      - name: Budget planner
+        run: npx tsx src/cli/index.ts budget --budget 20 --runtime 90
+        env:
+          PROVIDER_MODE: fake
+          LOG_LEVEL: error

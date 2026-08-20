@@ -1,5 +1,9 @@
 # Agentic Video Pipeline
 
+[![CI](https://github.com/ronyantonydev/agentic-video-pipeline/actions/workflows/ci.yml/badge.svg)](https://github.com/ronyantonydev/agentic-video-pipeline/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Node](https://img.shields.io/badge/node-%3E%3D22-brightgreen.svg)](package.json)
+
 **Turn one sentence into a finished video — without losing control of the
 budget.**
 
@@ -321,3 +325,15 @@ no cost — real H.264 files, so QA and rendering run for real.
 **Claude** plans. **Higgsfield** generates (Seedance, Kling, Veo, Soul).
 **FFmpeg** normalises and checks. **HyperFrames** edits and renders.
 **Zod** validates every artifact before it can drive a paid call.
+
+---
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md). The short version: never let a cost
+be guessed, and read `verify-spend-safety` before touching anything that
+spends.
+
+## License
+
+[MIT](LICENSE)
