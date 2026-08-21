@@ -202,14 +202,31 @@ export function formatFit(result: FitResult, req: FitRequest): string {
     '',
   );
 
+  // An option that cannot hold identity is not merely a cheaper trade-off when
+  // a character recurs - verify-realism rule 1 forbids it outright. Printing it
+  // with the same weight as a viable row invites the user to pick the lowest
+  // number on screen and hit the reference gate later. Mark it as ineligible.
+  const ineligible = (o: FitOption): boolean =>
+    o.plannedSeconds <= 0 || (req.needsCharacterConsistency && !o.tier.holdsIdentity);
+
   for (const o of result.options) {
-    const mark = o === result.recommended ? '→' : ' ';
+    const blocked = ineligible(o);
+    const mark = o === result.recommended ? '→' : blocked ? '✗' : ' ';
     lines.push(
       `${mark} ${o.tier.label.padEnd(22)} ${String(o.plannedSeconds).padStart(4)}s  ` +
         `${String(o.shotCount).padStart(3)} shots  ${o.estimatedCredits.toFixed(0).padStart(5)}cr  ` +
-        `$${o.estimatedUSD.toFixed(2)}`,
+        `$${o.estimatedUSD.toFixed(2)}` +
+        (blocked ? '   INELIGIBLE' : ''),
     );
     for (const w of o.warnings) lines.push(`    ! ${w}`);
+  }
+
+  if (req.needsCharacterConsistency && result.options.some(ineligible)) {
+    lines.push(
+      '',
+      '  ✗ = cannot carry a reference image, so the recurring character changes',
+      '      between shots. Cheaper per second, but the reference gate blocks it.',
+    );
   }
 
   if (result.shortfall) lines.push('', `  ${result.shortfall}`);
