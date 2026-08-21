@@ -40,8 +40,12 @@ claude
 ```
 
 ```text
-/grill-video
+/plan-video rain arriving on a dry riverbed, 15s, $5
 ```
+
+That plans and prices the whole thing and stops at two reference pictures.
+Look at them, then `/run-video rain-riverbed` to build it. For a quick test
+without the split, `/make-video` does it in one go.
 
 ---
 
@@ -108,7 +112,35 @@ the substitution it is looking for.
 
 ## Talk to it
 
-Two skills, differing in how hard they interrogate you.
+Four skills. Two run the whole thing in one go; two split it in half so you
+can price and inspect before committing.
+
+**Plan first, then run** — the safer shape, and the one to prefer for
+anything that costs real money:
+
+| | Spends | Ends at |
+| --- | --- | --- |
+| `/plan-video` | ~2 credits on reference plates | you looking at the plates |
+| `/run-video` | the rest of the plan | a finished video |
+
+```text
+/plan-video rain arriving on a dry riverbed, 15s, $5
+```
+
+`plan-video` writes every artifact, checks them against each other, prices
+the **whole** job — plates and retries included, not just the shots — and
+generates the cheap reference images. Then it stops. You look at two pictures
+and decide. `/run-video` takes it from there and makes no creative choices at
+all; if it wants one, the plan was incomplete and it says so.
+
+Why the split: every expensive failure on this project was a planning
+failure, not a generation failure. A winter forest that came back summer (no
+environment sheet), wrong hands (no reference attached), three rejected clips
+that shared one defect (none checked before the next). None needed a better
+model. All needed a better plan — and a look before the money moved.
+
+**One shot, no split** — for a quick test, or when you would rather answer
+questions than review a plan:
 
 | | Questions | Use it for |
 | --- | ---: | --- |
@@ -182,8 +214,14 @@ Skills live in `.claude/skills/`. Two kinds:
 
 | Skill | What it does |
 | --- | --- |
+| `/plan-video` | Plans everything, prices everything, makes the cheap plates. Stops for one look. Free apart from ~2 credits. |
+| `/run-video` | Executes an approved plan. No creative decisions — a missing decision means the plan was incomplete. |
 | `/make-video` | Four questions, prices it, builds it. For a quick test. |
 | `/grill-video` | Twenty questions across six rounds. For a video worth spending on. |
+
+`plan-video` writes `plan.json`, which fully determines the run — it is the
+contract `run-video` executes, and deliberately one data structure rather
+than intent spread across a conversation.
 
 **Model-invoked** — Claude reaches for these automatically when the task
 fits. They are guardrails, not workflows.

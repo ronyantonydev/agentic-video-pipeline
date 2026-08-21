@@ -284,7 +284,7 @@ without. There is no reason to omit it.
 
 Claude generates these directly with `generate_image` — there is no CLI
 command, because the user types an idea and Claude does the rest. The
-`make-video` and `grill-video` skills carry the instruction.
+`plan-video`, `make-video` and `grill-video` skills carry the instruction.
 
 ---
 
@@ -505,14 +505,47 @@ the timeline directly.
 
 ## 12. Skills
 
-Eight skills in `.claude/skills/`, in two kinds.
+Ten skills in `.claude/skills/`, in two kinds.
 
 ### User-invoked — you type them
 
+Two shapes. `plan-video` / `run-video` split the job at the point where money
+starts moving; `make-video` and `grill-video` do it in one pass.
+
 | Skill | Questions | For |
 |---|---:|---|
+| `/plan-video` | as needed | planning and pricing before committing |
+| `/run-video` | none | executing an approved plan |
 | `/make-video` | 4 | a quick test |
 | `/grill-video` | up to 20 | a video worth spending on |
+
+**The split exists because every expensive failure here has been a planning
+failure.** A winter forest that generated as summer (no environment sheet),
+wrong hands on a macro shot (no reference attached), three rejected clips
+sharing one defect (none checked before the next was generated). None of
+those needed a better model; all needed a better plan, and a human look
+before the spend.
+
+So `plan-video` does everything that is free or near-free — artifacts,
+realism and coherence checks, the complete price, and the ~1-credit reference
+plates — then stops at the look gate. `run-video` takes `plan.json` and
+executes it, taking no creative decisions at all. If it finds itself needing
+one, the plan was incomplete and it says which key was missing rather than
+improvising a choice nobody approved.
+
+Two rules the split makes explicit:
+
+- **The estimate must count everything.** `estimateGenerationPlan` walks
+  video shots only. rain-riverbed estimated $2.34 and cost $2.47 because two
+  reference plates were never counted. Harmless against a slack budget, wrong
+  when the plan decides how many credits to buy.
+- **Retries are capped per shot, not pooled.** Two attempts. A shot that
+  fails twice is mis-planned, and a third attempt reproduces the same defect
+  at full price.
+
+`plan.json` is the contract between the two, deliberately a single data
+structure rather than intent spread across a conversation — which is also the
+only form a frontend could later read and drive.
 
 `grill-video` covers six rounds — genre, character, story, look, budget,
 efficiency — re-prices after rounds 2, 5 and 6 so the cost moves as you
