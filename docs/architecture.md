@@ -11,6 +11,10 @@ Those numbers come from the original design and are preserved in
 [§ Design reference](#15-design-reference) at the end, so a citation in the
 code resolves to a rule stated here.
 
+> New here? [The Pipeline in Plain English](pipeline-in-plain-english.md)
+> explains what each of the 31 stages does, without the reasoning. Come back
+> here for *why*.
+
 ---
 
 ## Contents
