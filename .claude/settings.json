@@ -17,19 +17,20 @@
       "mcp__claude_ai_Higgsfield__jobs_wait",
       "mcp__claude_ai_Higgsfield__show_generation_by_ids",
       "mcp__claude_ai_Higgsfield__show_generations",
-      "mcp__claude_ai_Higgsfield__transactions"
+      "mcp__claude_ai_Higgsfield__transactions",
+
+      "mcp__claude_ai_Higgsfield__generate_image",
+      "mcp__claude_ai_Higgsfield__generate_image_batch",
+      "mcp__claude_ai_Higgsfield__generate_audio",
+      "mcp__claude_ai_Higgsfield__generate_audio_batch"
     ],
     "ask": [
       "Bash(npm run gen:*)",
       "Bash(npm run start:*)",
       "Bash(npm run video:*)",
       "Bash(npm run upscale:*)",
-      "mcp__claude_ai_Higgsfield__generate_image",
-      "mcp__claude_ai_Higgsfield__generate_image_batch",
       "mcp__claude_ai_Higgsfield__generate_video",
       "mcp__claude_ai_Higgsfield__generate_video_batch",
-      "mcp__claude_ai_Higgsfield__generate_audio",
-      "mcp__claude_ai_Higgsfield__generate_audio_batch",
       "mcp__claude_ai_Higgsfield__upscale_image",
       "mcp__claude_ai_Higgsfield__upscale_video"
     ],
