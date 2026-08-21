@@ -102,10 +102,13 @@ Rules for that message:
   Kling looks cheapest per second and has no `image_references` slot, so a
   recurring person becomes a different person each shot. Name the trade or
   leave it out.
-- **Do not offer the unlimited trial to a paying account.** It is for new
-  users on the free plan only — 24 hours, one concurrent generation, 8-second
-  clips. Mention it only if the user is actually eligible, and state those
-  limits when you do: 20 minutes is ~150 clips run one at a time.
+- **Do not offer an unlimited plan as the answer.** Neither Higgsfield
+  unlimited offer covers this pipeline. The paid add-on ($30/$70/$135 for
+  1/3/7 days) excludes MCP in its own terms — and every shot here goes
+  through MCP, since Seedance has no REST slug — so it would cover nothing
+  while still charging. The free trial is new-users-on-the-free-plan only.
+  See the `_comment` header in `config/models.json`. If the user raises it,
+  say plainly why it does not apply rather than dismissing it.
 
 Then build exactly what they choose.
 
