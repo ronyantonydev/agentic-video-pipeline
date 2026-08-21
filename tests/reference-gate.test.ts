@@ -101,6 +101,31 @@ describe('reference check', () => {
     expect(check.warnings.join(' ')).toMatch(/environment sheet/i);
   }, 120_000);
 
+  it('ignores a superseded plate, so a reject is never offered for approval', async () => {
+    // A plate that was looked at and replaced stays on disk as the evidence
+    // for why its replacement exists. Listing it beside the live plate lets a
+    // user approve the version that was already rejected.
+    makePack(PROJECT);
+    const styleDir = paths(PROJECT).referenceCategory('style');
+    mkdirSync(styleDir, { recursive: true });
+    makeImage(join(styleDir, 'style-sheet.png'));
+    makeImage(join(styleDir, 'style-sheet-rejected-v1.png'));
+
+    const check = await checkReferences(PROJECT);
+    expect(check.sheets.style).toBe(1);
+  }, 120_000);
+
+  it('counts a short pack correctly when a reject sits beside it', async () => {
+    // The reject must not pad the pack up to the recommended size either.
+    makePack(PROJECT, 2);
+    const dir = paths(PROJECT).referenceCategory('character');
+    makeImage(join(dir, 'face-front-rejected-blurry.png'));
+
+    const check = await checkReferences(PROJECT);
+    expect(check.characterPack.imageCount).toBe(2);
+    expect(check.characterPack.meetsPackSize).toBe(false);
+  }, 120_000);
+
   it('warns rather than blocks on a short pack', async () => {
     // One reference held identity in wide shots on the real project and
     // failed in close-ups. That is a warning, not an impossibility.

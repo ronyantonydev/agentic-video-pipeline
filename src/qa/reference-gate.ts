@@ -78,9 +78,26 @@ function resultPath(project: string): string {
   return join(paths(project).references, RESULT_FILE);
 }
 
+/**
+ * A plate that was generated, looked at, and rejected.
+ *
+ * Rejects are worth keeping - they are the evidence for why the replacement
+ * looks the way it does - but the gate must not offer one for approval
+ * alongside the plate that replaced it. Name a superseded plate
+ * `<name>-rejected-<something>.png` and it stays on disk without counting as
+ * a live reference.
+ */
+export function isRejectedPlate(file: string): boolean {
+  return /-rejected(-|\.)/i.test(file);
+}
+
+function isLiveImage(file: string): boolean {
+  return /\.(png|jpe?g|webp)$/i.test(file) && !isRejectedPlate(file);
+}
+
 function countImages(dir: string): number {
   if (!existsSync(dir)) return 0;
-  return readdirSync(dir).filter((f) => /\.(png|jpe?g|webp)$/i.test(f)).length;
+  return readdirSync(dir).filter(isLiveImage).length;
 }
 
 export type ReferenceCheckOptions = {
@@ -148,7 +165,7 @@ export async function checkReferences(
     // Every reference image must itself be usable. A blank or truncated
     // reference poisons every shot that uses it.
     for (const file of existsSync(characterDir) ? readdirSync(characterDir) : []) {
-      if (!/\.(png|jpe?g|webp)$/i.test(file)) continue;
+      if (!isLiveImage(file)) continue;
       const v = await validateAnchor(join(characterDir, file));
       for (const c of v.checks) {
         if (c.status === 'fail') {
@@ -169,7 +186,7 @@ export async function checkReferences(
       // fall back to the pack order only if it is missing.
       const master =
         referencePackPaths(characterDir).find((f) => existsSync(f)) ??
-        join(characterDir, readdirSync(characterDir).find((f) => /\.(png|jpe?g|webp)$/i.test(f))!);
+        join(characterDir, readdirSync(characterDir).find(isLiveImage)!);
       const result: DriftTestResult = await runDriftTest(master, opts.driftSamples);
       driftTest = {
         samples: result.samples,
@@ -249,7 +266,7 @@ export async function checkReferences(
   const ungroundedProps: string[] = [];
   const propsDir = p.referenceCategory('props');
   for (const file of existsSync(propsDir) ? readdirSync(propsDir) : []) {
-    if (!/\.(png|jpe?g|webp)$/i.test(file)) continue;
+    if (!isLiveImage(file)) continue;
     const g = await checkGrounding(join(propsDir, file));
     if (g.looksUngrounded) {
       ungroundedProps.push(file);
