@@ -69,12 +69,45 @@ they apply:
 - **Never auto-pick a model that cannot hold identity** when a person
   recurs. Kling has no `image_references` slot; five shots become five
   different people. Name it as skipped and why, then move on.
-- **Trim runtime rather than quality.** When the budget buys less than was
-  asked for, build the shorter video and say what was cut:
-  `30s requested; $5 buys 25s. Building 25s - dropping the finish pass.`
+- **Never quietly build a shorter video.** When the budget buys less runtime
+  than was asked for, stop and show the real numbers. The user gave a runtime
+  *and* a budget; when both cannot be true, choosing for them delivers
+  something they did not ask for. This is the one place this skill stops
+  beyond its four questions — see below.
 
 The user can still override with an explicit instruction ("use Kling"). Obey
 it, print the consequence once, and continue.
+
+### When the budget will not buy the runtime
+
+Show the shortfall and wait. Do not pick for them.
+
+```text
+20 minutes needs about $187.50. Your $5 buys 28 seconds.
+
+  28s      $5      what you have now
+  2.5 min  ~$30
+  20 min   ~$187   the full thing
+
+Build 28s, or change the budget or the runtime?
+```
+
+Rules for that message:
+
+- **Lead with the real cost of what they asked for**, then what their money
+  actually buys. Both numbers, every time.
+- **Offer at least one middle option.** "28s or $187" is a false choice; most
+  people land somewhere between.
+- **Never present a cheaper model as a free win when it costs identity.**
+  Kling looks cheapest per second and has no `image_references` slot, so a
+  recurring person becomes a different person each shot. Name the trade or
+  leave it out.
+- **Do not offer the unlimited trial to a paying account.** It is for new
+  users on the free plan only — 24 hours, one concurrent generation, 8-second
+  clips. Mention it only if the user is actually eligible, and state those
+  limits when you do: 20 minutes is ~150 clips run one at a time.
+
+Then build exactly what they choose.
 
 Measured rate, so estimates are honest: **~$0.20 per second** of finished
 video at Seedance 2.0 Mini quality. A 20-minute video is about $188.

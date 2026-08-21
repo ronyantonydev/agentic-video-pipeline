@@ -68,6 +68,25 @@ for twenty questions — recommend `--quick` and say why. Above it, recommend
 **Never ask when a flag was given.** An explicit `--quick` or `--grill` is
 the answer; asking again re-opens a decision the user already made.
 
+### When the budget will not buy the runtime
+
+Check this **before the interview**, right after you have the budget. The
+interview's answers depend on which video is actually being made, so settling
+it first avoids twenty questions about a video nobody can afford.
+
+```bash
+npm run budget -- --budget <usd> --runtime <seconds>
+```
+
+If the requested runtime costs more than the budget, **stop and show the
+numbers** — see the same rule in [[make-video]] for the message shape and the
+four rules governing it. Never quietly plan a shorter video: the user gave a
+runtime and a budget, and when both cannot be true, choosing for them delivers
+something they did not ask for.
+
+Once they choose, the runtime is settled and the interview proceeds against
+the real one.
+
 ### Running the interview
 
 Do not re-implement either interview here. Read the matching skill and follow

@@ -16,7 +16,16 @@
     "  2. learned cost for an identical config (measured balance delta)",
     "  3. costCredits below (measured previously, settings unknown)",
     "  4. refuse - never guess",
-    "A null costCredits NEVER becomes a silent assumption. See src/budget/cost.ts."
+    "A null costCredits NEVER becomes a silent assumption. See src/budget/cost.ts.",
+    "",
+    "UNLIMITED TRIAL - do not offer it to a paying account. Per Higgsfield's",
+    "own page (checked 2026-08-21) it is for NEW USERS ON THE FREE PLAN only,",
+    "lasts 24 hours from activation, and runs ONE concurrent generation shared",
+    "across every model. It covers 20+ models including Seedance 2.0, Kling 3.0",
+    "and Wan 2.7 - not just the one tagged supports_unlim below - but caps clip",
+    "length at 8s. So a 20-minute video is ~150 clips generated one at a time.",
+    "It is a real lever for a short piece on a new account, and not a way to",
+    "make a long video free."
   ],
   "restApi": {
     "_comment": [
@@ -614,7 +623,7 @@
         "normal",
         "identity-consistent"
       ],
-      "_note": "Has image_references (identity-capable) but NO start/end frame, so it cannot chain shot-to-shot. supports_unlim."
+      "_note": "Has image_references (identity-capable) but NO start/end frame, so it cannot chain shot-to-shot. supports_unlim - but see _unlimNote in the catalogue header: the unlimited trial covers several models, not only this one, and is not available on a paid plan."
     },
     {
       "id": "flux_3_video",
