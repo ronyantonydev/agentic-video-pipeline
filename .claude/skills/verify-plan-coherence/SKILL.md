@@ -92,4 +92,4 @@ npx tsx src/cli/index.ts plan generation <project>
 npx tsx src/cli/index.ts cost <project> --dry-run
 ```
 
-The dry run must produce a complete cost table with $0 spent.
+The dry run must produce a complete cost table with \$0 spent.

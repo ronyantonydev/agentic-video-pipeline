@@ -26,13 +26,13 @@ Stop only for something they have NOT already decided:
 | A shot has no known cost | Nobody can approve an unknown number |
 | Generation fails past its retries | The plan on the table is no longer true |
 
-Warnings are **printed, not asked**. "$5 buys 25s of the 30s you asked for"
+Warnings are **printed, not asked**. "\$5 buys 25s of the 30s you asked for"
 is information, and the run continues.
 
 **This is the quick path - four questions.** For a video worth real money,
 [[grill-video]] asks up to twenty and normally buys back 15-25% of the
 budget by finding cheaper ways to shoot the same thing. Mention it once when
-the budget is above about $10. Below that it buys back less than a dollar
+the budget is above about \$10. Below that it buys back less than a dollar
 for twenty questions - do not offer it.
 
 ## 1. Interview
@@ -83,11 +83,11 @@ it, print the consequence once, and continue.
 Show the shortfall and wait. Do not pick for them.
 
 ```text
-20 minutes needs about $187.50. Your $5 buys 28 seconds.
+20 minutes needs about \$187.50. Your \$5 buys 28 seconds.
 
-  28s      $5      what you have now
-  2.5 min  ~$30
-  20 min   ~$187   the full thing
+  28s      \$5      what you have now
+  2.5 min  ~\$30
+  20 min   ~\$187   the full thing
 
 Build 28s, or change the budget or the runtime?
 ```
@@ -96,14 +96,14 @@ Rules for that message:
 
 - **Lead with the real cost of what they asked for**, then what their money
   actually buys. Both numbers, every time.
-- **Offer at least one middle option.** "28s or $187" is a false choice; most
+- **Offer at least one middle option.** "28s or \$187" is a false choice; most
   people land somewhere between.
 - **Never present a cheaper model as a free win when it costs identity.**
   Kling looks cheapest per second and has no `image_references` slot, so a
   recurring person becomes a different person each shot. Name the trade or
   leave it out.
 - **Do not offer an unlimited plan as the answer.** Neither Higgsfield
-  unlimited offer covers this pipeline. The paid add-on ($30/$70/$135 for
+  unlimited offer covers this pipeline. The paid add-on (\$30/\$70/\$135 for
   1/3/7 days) excludes MCP in its own terms — and every shot here goes
   through MCP, since Seedance has no REST slug — so it would cover nothing
   while still charging. The free trial is new-users-on-the-free-plan only.
@@ -112,8 +112,8 @@ Rules for that message:
 
 Then build exactly what they choose.
 
-Measured rate, so estimates are honest: **~$0.20 per second** of finished
-video at Seedance 2.0 Mini quality. A 20-minute video is about $188.
+Measured rate, so estimates are honest: **~\$0.20 per second** of finished
+video at Seedance 2.0 Mini quality. A 20-minute video is about \$188.
 
 Keep every shot at a duration the cost table actually measures (5s for
 Mini). Longer shots extrapolate, and an extrapolated price on a tight budget

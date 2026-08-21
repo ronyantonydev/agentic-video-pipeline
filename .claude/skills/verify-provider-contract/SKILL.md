@@ -7,7 +7,7 @@ allowed-tools: [Read, Grep, Glob, Bash]
 # Verify provider contract
 
 The pipeline is written against `GenerationProvider`, not against Higgsfield.
-That is what let the whole thing be proven at $0 before Phase 6. These checks
+That is what let the whole thing be proven at \$0 before Phase 6. These checks
 keep the seam intact.
 
 Report PASS/FAIL per check with `file:line`.

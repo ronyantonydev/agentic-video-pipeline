@@ -138,12 +138,12 @@ is now unavailable and why.
 npm run budget -- --budget <usd> --runtime <seconds>
 ```
 
-Measured rate: **~$0.20 per second** of finished video at Seedance 2.0 Mini
-quality. Twenty minutes is about $188. That is a per-second wall; no prompt
+Measured rate: **~\$0.20 per second** of finished video at Seedance 2.0 Mini
+quality. Twenty minutes is about \$188. That is a per-second wall; no prompt
 technique moves it.
 
 19. **If the two do not fit: shorter video, or bigger budget?**
-    Put it in money terms - "90 seconds needs about $14; at $8 you get 50
+    Put it in money terms - "90 seconds needs about \$14; at \$8 you get 50
     seconds." Never shorten it silently.
 
 20. **Is this a test, or the real thing?**
@@ -202,7 +202,7 @@ Look         bare winter forest, flat overcast, no green foliage
 Runtime      90s
 Model        Seedance 2.0 Mini (holds identity)
 Sheets       character pack (6) + 1 environment + 2 props + 1 style ≈ 1 credit
-Cost         about $14.11 of a $20 budget
+Cost         about \$14.11 of a \$20 budget
 Efficiency   5 shots need no character reference; 1 still; single location
 ```
 

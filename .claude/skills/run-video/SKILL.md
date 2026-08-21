@@ -80,7 +80,7 @@ If the music plan calls for a generated track, generate it before rendering
 
 ## Reporting spend honestly
 
-**`npm run report` will say $0.00.** MCP generation never writes manifest
+**`npm run report` will say \$0.00.** MCP generation never writes manifest
 entries, so the report renders from an empty manifest and reads as "this run
 was free" rather than "this run was not recorded."
 

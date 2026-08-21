@@ -47,13 +47,13 @@ poor opening question for someone who does not yet know what the modes mean.
 
 So:
 
-1. If the idea already carries a budget (`"...15s, $5"`), take it. Otherwise
+1. If the idea already carries a budget (`"...15s, \$5"`), take it. Otherwise
    ask **only** "What is your budget for this?"
 2. Recommend a mode **with the number attached**, and offer the other.
 
 ```text
-At $30 I'd suggest --grill: 20 questions across six rounds. Its
-efficiency round usually recovers 15-25%, so about $5-8 back here,
+At \$30 I'd suggest --grill: 20 questions across six rounds. Its
+efficiency round usually recovers 15-25%, so about \$5-8 back here,
 which more than pays for the extra questions.
 
 --quick (4 questions) if you would rather just go.
@@ -61,7 +61,7 @@ which more than pays for the extra questions.
 
 3. Run whichever they pick.
 
-The threshold is about **$10**. Below it, grill buys back less than a dollar
+The threshold is about **\$10**. Below it, grill buys back less than a dollar
 for twenty questions — recommend `--quick` and say why. Above it, recommend
 `--grill` with the figure it is likely to recover.
 
@@ -124,7 +124,7 @@ Free work first, always. A plan that dies at step 3 should cost nothing.
 shots. It does not count reference images, character packs, music
 generation, or upscales.
 
-Observed on rain-riverbed 2026-08-21: estimated $2.34, actually cost $2.47,
+Observed on rain-riverbed 2026-08-21: estimated \$2.34, actually cost \$2.47,
 because two 1-credit reference plates were never in the estimate.
 
 A 5% miss does not matter when the budget has slack. It matters completely
