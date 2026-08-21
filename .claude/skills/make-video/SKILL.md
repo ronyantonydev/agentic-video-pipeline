@@ -8,6 +8,11 @@ allowed-tools: [Bash, Read, Write, Edit, Glob, Grep]
 
 **Four questions, then build it. Nothing else stops.**
 
+> Straight through to a finished video. To stop and check the look before the
+> expensive part, `/plan-video --quick` asks these same four questions, then
+> hands you a report and waits. Same interview, one gate. Prefer it when the
+> budget is real; use this one for a quick test.
+
 The budget answer is a ceiling and a decision. Once it is given, fitting a
 model and a runtime inside it is arithmetic, not a preference - do the
 arithmetic, print what it produced, and keep going. Every further

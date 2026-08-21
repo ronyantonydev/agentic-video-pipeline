@@ -1,6 +1,6 @@
 ---
 name: plan-video
-description: Plan a video completely before spending on it. Writes every artifact, generates the cheap reference plates, verifies them against each other, and stops at one approval. Produces plan.json, which is the only thing /run-video needs. Use whenever someone wants to plan, price, or prepare a video, or asks what a video would cost.
+description: Plan a video completely before spending on it. Writes every artifact, generates the cheap reference plates, verifies them against each other, and stops at one approval. Takes --quick (four questions) or --grill (six rounds) to choose how hard to interview first. Produces plan.json and plan-report.md, which are the only things /run-video needs. Use whenever someone wants to plan, price, or prepare a video, or asks what a video would cost.
 allowed-tools: [Bash, Read, Write, Edit, Glob, Grep, mcp__claude_ai_Higgsfield__generate_image, mcp__claude_ai_Higgsfield__generate_image_batch, mcp__claude_ai_Higgsfield__jobs_wait, mcp__claude_ai_Higgsfield__balance, mcp__claude_ai_Higgsfield__models_explore]
 ---
 
@@ -27,12 +27,36 @@ rain-riverbed run used this gate and wasted nothing.
 
 Nothing else stops. Warnings print and the plan continues.
 
+## Modes — how hard to interrogate
+
+The interview and the planning are separate concerns. This skill owns how a
+plan is **built and verified**; the mode decides how much is **asked first**.
+
+| Invocation | Interview | Use for |
+|---|---|---|
+| `/plan-video --quick <idea>` | [[make-video]]'s four questions | a test, or a cheap video |
+| `/plan-video --grill <idea>` | [[grill-video]]'s six rounds | a video worth real money |
+| `/plan-video <idea>` | pick one and say which | unspecified |
+
+With no flag, choose by budget: above about $10, grill pays for itself — its
+efficiency round typically recovers 15-25% by finding shots that need no
+character reference, shots that could be stills, or a single location. Below
+that it buys back less than a dollar for twenty questions. **Say which mode
+you picked and why**, in one line, then run it.
+
+Do not re-implement either interview here. Read the matching skill and follow
+its questions exactly — that way a difference in the plan reflects a
+difference in the interview, not two drifting copies of the same logic.
+
+If the user already gave an idea, a runtime and a budget, that is most of
+`--quick` answered. Do not re-ask what they just told you; confirm the rest.
+
 ## Order of work
 
 Free work first, always. A plan that dies at step 3 should cost nothing.
 
-1. **Understand the video.** Genre, subject, runtime, budget ceiling. If the
-   user gave an idea and a number, that is enough — do not re-ask.
+1. **Interview**, per the mode above. Then everything below is identical
+   whichever mode ran — one planning path, one verification path.
 2. **Write the planning artifacts.** story, beat-grid, progression,
    continuity, shotlist, storyboard, edit-plan, music, generation-plan.
    Every one Zod-validated. `npm run plan:*` where a generator exists.

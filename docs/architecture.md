@@ -514,10 +514,18 @@ starts moving; `make-video` and `grill-video` do it in one pass.
 
 | Skill | Questions | For |
 |---|---:|---|
-| `/plan-video` | as needed | planning and pricing before committing |
+| `/plan-video --quick` | 4 | planning and pricing before committing |
+| `/plan-video --grill` | up to 20 | the same, for a video worth spending on |
 | `/run-video` | none | executing an approved plan |
-| `/make-video` | 4 | a quick test |
-| `/grill-video` | up to 20 | a video worth spending on |
+| `/make-video` | 4 | a quick test, straight through |
+| `/grill-video` | up to 20 | a video worth spending on, straight through |
+
+**The interview is a separate concern from the execution.** `make-video` and
+`grill-video` own two interviews — four questions and six rounds. `plan-video`
+borrows whichever the user asks for rather than inventing a third, so the
+planning and verification path is identical either way. A difference in the
+resulting plan then reflects a difference in the interview, not drift between
+two copies of the same logic.
 
 **The split exists because every expensive failure here has been a planning
 failure.** A winter forest that generated as summer (no environment sheet),

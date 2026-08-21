@@ -51,10 +51,15 @@ Pick something simple with no recurring person. A person adds identity
 handling, which is worth testing separately.
 
 ```text
-/plan-video a candle burning down in a dark room, 15s, $5
+/plan-video --quick a candle burning down in a dark room, 15s, $5
 ```
 
 Let it run to the stop.
+
+**Read `reports/plan-report.md` first.** It is written automatically and lists
+every automatic check and every image you need to look at. The manual checks
+below are what that report is built from — work through them the first few
+times to know what the report is claiming, then trust the report.
 
 ### Verify on finish
 
@@ -236,6 +241,29 @@ this file alone? If any decision lives only in the chat transcript, the plan
 is incomplete — and no frontend could ever drive it.
 
 ---
+
+## Test 1b — the other interview, same plan
+
+Run the same idea through the deep interview:
+
+```text
+/plan-video --grill a candle burning down in a dark room, 15s, $5
+```
+
+This is the parity test, and it is the reason the modes exist as flags rather
+than as separate skills. Verify:
+
+- **The interview differed.** `--grill` asked about genre reference, look,
+  and efficiency; `--quick` asked four questions and moved on.
+- **The plan is the same shape.** Same nine artifacts, same validation, same
+  report sections, same gate. Only the *content* should differ — better
+  grounded prompts, possibly fewer shots after the efficiency round.
+- **`--grill` came out cheaper or better specified**, or it did not earn its
+  twenty questions. Its efficiency round exists to buy back 15–25%.
+
+If the two modes produce structurally different plans — a missing artifact, a
+different report shape — that is a bug. The interview is supposed to be the
+only difference.
 
 ## Test 2 — a person in the video
 

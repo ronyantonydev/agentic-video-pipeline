@@ -12,6 +12,11 @@ before generating, not after.
 Use this for a video worth spending on. For a quick test, [[make-video]]
 asks four questions and gets on with it.
 
+> This runs straight through to a finished video. `/plan-video --grill` asks
+> these same rounds, then stops at a report so you can check the references
+> before the expensive part — usually the better shape for a video worth this
+> many questions.
+
 ## How to run the interview
 
 **Ask one question at a time.** A wall of twenty-six questions gets skimmed,

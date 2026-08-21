@@ -120,12 +120,24 @@ anything that costs real money:
 
 | | Spends | Ends at |
 | --- | --- | --- |
-| `/plan-video` | ~2 credits on reference plates | you looking at the plates |
+| `/plan-video` | ~2 credits on reference plates | a report, and you deciding |
 | `/run-video` | the rest of the plan | a finished video |
 
 ```text
 /plan-video rain arriving on a dry riverbed, 15s, $5
 ```
+
+`plan-video` takes the interview from whichever mode you pick, so you are not
+choosing between being interrogated and being safe:
+
+```text
+/plan-video --quick <idea>    four questions, same as /make-video
+/plan-video --grill <idea>    six rounds, same as /grill-video
+```
+
+Above about $10, `--grill` pays for itself — its efficiency round typically
+recovers 15–25%. Below that, `--quick`. With no flag it picks and tells you
+which.
 
 `plan-video` writes every artifact, checks them against each other, prices
 the **whole** job — plates and retries included, not just the shots — and
@@ -214,10 +226,14 @@ Skills live in `.claude/skills/`. Two kinds:
 
 | Skill | What it does |
 | --- | --- |
-| `/plan-video` | Plans everything, prices everything, makes the cheap plates. Stops for one look. Free apart from ~2 credits. |
+| `/plan-video` | Plans everything, prices everything, makes the cheap plates. Stops at a report. `--quick` or `--grill` picks the interview. |
 | `/run-video` | Executes an approved plan. No creative decisions — a missing decision means the plan was incomplete. |
-| `/make-video` | Four questions, prices it, builds it. For a quick test. |
-| `/grill-video` | Twenty questions across six rounds. For a video worth spending on. |
+| `/make-video` | Four questions, prices it, builds it straight through. For a quick test. |
+| `/grill-video` | Twenty questions across six rounds, straight through. For a video worth spending on. |
+
+The interview and the execution are separate concerns: `make-video` and
+`grill-video` own two interviews, `plan-video` borrows whichever you ask for
+rather than inventing a third.
 
 `plan-video` writes `plan.json`, which fully determines the run — it is the
 contract `run-video` executes, and deliberately one data structure rather
