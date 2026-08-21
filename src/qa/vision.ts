@@ -8,7 +8,7 @@
  * Frame extraction is free and local; only the judgement is delegated.
  */
 
-import { mkdirSync, existsSync } from 'node:fs';
+import { mkdirSync, existsSync, readdirSync } from 'node:fs';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { join } from 'node:path';
@@ -114,6 +114,80 @@ export async function buildProjectContactSheet(
         output,
       ],
       { maxBuffer: 32 * 1024 * 1024 },
+    );
+    return output;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Contact sheet for the LOOK gate, built from planning images.
+ *
+ * `buildProjectContactSheet` reads `shots/<id>/qa-frames/sheet.jpg`, which
+ * only exists once video has been generated - so at the `contact-sheet`
+ * stage, which sits *before* gate-look, it always returned null. The stage
+ * that is meant to give the human one page to look at produced nothing.
+ *
+ * This builds the sheet from what does exist at that point: the reference
+ * plates every shot inherits, and the anchor frames that decide the opening
+ * and closing image of the shots carrying the most weight. Those are exactly
+ * the images a wrong answer is most expensive on.
+ *
+ * Free - ffmpeg only, no generation.
+ */
+export async function buildPlanContactSheet(project: string): Promise<string | null> {
+  const env = loadEnv();
+  const p = paths(project);
+
+  const isLive = (f: string) => /\.(png|jpe?g|webp)$/i.test(f) && !/-rejected(-|\.)/i.test(f);
+  const fromDir = (dir: string): string[] =>
+    existsSync(dir) ? readdirSync(dir).filter(isLive).sort().map((f) => join(dir, f)) : [];
+
+  // Order matters: identity first, then the world, then the specific moments.
+  const tiles = [
+    ...fromDir(p.referenceCategory('character')),
+    ...fromDir(p.referenceCategory('environment')),
+    ...fromDir(p.referenceCategory('style')),
+    ...fromDir(p.referenceCategory('props')),
+    ...fromDir(p.storyboardFrames),
+  ];
+  if (tiles.length === 0) return null;
+
+  mkdirSync(p.storyboard, { recursive: true });
+  const output = p.contactSheet;
+
+  // A grid rather than a vstack: twenty-odd plates stacked vertically make a
+  // strip nobody can read. Four across keeps each tile legible on one screen.
+  const cols = 4;
+  const rows = Math.ceil(tiles.length / cols);
+  const scaled = tiles.map((_, i) => `[${i}:v]scale=640:360:force_original_aspect_ratio=decrease,` +
+    `pad=640:360:(ow-iw)/2:(oh-ih)/2:color=0x1a1a1a[s${i}]`).join(';');
+
+  // Pad the final row so xstack gets a complete grid.
+  const blanks = rows * cols - tiles.length;
+  const blankInputs = Array.from({ length: blanks }, () =>
+    ['-f', 'lavfi', '-i', 'color=c=0x1a1a1a:s=640x360:d=1']).flat();
+  const blankLabels = Array.from({ length: blanks }, (_, i) => `[${tiles.length + i}:v]`).join('');
+
+  const layout = Array.from({ length: rows * cols }, (_, i) =>
+    `${(i % cols) * 640}_${Math.floor(i / cols) * 360}`).join('|');
+
+  try {
+    await exec(
+      env.ffmpegBin,
+      [
+        '-v', 'error', '-y',
+        ...tiles.flatMap((f) => ['-i', f]),
+        ...blankInputs,
+        '-filter_complex',
+        `${scaled};${tiles.map((_, i) => `[s${i}]`).join('')}${blankLabels}` +
+          `xstack=inputs=${rows * cols}:layout=${layout}[out]`,
+        '-map', '[out]',
+        '-frames:v', '1',
+        output,
+      ],
+      { maxBuffer: 64 * 1024 * 1024 },
     );
     return output;
   } catch {

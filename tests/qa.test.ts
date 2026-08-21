@@ -1,12 +1,14 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, rmSync, writeFileSync, readFileSync } from 'node:fs';
+import { mkdtempSync, rmSync, writeFileSync, readFileSync, mkdirSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { probe, frameContrast, frameLuminance, ProbeError } from '../src/ffmpeg/probe.js';
 import { normalizeClip, conformsToProject } from '../src/ffmpeg/normalize.js';
 import { runMachineQa, summarizeQa } from '../src/qa/machine.js';
 import { loadProjectDefaults } from '../src/config/loader.js';
+import { buildPlanContactSheet } from '../src/qa/vision.js';
+import { ensureProjectDirs, paths } from '../src/state/paths.js';
 
 let dir: string;
 
@@ -211,4 +213,61 @@ describe('machine QA', () => {
     expect(s.failed).toBe(1);
     expect(s.failedShots).toEqual(['b']);
   });
+});
+
+describe('the look gate contact sheet', () => {
+  // The `contact-sheet` stage sits BEFORE gate-look, but the only builder read
+  // frames from generated video - which does not exist yet - so the stage that
+  // gives the human one page to look at always produced nothing.
+  it('builds from planning images, before any video exists', async () => {
+    const cwd = process.cwd();
+    const tmp = mkdtempSync(join(tmpdir(), 'avp-sheet-'));
+    try {
+      process.chdir(tmp);
+      const project = 'sheet-test';
+      ensureProjectDirs(project);
+      const p = paths(project);
+
+      const img = (path: string) => {
+        mkdirSync(join(path, '..'), { recursive: true });
+        execFileSync('ffmpeg', [
+          '-v', 'error', '-y', '-f', 'lavfi',
+          '-i', 'testsrc2=size=1280x720:rate=1', '-frames:v', '1', path,
+        ], { stdio: 'ignore' });
+      };
+      img(join(p.referenceCategory('character'), 'face-front.png'));
+      img(join(p.referenceCategory('environment'), 'env.png'));
+      img(join(p.storyboardFrames, 'shot_001-start.png'));
+      img(join(p.storyboardFrames, 'shot_001-end.png'));
+      // A superseded plate must not reach the page the human approves.
+      img(join(p.referenceCategory('style'), 'style-rejected-v1.png'));
+
+      const out = await buildPlanContactSheet(project);
+      expect(out).not.toBeNull();
+      expect(existsSync(out!)).toBe(true);
+      // Five files on disk, four live: a 4-wide grid of one 640x360 row.
+      // probe() is built for video and reports no dimensions for a still.
+      const dims = execFileSync('ffprobe', [
+        '-v', 'error', '-select_streams', 'v:0',
+        '-show_entries', 'stream=width,height', '-of', 'csv=p=0', out!,
+      ]).toString().trim();
+      expect(dims).toBe('2560,360');
+    } finally {
+      process.chdir(cwd);
+      rmSync(tmp, { recursive: true, force: true });
+    }
+  }, 120_000);
+
+  it('returns null when there is nothing to assemble', async () => {
+    const cwd = process.cwd();
+    const tmp = mkdtempSync(join(tmpdir(), 'avp-sheet-empty-'));
+    try {
+      process.chdir(tmp);
+      ensureProjectDirs('empty');
+      expect(await buildPlanContactSheet('empty')).toBeNull();
+    } finally {
+      process.chdir(cwd);
+      rmSync(tmp, { recursive: true, force: true });
+    }
+  }, 60_000);
 });
