@@ -527,6 +527,13 @@ planning and verification path is identical either way. A difference in the
 resulting plan then reflects a difference in the interview, not drift between
 two copies of the same logic.
 
+With no flag, `plan-video` establishes the **budget first** and then
+recommends a mode with the recovery figure attached. The order matters: the
+budget is what decides, both interviews need it regardless, and asking "quick
+or grill?" up front makes the user guess at the one thing the skill is
+positioned to advise on. Threshold is about $10 — below it, grill's
+efficiency round buys back less than a dollar for twenty questions.
+
 **The split exists because every expensive failure here has been a planning
 failure.** A winter forest that generated as summer (no environment sheet),
 wrong hands on a macro shot (no reference attached), three rejected clips

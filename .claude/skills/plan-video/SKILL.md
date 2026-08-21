@@ -36,13 +36,39 @@ plan is **built and verified**; the mode decides how much is **asked first**.
 |---|---|---|
 | `/plan-video --quick <idea>` | [[make-video]]'s four questions | a test, or a cheap video |
 | `/plan-video --grill <idea>` | [[grill-video]]'s six rounds | a video worth real money |
-| `/plan-video <idea>` | pick one and say which | unspecified |
+| `/plan-video <idea>` | ask, having first learned the budget | unspecified |
 
-With no flag, choose by budget: above about $10, grill pays for itself — its
-efficiency round typically recovers 15-25% by finding shots that need no
-character reference, shots that could be stills, or a single location. Below
-that it buys back less than a dollar for twenty questions. **Say which mode
-you picked and why**, in one line, then run it.
+### Choosing the mode when no flag was given
+
+**Get the budget first, then recommend.** The budget is what decides, both
+interviews need it anyway, and asking "quick or grill?" before you know it
+makes the user guess at the thing you should be advising on. It is also a
+poor opening question for someone who does not yet know what the modes mean.
+
+So:
+
+1. If the idea already carries a budget (`"...15s, $5"`), take it. Otherwise
+   ask **only** "What is your budget for this?"
+2. Recommend a mode **with the number attached**, and offer the other.
+
+```text
+At $30 I'd suggest --grill: 20 questions across six rounds. Its
+efficiency round usually recovers 15-25%, so about $5-8 back here,
+which more than pays for the extra questions.
+
+--quick (4 questions) if you would rather just go.
+```
+
+3. Run whichever they pick.
+
+The threshold is about **$10**. Below it, grill buys back less than a dollar
+for twenty questions — recommend `--quick` and say why. Above it, recommend
+`--grill` with the figure it is likely to recover.
+
+**Never ask when a flag was given.** An explicit `--quick` or `--grill` is
+the answer; asking again re-opens a decision the user already made.
+
+### Running the interview
 
 Do not re-implement either interview here. Read the matching skill and follow
 its questions exactly — that way a difference in the plan reflects a

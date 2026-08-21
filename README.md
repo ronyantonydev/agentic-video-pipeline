@@ -135,9 +135,16 @@ choosing between being interrogated and being safe:
 /plan-video --grill <idea>    six rounds, same as /grill-video
 ```
 
-Above about $10, `--grill` pays for itself — its efficiency round typically
-recovers 15–25%. Below that, `--quick`. With no flag it picks and tells you
-which.
+With no flag it asks your budget, then recommends one **with the number
+attached** — because the budget is what decides, and "quick or grill?" is a
+poor question to face before you have said what you are spending:
+
+> *"At $30 I'd suggest `--grill`. Its efficiency round usually recovers
+> 15–25%, so about $5–8 back here — more than the extra questions cost you.
+> `--quick` if you'd rather just go."*
+
+The line is around **$10**. Below it, grill buys back less than a dollar for
+twenty questions.
 
 `plan-video` writes every artifact, checks them against each other, prices
 the **whole** job — plates and retries included, not just the shots — and
