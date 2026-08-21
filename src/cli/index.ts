@@ -11,7 +11,7 @@ import { runDoctor } from './doctor.js';
 import { log } from '../util/logger.js';
 import { HardStop, PipelineError, GatePending } from '../util/errors.js';
 import {
-  cmdInit, cmdPlan, cmdCost, cmdApprove, cmdStatus,
+  cmdInit, cmdPlan, cmdCost, cmdApprove, cmdStatus, cmdRequestLook,
   cmdQaMachine, cmdQaFinal, cmdRender, cmdThumbnail, cmdReport,
   type PlanStage,
 } from './commands.js';
@@ -215,7 +215,23 @@ program
     process.stdout.write(`\n${formatReferenceCheck(check)}\n\n`);
     // Non-zero so a scripted run stops here rather than generating against a
     // reference that was never going to work.
-    if (!check.pass) process.exitCode = 4;
+    if (!check.pass) {
+      process.exitCode = 4;
+      return;
+    }
+
+    // A passing check is the moment the look becomes reviewable, so it is
+    // where the look gate is raised.
+    //
+    // Nothing used to raise it. Only the cost gate was ever requested, and
+    // the stage that would have requested this one is `gen references`,
+    // which is deliberately notImplemented because generation runs through
+    // MCP. So `gate-look` was a defined stage no project could enter, and
+    // `approve --gate look` always failed with "not reached yet - nothing to
+    // approve": the gate was unreachable by construction rather than
+    // pending. Harmless while nothing enforced it; a deadlock once
+    // generateShot began to.
+    cmdRequestLook(project, check);
   });
 
 /* --------------------------------------------------------------- generation */

@@ -5,7 +5,7 @@
  * here blocks on human input - gates throw GatePending instead.
  */
 
-import { existsSync } from 'node:fs';
+import { existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { loadProjectDefaults, loadQualityPolicy } from '../config/loader.js';
 import { loadEnv } from '../config/env.js';
@@ -29,6 +29,7 @@ import {
   estimateGenerationPlan, renderCostEstimateMarkdown, writeCostEstimate,
 } from '../reports/cost-estimate.js';
 import { requestApproval, decideGate } from '../gates/gates.js';
+import type { ReferenceCheck } from '../qa/reference-gate.js';
 import { ValidationError } from '../util/errors.js';
 import { log } from '../util/logger.js';
 import type { GateNameT } from '../schemas/state.js';
@@ -235,6 +236,40 @@ export async function cmdCost(
     `Status:         OVER BUDGET by $${estimate.overageUSD.toFixed(2)}`,
     ``,
     `Full breakdown: ${file}`,
+  ]);
+}
+
+/* --------------------------------------------------------------- gate look */
+
+/**
+ * Raise the look gate once the references pass their check.
+ *
+ * Called by `refcheck`, which is the first point where there is a look to
+ * judge: the reference sheets exist on disk and have been verified readable.
+ * Everything downstream inherits from them, so a wrong plate here is wrong
+ * in every shot generated against it - cheap to redo now, expensive later.
+ *
+ * Throws GatePending, which the CLI reports as exit 3.
+ */
+export function cmdRequestLook(project: string, check: ReferenceCheck): never {
+  const p = paths(project);
+  const sheets: string[] = [];
+  for (const category of ['character', 'environment', 'props', 'style'] as const) {
+    const dir = p.referenceCategory(category);
+    if (!existsSync(dir)) continue;
+    for (const f of readdirSync(dir).filter((n) => /\.(png|jpe?g|webp)$/i.test(n)).sort()) {
+      sheets.push(`  ${category}/${f}`);
+    }
+  }
+
+  requestApproval(project, 'look', [
+    'Look at these before any video is generated. Every shot is generated',
+    'against them, so a wrong plate here is wrong in all of them.',
+    '',
+    ...(sheets.length > 0 ? ['References:', ...sheets] : ['No reference images.']),
+    ...(check.warnings.length > 0
+      ? ['', 'Warnings:', ...check.warnings.map((w) => `  ${w}`)]
+      : []),
   ]);
 }
 
