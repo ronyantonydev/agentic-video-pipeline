@@ -871,7 +871,8 @@
       "provider": "Google",
       "name": "Nano Banana",
       "qualityTier": "budget",
-      "costCredits": null,
+      "costCredits": 1,
+      "costSource": "measured by balance delta 2026-08-21: 2 images at 16:9 took the subscription wallet 1059.72 -> 1057.72, exactly 1 credit each",
       "supportsImageReferences": true,
       "aspectRatios": [
         "1:1",
