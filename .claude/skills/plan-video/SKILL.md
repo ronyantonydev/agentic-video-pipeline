@@ -38,51 +38,77 @@ plan is **built and verified**; the mode decides how much is **asked first**.
 | `/plan-video --grill <idea>` | [[grill-video]]'s six rounds | a video worth real money |
 | `/plan-video <idea>` | ask, having first learned the budget | unspecified |
 
-### Choosing the mode when no flag was given
+### Ask what they want BEFORE asking what they will pay
 
-**Get the budget first, then recommend.** The budget is what decides, both
-interviews need it anyway, and asking "quick or grill?" before you know it
-makes the user guess at the thing you should be advising on. It is also a
-poor opening question for someone who does not yet know what the modes mean.
+**Length and quality first. Then price it, then let them choose.**
 
-So:
-
-1. If the idea already carries a budget (`"...15s, \$5"`), take it. Otherwise
-   ask **only** "What is your budget for this?"
-2. Recommend a mode **with the number attached**, and offer the other.
+Opening with "what is your budget?" gets the order backwards, and it fails in
+a specific way: to make the budget options mean anything you have to attach a
+runtime to each of them —
 
 ```text
-At \$30 I'd suggest --grill: 20 questions across six rounds. Its
-efficiency round usually recovers 15-25%, so about \$5-8 back here,
-which more than pays for the extra questions.
-
---quick (4 questions) if you would rather just go.
+$30   ~2.5 minutes at Mini quality
+$15   ~75 seconds
 ```
 
-3. Run whichever they pick.
+— and now **the runtime was chosen for the user**, by you, from a number they
+picked for an entirely different reason. That is the thing "never quietly plan
+a shorter video" exists to forbid, done one step earlier and less visibly.
 
-The threshold is about **\$10**. Below it, grill buys back less than a dollar
-for twenty questions — recommend `--quick` and say why. Above it, recommend
-`--grill` with the figure it is likely to recover.
+The budget is a **ceiling on a thing**. Ask what the thing is first.
+
+So, when no `--quick` / `--grill` flag was given:
+
+1. **How long, in seconds?** Take it from the idea if it carries one
+   (`"...3 minutes"`), otherwise ask. This is the only question that decides
+   how many shots exist.
+2. **What quality?** Three real answers, and the price gap between them is
+   large enough to be a genuine choice:
+
+   | | Model | 3 min (27 × 5s) | Reads as |
+   |---|---|---|---|
+   | Budget | `seedance_2_0_mini` throughout | 338cr, **\$21** | 720p, fine, the default |
+   | Tiered | Mini + `seedance_2_0` on 4 anchors | 468cr, **\$29** | the shots carrying the film get the better model |
+   | Quality | `seedance_2_0` throughout | 1215cr, **\$76** | only when every second must hold up |
+
+   Measured, not estimated: Mini is 12.5cr per 5s shot, `seedance_2_0` is
+   45cr - **3.6× dearer**. Tiering four anchors costs +39% over all-Mini,
+   which is the interesting middle and usually the right answer.
+
+3. **Does the same person appear in several shots?** See
+   [[verify-realism]] rule 1 - "hands only" still counts as yes.
+4. **Now price it and show the table:**
+
+   ```bash
+   npm run budget -- --budget <ceiling-guess> --runtime <seconds>
+   ```
+
+   Show what each tier costs for the runtime they asked for. **This is where
+   the budget question belongs** - by now it is "does this number work for
+   you", asked against real figures, rather than a riddle.
+
+5. **Recommend the interview mode with the number attached**, and offer the
+   other. Above ~\$10, `--grill`'s efficiency round usually recovers 15-25%,
+   which more than pays for the extra questions. Below it, recommend
+   `--quick` and say why.
 
 **Never ask when a flag was given.** An explicit `--quick` or `--grill` is
 the answer; asking again re-opens a decision the user already made.
 
 ### When the budget will not buy the runtime
 
-Check this **before the interview**, right after you have the budget. The
-interview's answers depend on which video is actually being made, so settling
-it first avoids twenty questions about a video nobody can afford.
+Once you have both, check whether they can both be true:
 
 ```bash
 npm run budget -- --budget <usd> --runtime <seconds>
 ```
 
-If the requested runtime costs more than the budget, **stop and show the
-numbers** — see the same rule in [[make-video]] for the message shape and the
-four rules governing it. Never quietly plan a shorter video: the user gave a
-runtime and a budget, and when both cannot be true, choosing for them delivers
-something they did not ask for.
+If the runtime costs more than the budget, **stop and show the numbers** — see
+the same rule in [[make-video]] for the message shape and the four rules
+governing it. Lead with what they asked for, then what their money buys, and
+offer at least one middle option. Never quietly plan a shorter video: they
+gave a runtime *and* a budget, and when both cannot hold, choosing for them
+delivers something they did not ask for.
 
 Once they choose, the runtime is settled and the interview proceeds against
 the real one.
