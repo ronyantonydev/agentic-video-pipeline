@@ -32,9 +32,16 @@
     "  2. Free trial: new users on the FREE plan only, 24 hours, 1 concurrent,",
     "     8s clips, 20+ models. Not available on a paid account.",
     "",
-    "Do not quote either as a way to make a long video cheap. If the MCP",
-    "exclusion is ever lifted, offer 1 is a genuine win: ~$70 for three days",
-    "against ~$187 in credits for a 20-minute video."
+    "Do not quote either as a way to make a long video cheap. Do not plan",
+    "around the MCP exclusion being lifted either: Higgsfield's Unlimited",
+    "terms state the platform is for 'personal, human creative use' and that",
+    "'automation... is not permitted', so excluding MCP from an unmetered",
+    "plan reads as deliberate rather than as an oversight.",
+    "",
+    "Those same terms also say Unlimited 'defines access, not speed' - it runs",
+    "on a separate, slower queue - and does NOT raise concurrency, which is a",
+    "property of the plan. So even if it applied, a many-shot run would be",
+    "slow and still serial. Cost is not the binding constraint there."
   ],
   "restApi": {
     "_comment": [
