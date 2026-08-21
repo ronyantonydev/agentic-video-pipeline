@@ -395,6 +395,7 @@ redacted value survives.
 | | |
 | --- | --- |
 | [docs/architecture.md](docs/architecture.md) | How it works and why — stages, budget guards, QA tiers, skills, what we learned the expensive way, and the numbered design rules the code cites |
+| [docs/testing-plan-video.md](docs/testing-plan-video.md) | How to test `/plan-video` — what to run, what to verify at the stop, and what to do when the plan is not good |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | Setup, the rules that matter, how to test |
 
 ## Contributing
