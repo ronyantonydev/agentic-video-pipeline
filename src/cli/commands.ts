@@ -23,6 +23,7 @@ import { compileComposition } from '../timeline/compile.js';
 import { renderComposition } from '../timeline/render.js';
 import { extractThumbnail } from '../thumbnail/thumbnail.js';
 import { renderCostReport, writeCostReport } from '../reports/cost-report.js';
+import { buildPlanReport, renderPlanReport, writePlanReport } from '../reports/plan-report.js';
 import { buildContinuityGraph, assertExecutableGraph, executionPlan } from '../planning/continuity-graph.js';
 import { lintMotionRatio, formatLintResult } from '../planning/motion-lint.js';
 import {
@@ -237,6 +238,27 @@ export async function cmdCost(
     ``,
     `Full breakdown: ${file}`,
   ]);
+}
+
+/* ------------------------------------------------------------- plan report */
+
+/**
+ * Render the plan into one page a human can act on.
+ *
+ * Free - reads files and re-runs the cheap image checks. Spends nothing.
+ */
+export async function cmdPlanReport(project: string): Promise<void> {
+  const report = await buildPlanReport(project);
+  const file = writePlanReport(project, renderPlanReport(report));
+
+  log.info(`Plan report: ${file}`);
+  if (!report.ready) {
+    log.warn(`${report.blockers.length} blocker(s) - see the report.`);
+    // Non-zero so a scripted run stops rather than approving a broken plan.
+    process.exitCode = 4;
+    return;
+  }
+  log.info(`${report.humanChecks.length} thing(s) for you to look at before approving.`);
 }
 
 /* --------------------------------------------------------------- gate look */

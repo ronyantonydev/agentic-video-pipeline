@@ -166,12 +166,20 @@ credits to redo.
 
 ## Finishing
 
-Print, in this order:
+`refcheck` writes `reports/plan-report.md` automatically — one page listing
+every automatic check that ran and every image the user must look at, each
+with what to look for and what to do if it is wrong. Regenerate it any time
+with `npm run plan:report -- <project>`.
+
+**Point the user at that file.** They should not have to open nine JSON files
+and a folder of images to answer "does this look right".
+
+Then print, briefly:
 
 1. What the video is — shots, runtime, look
 2. The complete cost range, with the breakdown
 3. Whether the wallet covers it
-4. The plates, named, with your own assessment of them
+4. The path to the plan report
 5. `Run it with /run-video <project>`
 
 Then stop. Do not generate video. Do not approve the look gate on the

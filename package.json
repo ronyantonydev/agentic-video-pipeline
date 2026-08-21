@@ -22,6 +22,7 @@
     "cost": "tsx src/cli/index.ts cost",
     "approve": "tsx src/cli/index.ts approve",
     "refcheck": "tsx src/cli/index.ts refcheck",
+    "plan:report": "tsx src/cli/index.ts plan-report",
     "gen:references": "tsx src/cli/index.ts gen references",
     "gen:shots": "tsx src/cli/index.ts gen shots",
     "qa:machine": "tsx src/cli/index.ts qa machine",

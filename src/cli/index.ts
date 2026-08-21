@@ -11,7 +11,7 @@ import { runDoctor } from './doctor.js';
 import { log } from '../util/logger.js';
 import { HardStop, PipelineError, GatePending } from '../util/errors.js';
 import {
-  cmdInit, cmdPlan, cmdCost, cmdApprove, cmdStatus, cmdRequestLook,
+  cmdInit, cmdPlan, cmdCost, cmdApprove, cmdStatus, cmdRequestLook, cmdPlanReport,
   cmdQaMachine, cmdQaFinal, cmdRender, cmdThumbnail, cmdReport,
   type PlanStage,
 } from './commands.js';
@@ -220,6 +220,11 @@ program
       return;
     }
 
+    // Write the human-readable report before raising the gate: the gate's
+    // whole question is "does this look right", and nine JSON files plus a
+    // folder of images is not a question anyone can answer.
+    await cmdPlanReport(project);
+
     // A passing check is the moment the look becomes reviewable, so it is
     // where the look gate is raised.
     //
@@ -232,6 +237,15 @@ program
     // pending. Harmless while nothing enforced it; a deadlock once
     // generateShot began to.
     cmdRequestLook(project, check);
+  });
+
+program
+  .command('plan-report')
+  .description('Write plan-report.md - what the code checked, and what you must look at (free)')
+  .argument('<project>', 'project name')
+  .action(async (project: string) => {
+    withLog(project);
+    await cmdPlanReport(project);
   });
 
 /* --------------------------------------------------------------- generation */
