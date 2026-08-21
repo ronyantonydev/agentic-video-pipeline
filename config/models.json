@@ -924,7 +924,9 @@
         "references",
         "progression",
         "props"
-      ]
+      ],
+      "maxImageReferences": 3,
+      "_maxRefNote": "Verified 2026-08-21 by controlled test: 4 image_references fails SILENTLY - status 'failed', no error message, no charge, and in a batch the whole job is lost. 3 succeeds. get_cost accepts 4 and quotes 1 credit, so a preflight does NOT catch it. 17 of 23 frame jobs died this way."
     },
     {
       "id": "nano_banana_2",
