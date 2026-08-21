@@ -343,7 +343,15 @@
       "useFor": [
         "normal",
         "identity-consistent"
-      ]
+      ],
+      "mcpMediaRoles": [
+        "start_image",
+        "end_image",
+        "image_references",
+        "video_references",
+        "audio_references"
+      ],
+      "_mcpRoleNote": "Exact role strings the MCP tools accept. A bare \"reference\" is rejected at submission with submission_failed - no charge, but the batch is lost. Verified 2026-08-21."
     },
     {
       "id": "minimax_h3",
