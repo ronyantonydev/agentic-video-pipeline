@@ -36,7 +36,10 @@
     "doctor": "tsx src/cli/index.ts doctor",
     "start": "tsx src/cli/index.ts start",
     "budget": "tsx src/cli/index.ts budget",
-    "debug": "tsx src/cli/index.ts debug"
+    "debug": "tsx src/cli/index.ts debug",
+    "set-budget": "tsx src/cli/index.ts set-budget",
+    "plan:contract": "tsx src/cli/index.ts plan-contract",
+    "readiness": "tsx src/cli/index.ts readiness"
   },
   "dependencies": {
     "commander": "^12.1.0",

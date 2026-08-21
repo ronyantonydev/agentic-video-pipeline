@@ -296,6 +296,132 @@ export const AudioPlanSchema = z.object({
 });
 export type AudioPlan = z.infer<typeof AudioPlanSchema>;
 
+/* --------------------------------------------------------------- plan.json */
+/* "What will the run do?" - the single contract /run-video reads. */
+
+/**
+ * The run contract.
+ *
+ * The nine planning artifacts each answer one question well, but nothing tied
+ * them together: retry policy lived in a markdown report, the model tier per
+ * shot lived only in generation-plan, and which gates were approved on what
+ * evidence lived in state.json. `/run-video` had to reassemble intent from
+ * four places, and anything that lived only in the planning conversation was
+ * simply lost.
+ *
+ * This is also what makes a UI possible later. A frontend can read and edit
+ * one data structure; it cannot read intent that lived in a chat log.
+ */
+export const PlanSchema = z.object({
+  projectName: z.string().min(1),
+  idea: z.string().min(1),
+  mode: z.enum(['quick', 'grill', 'unspecified']),
+
+  /** Total runtime, and how it splits between paid footage and the edit. */
+  runtime: z.object({
+    totalSeconds: Seconds,
+    /** Seconds of generated video. Everything else is composed, not paid for. */
+    generatedSeconds: Seconds,
+    /** Titles, cards, stills and graphics - HyperFrames, not the video model. */
+    composedSeconds: z.number().nonnegative(),
+  }),
+
+  shots: z
+    .array(
+      z.object({
+        id: ShotId,
+        model: z.string().min(1),
+        seconds: Seconds,
+        importance: ShotImportance,
+        prompt: z.string().min(1),
+        negativePrompt: z.string().optional(),
+        references: z.array(z.string()).default([]),
+        startFrame: z.string().optional(),
+        endFrame: z.string().optional(),
+        aspect: z.string(),
+      }),
+    )
+    .min(1),
+
+  /** Every plate to generate, with the category it belongs to. */
+  references: z
+    .array(
+      z.object({
+        path: z.string().min(1),
+        category: z.enum(['character', 'environment', 'props', 'style', 'progression']),
+        prompt: z.string().min(1),
+        model: z.string().min(1),
+      }),
+    )
+    .default([]),
+
+  /** Pack images and the master, or null when nobody recurs. */
+  characterPack: z
+    .object({
+      master: z.string().min(1),
+      images: z.array(z.string()).min(1),
+    })
+    .nullable(),
+
+  music: z.object({
+    plan: MusicSchema,
+    mustGenerate: z.boolean(),
+  }),
+
+  /** How the timeline presents it - the HyperFrames layer. */
+  edit: z.object({
+    transitions: z.array(z.string()).default([]),
+    captions: z.number().int().nonnegative().default(0),
+    titleCards: z.number().int().nonnegative().default(0),
+    musicGainDb: z.number(),
+    fadeInSeconds: z.number().nonnegative(),
+    fadeOutSeconds: z.number().nonnegative(),
+  }),
+
+  cost: z.object({
+    lineItems: z
+      .array(z.object({ label: z.string().min(1), credits: z.number().nonnegative() }))
+      .min(1),
+    minimumCredits: z.number().nonnegative(),
+    withRetriesCredits: z.number().nonnegative(),
+    minimumUSD: z.number().nonnegative(),
+    withRetriesUSD: z.number().nonnegative(),
+  }),
+
+  /**
+   * Two attempts per shot, never an open allowance. A shot that fails twice
+   * is mis-planned, and a third attempt reproduces the same defect at full
+   * price - which is how the first rejected run burned its budget.
+   */
+  retryPolicy: z.object({
+    maxAttemptsPerShot: z.number().int().min(1).max(2),
+    allowanceCredits: z.number().nonnegative(),
+  }),
+
+  gates: z
+    .array(
+      z.object({
+        name: z.enum(['cost', 'look', 'review']),
+        status: z.string().min(1),
+        evidence: z.string().min(1),
+      }),
+    )
+    .default([]),
+})
+  .refine(
+    (p) =>
+      Math.abs(p.runtime.generatedSeconds + p.runtime.composedSeconds - p.runtime.totalSeconds) <
+      0.01,
+    { message: 'generatedSeconds + composedSeconds must equal totalSeconds' },
+  )
+  .refine((p) => p.cost.withRetriesCredits >= p.cost.minimumCredits, {
+    message: 'withRetriesCredits must be at least minimumCredits',
+  })
+  .refine((p) => new Set(p.shots.map((s) => s.id)).size === p.shots.length, {
+    message: 'duplicate shot id in plan',
+  });
+export type Plan = z.infer<typeof PlanSchema>;
+
 /* ------------------------------------------------------------------ export */
 
 export const PLANNING_ARTIFACTS = {

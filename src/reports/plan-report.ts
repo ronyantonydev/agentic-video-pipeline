@@ -27,7 +27,9 @@ import { existsSync, readdirSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { paths } from '../state/paths.js';
 import { readState } from '../state/store.js';
-import { readReferenceCheck } from '../qa/reference-gate.js';
+import { readReferenceCheck, isRejectedPlate } from '../qa/reference-gate.js';
+import { creditsToUsd } from '../budget/cost.js';
+import { loadModels } from '../config/loader.js';
 import { validateAnchor } from '../qa/anchor.js';
 import { readJsonIfExists, writeFileAtomic } from '../util/atomic.js';
 import { PLANNING_ARTIFACTS, type PlanningArtifactName } from '../schemas/planning.js';
@@ -48,12 +50,40 @@ export type HumanCheck = {
   ifWrong: string;
 };
 
+/**
+ * What the plan costs, completely.
+ *
+ * `estimateGenerationPlan` walks generation-plan.json only, so it counts video
+ * shots and nothing else. On rain-riverbed that under-reported the real spend
+ * because two reference plates were never in the estimate. A user deciding how
+ * many credits to buy needs the whole figure, including the plates already
+ * generated and an allowance for retries.
+ */
+export type PlanCost = {
+  shotCredits: number;
+  shotUSD: number;
+  shotCount: number;
+  /** Reference plates already on disk, at the measured per-image rate. */
+  plateCredits: number;
+  plateUSD: number;
+  plateCount: number;
+  /** Held back for retries - a stochastic model returns the odd bad shot. */
+  retryCredits: number;
+  minimumCredits: number;
+  withRetriesCredits: number;
+  minimumUSD: number;
+  withRetriesUSD: number;
+  budgetUSD: number;
+  withinBudget: boolean;
+};
+
 export type PlanReport = {
   project: string;
   idea: string;
   generatedAt: string;
   codeChecks: CodeCheck[];
   humanChecks: HumanCheck[];
+  cost: PlanCost | null;
   blockers: string[];
   ready: boolean;
 };
@@ -62,7 +92,9 @@ const IMAGE_RE = /\.(png|jpe?g|webp)$/i;
 
 function listImages(dir: string): string[] {
   if (!existsSync(dir)) return [];
-  return readdirSync(dir).filter((f) => IMAGE_RE.test(f)).sort();
+  // A superseded plate stays on disk as evidence but must never be offered
+  // for approval next to the plate that replaced it.
+  return readdirSync(dir).filter((f) => IMAGE_RE.test(f) && !isRejectedPlate(f)).sort();
 }
 
 /** Paths in the report are project-relative so they are short and clickable. */
@@ -283,10 +315,9 @@ export async function buildPlanReport(
 
   // An attached reference is what stops the model reinventing the location or
   // the person. Missing attachments are invisible in the images themselves.
-  const genPlan = readJsonIfExists<{ items?: Array<{ shotId: string }> } | null>(
-    p.planningFile('generation-plan.json'),
-    null,
-  );
+  const genPlan = readJsonIfExists<{
+    items?: Array<{ shotId: string; modelId?: string }>;
+  } | null>(p.planningFile('generation-plan.json'), null);
   if (genPlan?.items && genPlan.items.length > 0) {
     humanChecks.push({
       what: `Every shot carries its references (${genPlan.items.length} shots)`,
@@ -299,6 +330,158 @@ export async function buildPlanReport(
         project +
         '. A hands-only macro generated without it came back with different hands in a ' +
         'different place, 20 credits to redo.',
+    });
+  }
+
+  /* ------------------------------------------------------------------ cost */
+
+  // Priced here rather than read from cost-estimate.md so this report stays
+  // free and self-contained: it reads config and files, never the API.
+  let cost: PlanCost | null = null;
+  if (genPlan?.items && genPlan.items.length > 0) {
+    const models = loadModels();
+    let shotCredits = 0;
+    let unpriced = 0;
+    for (const item of genPlan.items) {
+      const entry = models.video.find((m) => m.id === item.modelId);
+      if (entry?.costCredits != null) shotCredits += entry.costCredits;
+      else unpriced++;
+    }
+
+    // Plates already generated, at the measured image rate.
+    //
+    // This is an UPPER BOUND, not a record. Plates generated through MCP never
+    // reach manifest.json, so there is no per-file receipt to read; and views
+    // cut locally from one turnaround sheet cost nothing at all while still
+    // appearing as separate files. The figure exists so the total is not
+    // silently short - `transactions` is the authority on what was really
+    // spent.
+    const plateFiles = [...character, ...environment, ...style, ...props];
+    const imageRate = models.image.find((m) => m.id === 'nano_banana')?.costCredits ?? null;
+    const plateCredits = imageRate == null ? 0 : plateFiles.length * imageRate;
+
+    const retryCredits = round1(shotCredits * 0.2);
+    const minimumCredits = round1(shotCredits + plateCredits);
+    const withRetriesCredits = round1(minimumCredits + retryCredits);
+
+    cost = {
+      shotCredits: round1(shotCredits),
+      shotUSD: creditsToUsd(shotCredits, models),
+      shotCount: genPlan.items.length,
+      plateCredits: round1(plateCredits),
+      plateUSD: creditsToUsd(plateCredits, models),
+      plateCount: plateFiles.length,
+      retryCredits,
+      minimumCredits,
+      withRetriesCredits,
+      minimumUSD: creditsToUsd(minimumCredits, models),
+      withRetriesUSD: creditsToUsd(withRetriesCredits, models),
+      budgetUSD: state.budget.maxBudgetUSD,
+      withinBudget: creditsToUsd(withRetriesCredits, models) <= state.budget.maxBudgetUSD,
+    };
+
+    codeChecks.push({
+      name: 'Cost is fully priced',
+      status: unpriced > 0 ? 'fail' : 'pass',
+      detail:
+        unpriced > 0
+          ? `${unpriced} shot(s) have no known price - a cost can never be guessed`
+          : `every shot priced from a measured figure`,
+    });
+    if (unpriced > 0) {
+      blockers.push(
+        `${unpriced} shot(s) in the generation plan have no known cost. Resolve a real price ` +
+          `before running - the pipeline refuses to guess.`,
+      );
+    }
+  }
+
+  /* -------------------------------------------- completeness of the plan */
+
+  // A plan can validate against every schema and still be thin: all shots on
+  // one model, no anchor frames, every second paid for. These checks exist
+  // because a passing schema says the file is well-formed, not that the plan
+  // is a good one. Each is a WARN - the architecture states a policy, and
+  // deviating from it is a judgement the planner can defend.
+
+  // plan.json - the contract /run-video reads.
+  const planExists = existsSync(p.plan);
+  codeChecks.push({
+    name: 'Run contract (plan.json)',
+    status: planExists ? 'pass' : 'fail',
+    detail: planExists
+      ? 'written - validate with npm run plan:contract'
+      : 'missing - /run-video has no single file to read',
+  });
+  if (!planExists) {
+    blockers.push(
+      `plan.json missing. It is the contract /run-video reads; without it the plan is ` +
+        `incomplete however many artifacts exist. Write it, then run: ` +
+        `npm run plan:contract -- ${project}`,
+    );
+  }
+
+  const storyboard = readJsonIfExists<{
+    frames?: Array<{ shotId: string; startFramePrompt?: string; endFramePrompt?: string }>;
+  } | null>(p.planningFile('storyboard.json'), null);
+  const shotlist = readJsonIfExists<{
+    shots?: Array<{ id: string; importance?: string; continuityMode?: string }>;
+  } | null>(p.planningFile('shotlist.json'), null);
+  const editPlan = readJsonIfExists<{
+    totalDurationSeconds?: number;
+    items?: Array<{ screenDurationSeconds: number; motionSeconds: number; isStill?: boolean }>;
+    captions?: unknown[];
+  } | null>(p.planningFile('edit-plan.json'), null);
+
+  // Anchor frames. A video model given a start and end frame fills in the
+  // middle, so a wrong anchor guarantees a wrong clip at ~100x the frame's
+  // cost - which makes an absent anchor the most expensive thing to skip.
+  if (storyboard?.frames && storyboard.frames.length > 0) {
+    const withFrames = storyboard.frames.filter(
+      (f) => f.startFramePrompt || f.endFramePrompt,
+    ).length;
+    codeChecks.push({
+      name: 'Anchor frames planned',
+      status: withFrames === 0 ? 'warn' : 'pass',
+      detail:
+        withFrames === 0
+          ? `none of ${storyboard.frames.length} shots define a start or end frame - ` +
+            `the model chooses its own opening and closing image on every shot`
+          : `${withFrames} of ${storyboard.frames.length} shots anchored`,
+    });
+  }
+
+  // Anchor shots and model tiering. §9: 2-4 shots carry the weight and get
+  // quality treatment; supporting shots go cheaper.
+  if (shotlist?.shots && shotlist.shots.length > 0 && genPlan?.items) {
+    const anchors = shotlist.shots.filter((s) => s.importance === 'anchor').length;
+    const models = new Set(genPlan.items.map((i) => i.modelId));
+    codeChecks.push({
+      name: 'Anchor shots get quality treatment',
+      status: models.size === 1 && anchors > 0 ? 'warn' : 'pass',
+      detail:
+        models.size === 1
+          ? `${anchors} anchor(s) marked, but all ${genPlan.items.length} shots use ` +
+            `${[...models][0]}. Anchors are meant to carry the weight on a dearer model.`
+          : `${anchors} anchor(s) across ${models.size} model tier(s)`,
+    });
+  }
+
+  // Runtime split. The motion floor is 55%, so up to 45% of runtime may be
+  // stills, titles and graphics - which cost nothing to generate. Planning
+  // 100% motion is valid, and pays the video model for every second.
+  if (editPlan?.items && editPlan.items.length > 0 && editPlan.totalDurationSeconds) {
+    const motion = editPlan.items.reduce((sum, i) => sum + i.motionSeconds, 0);
+    const pct = (motion / editPlan.totalDurationSeconds) * 100;
+    const captions = Array.isArray(editPlan.captions) ? editPlan.captions.length : 0;
+    codeChecks.push({
+      name: 'Runtime split (generated vs composed)',
+      status: pct >= 99.9 ? 'warn' : 'pass',
+      detail:
+        pct >= 99.9
+          ? `100% generated motion, ${captions} caption(s). Every second is paid footage; ` +
+            `the lint floor is 55%, so titles and stills could carry up to 45%.`
+          : `${pct.toFixed(0)}% generated motion, ${captions} caption(s)`,
     });
   }
 
@@ -322,9 +505,14 @@ export async function buildPlanReport(
     generatedAt: now,
     codeChecks,
     humanChecks,
+    cost,
     blockers,
     ready: blockers.length === 0,
   };
+}
+
+function round1(n: number): number {
+  return Math.round(n * 10) / 10;
 }
 
 const ICON = { pass: '✅', warn: '⚠️', fail: '❌' } as const;
@@ -374,6 +562,50 @@ export function renderPlanReport(r: PlanReport): string {
   out.push('');
   out.push('---');
   out.push('');
+
+  /* ------------------------------------------------------------- what it costs */
+
+  if (r.cost) {
+    const c = r.cost;
+    out.push('## What it costs');
+    out.push('');
+    out.push('| Line | Credits | USD |');
+    out.push('|---|---:|---:|');
+    out.push(`| ${c.shotCount} video shots | ${c.shotCredits} | $${c.shotUSD.toFixed(2)} |`);
+    out.push(
+      `| ${c.plateCount} reference plates (upper bound) | ${c.plateCredits} | ` +
+        `$${c.plateUSD.toFixed(2)} |`,
+    );
+    out.push(`| **Minimum** | **${c.minimumCredits}** | **$${c.minimumUSD.toFixed(2)}** |`);
+    out.push(`| Retry allowance (20%) | ${c.retryCredits} | — |`);
+    out.push(
+      `| **With retries** | **${c.withRetriesCredits}** | **$${c.withRetriesUSD.toFixed(2)}** |`,
+    );
+    out.push('');
+    out.push(
+      `**Buy for ${c.withRetriesCredits} credits, not ${c.minimumCredits}.** ` +
+        'A stochastic model returns the occasional bad shot; the allowance is what makes ' +
+        'that recoverable instead of fatal.',
+    );
+    out.push('');
+    out.push(
+      '_The plate line counts every reference file at the full image rate, so it reads high: ' +
+        'views cut locally from one turnaround sheet cost nothing, and plates generated ' +
+        'through MCP never reach manifest.json. Read `transactions` for what was actually ' +
+        'charged._',
+    );
+    out.push('');
+    out.push(
+      c.withinBudget
+        ? `Budget is $${c.budgetUSD.toFixed(2)} — the full range fits.`
+        : `⚠️ Budget is $${c.budgetUSD.toFixed(2)}, which does **not** cover the retry ` +
+          `allowance. Raise it with \`npm run set-budget -- ${r.project} --budget <usd>\` ` +
+          `or accept that a failed shot cannot be retried.`,
+    );
+    out.push('');
+    out.push('---');
+    out.push('');
+  }
 
   /* ------------------------------------------------------- what you must do */
 

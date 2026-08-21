@@ -11,7 +11,8 @@ import { runDoctor } from './doctor.js';
 import { log } from '../util/logger.js';
 import { HardStop, PipelineError, GatePending } from '../util/errors.js';
 import {
-  cmdInit, cmdPlan, cmdCost, cmdApprove, cmdStatus, cmdRequestLook, cmdPlanReport,
+  cmdInit, cmdPlan, cmdCost, cmdApprove, cmdStatus, cmdRequestLook, cmdPlanReport, cmdSetBudget,
+  cmdPlanContract, cmdReadiness,
   cmdQaMachine, cmdQaFinal, cmdRender, cmdThumbnail, cmdReport,
   type PlanStage,
 } from './commands.js';
@@ -23,6 +24,7 @@ import { paths } from '../state/paths.js';
 import { existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { checkReferences, formatReferenceCheck } from '../qa/reference-gate.js';
+import { buildPlanContactSheet } from '../qa/vision.js';
 import { fitToBudget, formatFit } from '../budget/budget-fit.js';
 
 const program = new Command();
@@ -98,6 +100,15 @@ program
   .action((project: string) => cmdStatus(withLog(project)));
 
 program
+  .command('set-budget')
+  .description('Change the budget ceiling on an existing project')
+  .argument('<project>', 'project name')
+  .requiredOption('--budget <usd>', 'the new ceiling, in USD')
+  .action((project: string, opts: { budget: string }) => {
+    cmdSetBudget(withLog(project), Number(opts.budget));
+  });
+
+program
   .command('start')
   .description('Interactive setup: asks for the idea and budget, then fits a model to it')
   .option('--idea <text>', 'skip the idea prompt')
@@ -139,6 +150,18 @@ for (const stage of ['story', 'audio', 'storyboard', 'edit', 'generation'] as co
     .argument('<project>', 'project name')
     .action((project: string) => cmdPlan(withLog(project), stage as PlanStage));
 }
+
+program
+  .command('readiness')
+  .description('Would /run-video finish? Checks every layer - shots, frames, stills, audio (free)')
+  .argument('<project>', 'project name')
+  .action((project: string) => cmdReadiness(withLog(project)));
+
+program
+  .command('plan-contract')
+  .description('Validate plan.json - the one file /run-video reads (free)')
+  .argument('<project>', 'project name')
+  .action((project: string) => cmdPlanContract(withLog(project)));
 
 /* ------------------------------------------------------------- cost / gates */
 
@@ -225,6 +248,13 @@ program
     // folder of images is not a question anyone can answer.
     await cmdPlanReport(project);
 
+    // The `contact-sheet` stage sits before gate-look precisely so the human
+    // gets one page instead of twenty files. It was never built here, and the
+    // only builder read frames from generated video that does not exist yet.
+    const contactSheet = await buildPlanContactSheet(project);
+    if (contactSheet) log.info(`Contact sheet: ${contactSheet}`);
+    else log.warn('No contact sheet - no reference images or anchor frames to assemble.');
+
     // A passing check is the moment the look becomes reviewable, so it is
     // where the look gate is raised.
     //
@@ -236,7 +266,7 @@ program
     // approve": the gate was unreachable by construction rather than
     // pending. Harmless while nothing enforced it; a deadlock once
     // generateShot began to.
-    cmdRequestLook(project, check);
+    cmdRequestLook(project, check, contactSheet);
   });
 
 program

@@ -100,6 +100,102 @@ describe('plan report', () => {
     expect(drift.detail).toMatch(/ADVISORY/i);
   });
 
+  it('states the cost as a range, so nobody buys only the minimum', async () => {
+    // The report is what the user decides on. A plan whose cost lives in a
+    // different file leaves them buying credits against a number they were
+    // never shown - and buying the minimum means the first bad shot is fatal.
+    mkdirSync(paths(PROJECT).planning, { recursive: true });
+    writeFileSync(
+      paths(PROJECT).planningFile('generation-plan.json'),
+      JSON.stringify({
+        items: Array.from({ length: 4 }, (_, i) => ({
+          shotId: `shot_00${i + 1}`,
+          modelId: 'seedance_2_0_mini',
+        })),
+      }),
+    );
+
+    const r = await buildPlanReport(PROJECT, NOW);
+    expect(r.cost).not.toBeNull();
+    expect(r.cost!.shotCount).toBe(4);
+    // 4 shots at the measured 12.5cr.
+    expect(r.cost!.shotCredits).toBe(50);
+    // The range must be strictly wider than the minimum.
+    expect(r.cost!.withRetriesCredits).toBeGreaterThan(r.cost!.minimumCredits);
+
+    const md = renderPlanReport(r);
+    expect(md).toContain('## What it costs');
+    expect(md).toMatch(/with retries/i);
+  });
+
+  it('blocks when a shot has no known price rather than guessing one', async () => {
+    mkdirSync(paths(PROJECT).planning, { recursive: true });
+    writeFileSync(
+      paths(PROJECT).planningFile('generation-plan.json'),
+      JSON.stringify({ items: [{ shotId: 'shot_001', modelId: 'no-such-model' }] }),
+    );
+
+    const r = await buildPlanReport(PROJECT, NOW);
+    const check = r.codeChecks.find((c) => c.name === 'Cost is fully priced')!;
+    expect(check.status).toBe('fail');
+    expect(r.blockers.join(' ')).toMatch(/no known cost/i);
+  });
+
+  it('blocks when plan.json is missing', async () => {
+    // Nine valid artifacts still do not make a runnable plan: /run-video reads
+    // one contract, and intent that lives only in the planning conversation is
+    // lost without it.
+    const r = await buildPlanReport(PROJECT, NOW);
+    const check = r.codeChecks.find((c) => c.name === 'Run contract (plan.json)')!;
+    expect(check.status).toBe('fail');
+    expect(r.blockers.join(' ')).toMatch(/plan\.json missing/i);
+  });
+
+  it('warns when no shot defines an anchor frame', async () => {
+    mkdirSync(paths(PROJECT).planning, { recursive: true });
+    writeFileSync(
+      paths(PROJECT).planningFile('storyboard.json'),
+      JSON.stringify({
+        frames: [
+          { shotId: 'shot_001', description: 'd', imagePrompt: 'p', referenceImages: [] },
+          { shotId: 'shot_002', description: 'd', imagePrompt: 'p', referenceImages: [] },
+        ],
+      }),
+    );
+
+    const r = await buildPlanReport(PROJECT, NOW);
+    const check = r.codeChecks.find((c) => c.name === 'Anchor frames planned')!;
+    // A wrong anchor costs ~100x the frame, so an absent one is worth saying.
+    expect(check.status).toBe('warn');
+    expect(check.detail).toMatch(/none of 2 shots/i);
+  });
+
+  it('warns when every second of runtime is paid generation', async () => {
+    mkdirSync(paths(PROJECT).planning, { recursive: true });
+    writeFileSync(
+      paths(PROJECT).planningFile('edit-plan.json'),
+      JSON.stringify({
+        totalDurationSeconds: 10,
+        items: [
+          {
+            shotId: 'shot_001', startSeconds: 0, screenDurationSeconds: 10,
+            motionSeconds: 10, speedFactor: 1, transitionIn: 'cut',
+            transitionOut: 'cut', isStill: false,
+          },
+        ],
+        music: { gainDb: -12, fadeInSeconds: 0, fadeOutSeconds: 0 },
+        captions: [],
+      }),
+    );
+
+    const r = await buildPlanReport(PROJECT, NOW);
+    const check = r.codeChecks.find((c) => c.name === 'Runtime split (generated vs composed)')!;
+    // 100% motion passes the lint (floor is 55%) but means titles and stills
+    // carry none of the runtime, so the video model is paid for every second.
+    expect(check.status).toBe('warn');
+    expect(check.detail).toMatch(/55%/);
+  });
+
   it('renders markdown that tells the user what to do next', async () => {
     const r = await buildPlanReport(PROJECT, NOW);
     const md = renderPlanReport(r);

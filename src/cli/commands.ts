@@ -12,7 +12,7 @@ import { loadEnv } from '../config/env.js';
 import { ensureProjectDirs, isValidProjectName, paths } from '../state/paths.js';
 import { readState, writeState, advanceStage, addWarning, stateExists } from '../state/store.js';
 import { emptyState } from '../schemas/state.js';
-import { writeFileAtomic } from '../util/atomic.js';
+import { writeFileAtomic, readJsonIfExists } from '../util/atomic.js';
 import {
   validateArtifact, surveyArtifacts, validateCrossReferences, artifactIsValid,
 } from '../planning/validate.js';
@@ -30,7 +30,9 @@ import {
   estimateGenerationPlan, renderCostEstimateMarkdown, writeCostEstimate,
 } from '../reports/cost-estimate.js';
 import { requestApproval, decideGate } from '../gates/gates.js';
-import type { ReferenceCheck } from '../qa/reference-gate.js';
+import { PlanSchema } from '../schemas/planning.js';
+import { checkReadiness, formatReadiness } from '../planning/readiness.js';
+import { isRejectedPlate, type ReferenceCheck } from '../qa/reference-gate.js';
 import { ValidationError } from '../util/errors.js';
 import { log } from '../util/logger.js';
 import type { GateNameT } from '../schemas/state.js';
@@ -84,6 +86,46 @@ export function cmdInit(
 
   writeFileAtomic(p.idea, `# ${project}\n\n${idea}\n`);
   log.info(`Initialised project "${project}" at ${p.root}`);
+}
+
+/* -------------------------------------------------------------- set-budget */
+
+/**
+ * Change the ceiling on an existing project.
+ *
+ * The budget was previously fixed at init, which broke the plan-then-commit
+ * flow: /plan-video prices several models *after* the project exists, so a
+ * user who inits at $20 and then picks a $28 option had no supported way
+ * forward except deleting the project. Raising it must still be an explicit
+ * act with a stated number - never inferred from an estimate that overran.
+ */
+export function cmdSetBudget(project: string, maxBudgetUSD: number): void {
+  if (!Number.isFinite(maxBudgetUSD) || maxBudgetUSD < 0) {
+    throw new ValidationError(
+      `Budget must be a non-negative number, got "${maxBudgetUSD}".`,
+      'budget',
+    );
+  }
+
+  const state = readState(project);
+  const committed = state.budget.spentUSD + state.budget.reservedUSD;
+  if (maxBudgetUSD < committed) {
+    throw new ValidationError(
+      `Cannot set the budget to $${maxBudgetUSD.toFixed(2)}: ` +
+        `$${committed.toFixed(2)} is already spent or reserved on this project.`,
+      'budget',
+    );
+  }
+
+  const previous = state.budget.maxBudgetUSD;
+  writeState(project, {
+    ...state,
+    budget: { ...state.budget, maxBudgetUSD },
+  });
+
+  log.info(
+    `Budget for "${project}": $${previous.toFixed(2)} → $${maxBudgetUSD.toFixed(2)}`,
+  );
 }
 
 /* -------------------------------------------------------------------- plan */
@@ -261,6 +303,102 @@ export async function cmdPlanReport(project: string): Promise<void> {
   log.info(`${report.humanChecks.length} thing(s) for you to look at before approving.`);
 }
 
+/* ------------------------------------------------------- the run contract */
+
+/**
+ * Validate plan.json and check it against the artifacts it summarises.
+ *
+ * plan.json is the one file `/run-video` reads. Validating its shape is not
+ * enough: a contract that disagrees with the artifacts is worse than no
+ * contract, because the run follows the contract and the human reviewed the
+ * artifacts. So every claim it makes about shots, runtime and cost is
+ * cross-checked against the file that owns that fact.
+ */
+export function cmdPlanContract(project: string): void {
+  const raw = readJsonIfExists<unknown>(paths(project).plan, null);
+  if (raw === null) {
+    throw new ValidationError(
+      `plan.json missing. It is the contract /run-video reads - without it the plan is ` +
+        `incomplete, however many artifacts exist.`,
+      'plan.json',
+    );
+  }
+
+  const parsed = PlanSchema.safeParse(raw);
+  if (!parsed.success) {
+    throw new ValidationError(
+      `plan.json is invalid:\n  ${parsed.error.issues.map((i) => `${i.path.join('.')}: ${i.message}`).join('\n  ')}`,
+      'plan.json',
+      parsed.error.issues.map((i) => i.message),
+    );
+  }
+  const plan = parsed.data;
+
+  const problems: string[] = [];
+
+  // Against generation-plan.json: same shots, same models, same durations.
+  const gen = validateArtifact(project, 'generation-plan.json').data;
+  const genById = new Map(gen.items.map((i) => [i.shotId, i]));
+  if (gen.items.length !== plan.shots.length) {
+    problems.push(
+      `plan.json has ${plan.shots.length} shot(s), generation-plan.json has ${gen.items.length}`,
+    );
+  }
+  for (const s of plan.shots) {
+    const g = genById.get(s.id);
+    if (!g) {
+      problems.push(`${s.id} is in plan.json but not in generation-plan.json`);
+      continue;
+    }
+    if (g.modelId !== s.model) {
+      problems.push(`${s.id}: plan says model ${s.model}, generation-plan says ${g.modelId}`);
+    }
+    if (Math.abs(g.billableSeconds - s.seconds) > 0.001) {
+      problems.push(
+        `${s.id}: plan says ${s.seconds}s, generation-plan bills ${g.billableSeconds}s`,
+      );
+    }
+  }
+
+  // Against edit-plan.json: the runtime split must be real, not asserted.
+  const edit = validateArtifact(project, 'edit-plan.json').data;
+  if (Math.abs(edit.totalDurationSeconds - plan.runtime.totalSeconds) > 0.01) {
+    problems.push(
+      `plan.json runtime is ${plan.runtime.totalSeconds}s, edit-plan is ` +
+        `${edit.totalDurationSeconds}s`,
+    );
+  }
+  const generatedInEdit = edit.items
+    .filter((i) => !i.isStill)
+    .reduce((sum, i) => sum + i.screenDurationSeconds, 0);
+  if (Math.abs(generatedInEdit - plan.runtime.generatedSeconds) > 0.01) {
+    problems.push(
+      `plan.json claims ${plan.runtime.generatedSeconds}s generated, edit-plan has ` +
+        `${round2(generatedInEdit)}s of non-still items`,
+    );
+  }
+
+  if (problems.length > 0) {
+    throw new ValidationError(
+      `plan.json disagrees with the artifacts it summarises:\n  ${problems.join('\n  ')}`,
+      'plan.json',
+      problems,
+    );
+  }
+
+  log.info(`plan.json valid - ${plan.shots.length} shot(s), ${plan.runtime.totalSeconds}s`);
+  log.info(
+    `  ${plan.runtime.generatedSeconds}s generated, ${plan.runtime.composedSeconds}s composed`,
+  );
+  log.info(
+    `  ${plan.cost.minimumCredits}cr minimum, ${plan.cost.withRetriesCredits}cr with retries`,
+  );
+}
+
+function round2(n: number): number {
+  return Math.round(n * 100) / 100;
+}
+
 /* --------------------------------------------------------------- gate look */
 
 /**
@@ -273,22 +411,43 @@ export async function cmdPlanReport(project: string): Promise<void> {
  *
  * Throws GatePending, which the CLI reports as exit 3.
  */
-export function cmdRequestLook(project: string, check: ReferenceCheck): never {
+export function cmdRequestLook(
+  project: string,
+  check: ReferenceCheck,
+  contactSheet?: string | null,
+): never {
   const p = paths(project);
   const sheets: string[] = [];
   for (const category of ['character', 'environment', 'props', 'style'] as const) {
     const dir = p.referenceCategory(category);
     if (!existsSync(dir)) continue;
-    for (const f of readdirSync(dir).filter((n) => /\.(png|jpe?g|webp)$/i.test(n)).sort()) {
+    for (const f of readdirSync(dir)
+      .filter((n) => /\.(png|jpe?g|webp)$/i.test(n) && !isRejectedPlate(n))
+      .sort()) {
       sheets.push(`  ${category}/${f}`);
     }
   }
+
+  // Anchor frames decide the opening and closing image of the shots carrying
+  // the most weight, and the model fills in between them - so a wrong frame
+  // is wrong for the whole clip. They belong in front of the human at this
+  // gate just as much as the plates do.
+  const frames: string[] = existsSync(p.storyboardFrames)
+    ? readdirSync(p.storyboardFrames)
+        .filter((n) => /\.(png|jpe?g|webp)$/i.test(n) && !isRejectedPlate(n))
+        .sort()
+        .map((f) => `  storyboard/frames/${f}`)
+    : [];
 
   requestApproval(project, 'look', [
     'Look at these before any video is generated. Every shot is generated',
     'against them, so a wrong plate here is wrong in all of them.',
     '',
     ...(sheets.length > 0 ? ['References:', ...sheets] : ['No reference images.']),
+    ...(frames.length > 0
+      ? ['', 'Anchor frames (a wrong one is wrong for the whole clip):', ...frames]
+      : []),
+    ...(contactSheet ? ['', 'All of them on one page:', `  ${contactSheet}`] : []),
     ...(check.warnings.length > 0
       ? ['', 'Warnings:', ...check.warnings.map((w) => `  ${w}`)]
       : []),
@@ -505,3 +664,21 @@ export function cmdStatus(project: string): void {
 // nothing, so the gates it was meant to enforce were never enforced.
 // `generateShot` now calls `requireApproval` directly, at the point where
 // money is actually about to move.
+
+/* ------------------------------------------------------------- readiness */
+
+/**
+ * The whole question: would /run-video finish?
+ *
+ * Every other check answers one part well. This asks whether the parts add up,
+ * which is where the holes hide - a plan can pass every schema and still be
+ * missing the image a title card renders from.
+ */
+export function cmdReadiness(project: string): void {
+  const result = checkReadiness(project);
+  process.stdout.write(formatReadiness(result));
+  if (!result.ready) {
+    // Non-zero so a scripted run stops rather than proceeding to spend.
+    process.exitCode = 4;
+  }
+}

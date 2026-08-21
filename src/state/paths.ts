@@ -29,6 +29,8 @@ export function paths(project: string) {
     idea: join(root, 'idea.md'),
     state: join(root, 'state.json'),
     manifest: join(root, 'manifest.json'),
+    /** The run contract: one file that fully determines what /run-video does. */
+    plan: join(root, 'plan.json'),
 
     planning: join(root, 'planning'),
     planningFile: (name: string) => join(root, 'planning', name),

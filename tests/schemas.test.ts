@@ -10,6 +10,7 @@ import {
   ContinuitySchema,
   StoryboardSchema,
   AudioPlanSchema,
+  PlanSchema,
   PLANNING_ARTIFACTS,
 } from '../src/schemas/planning.js';
 import { StateSchema, BudgetStateSchema, emptyState, STAGES, stageAtLeast } from '../src/schemas/state.js';
@@ -267,5 +268,58 @@ describe('state schema and stages', () => {
   it('rejects an unknown stage', () => {
     const s = emptyState({ projectName: 't', idea: 'x', mode: 'full', maxBudgetUSD: 20, projectSettings: SETTINGS });
     expect(StateSchema.safeParse({ ...s, stage: 'not-a-stage' }).success).toBe(false);
+  });
+});
+
+describe('plan.json - the run contract', () => {
+  const valid = {
+    projectName: 'p', idea: 'an idea', mode: 'quick' as const,
+    runtime: { totalSeconds: 100, generatedSeconds: 70, composedSeconds: 30 },
+    shots: [{
+      id: 'shot_001', model: 'seedance_2_0_mini', seconds: 5,
+      importance: 'anchor' as const, prompt: 'p', references: [], aspect: '16:9',
+    }],
+    references: [], characterPack: null,
+    music: {
+      plan: {
+        mood: 'm', genre: 'g', bpm: 60, energyCurve: 'steady' as const,
+        source: 'generated' as const, durationSeconds: 100,
+      },
+      mustGenerate: true,
+    },
+    edit: {
+      transitions: ['cut'], captions: 0, titleCards: 1,
+      musicGainDb: -12, fadeInSeconds: 1, fadeOutSeconds: 2,
+    },
+    cost: {
+      lineItems: [{ label: 'shots', credits: 100 }],
+      minimumCredits: 100, withRetriesCredits: 120,
+      minimumUSD: 6.25, withRetriesUSD: 7.5,
+    },
+    retryPolicy: { maxAttemptsPerShot: 2, allowanceCredits: 20 },
+    gates: [],
+  };
+
+  it('accepts a complete contract', () => {
+    expect(PlanSchema.safeParse(valid).success).toBe(true);
+  });
+
+  it('rejects a runtime split that does not add up', () => {
+    // The split is the whole point: composed seconds are free, generated ones
+    // are paid. A total that disagrees hides which is which.
+    const bad = { ...valid, runtime: { totalSeconds: 100, generatedSeconds: 70, composedSeconds: 10 } };
+    expect(PlanSchema.safeParse(bad).success).toBe(false);
+  });
+
+  it('refuses a third attempt per shot', () => {
+    // A shot that fails twice is mis-planned; a third attempt reproduces the
+    // same defect at full price.
+    const bad = { ...valid, retryPolicy: { maxAttemptsPerShot: 3, allowanceCredits: 20 } };
+    expect(PlanSchema.safeParse(bad).success).toBe(false);
+  });
+
+  it('rejects a retry total below the minimum', () => {
+    const bad = { ...valid, cost: { ...valid.cost, withRetriesCredits: 50 } };
+    expect(PlanSchema.safeParse(bad).success).toBe(false);
   });
 });
