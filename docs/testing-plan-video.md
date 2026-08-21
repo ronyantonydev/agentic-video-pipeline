@@ -151,6 +151,80 @@ Check against `continuity.json` — light, palette, location, texture. Ask:
 `refcheck` passing means the file is readable, **not** that it is correct. It
 passed with zero images on a real project, because missing sheets only warn.
 
+**F-bis. Every reference image, one by one.**
+
+"Look at the plates" is not one check — it is a sweep over everything the
+video will be built from. Do this systematically, because a single wrong
+image propagates into every shot that uses it.
+
+**What the code checks for you (mechanics):**
+
+`validateAnchor` in `src/qa/anchor.ts` runs on start/end frames and on every
+character image, and covers: file exists, decodes, meets minimum resolution,
+is not blank (contrast sampling), and a composition smoke-test. `refcheck`
+additionally counts sheets and runs the drift score.
+
+**What only you can check (content):** whether it is the *right* face, the
+*right* place, the *right* moment. No code in this repo can answer that. The
+drift score explicitly cannot — it is a whole-frame perceptual hash that
+scored a photograph of a stool at 0.50 against a character master, higher
+than two of five genuine samples. Treat it as a smoke signal, never a
+verdict.
+
+So walk the list:
+
+| What | Where | Verify by eye |
+|---|---|---|
+| Character pack | `references/character/` | Same person in all six. Same wardrobe, same age, same build. |
+| Environment sheet | `references/environment/` | The location the shots describe, in the light `continuity.json` states. |
+| Style sheet | `references/style/` | The palette and grade every shot inherits. |
+| Prop sheets | `references/props/` | Grounded in a real setting, not floating on a studio backdrop. |
+| Start frame | per shot | The moment the shot *begins*. |
+| End frame | per shot | The moment the shot *ends* — and continuous with the next shot's start. |
+
+**The six-image character pack** is exactly these filenames — anything else
+is not found by `referencePackPaths`:
+
+```text
+face-front.png  face-three-quarter.png  face-profile.png
+body-front.png  body-three-quarter.png  body-back.png
+```
+
+Three face angles, three body. Fewer than six warns rather than blocks: one
+reference held identity in wide shots on a real project and failed in
+close-ups, which is why six are wanted. Check all six show **one person** —
+generating them as six independent calls produces six near-strangers, and one
+reference image will not hold a face across separate calls.
+
+**Start and end frames** are the highest-leverage check here. A video model
+given both fills in the middle, so a wrong anchor guarantees a wrong clip —
+and the clip costs roughly 100× the frame. Both real failures on the first
+project were visible in the anchor and cost a full clip each to discover.
+
+For each shot that uses them:
+
+- Does the start frame show the moment the shot *opens* on?
+- Does the end frame show where it should *land*?
+- Is the end frame of shot N continuous with the start frame of shot N+1 —
+  same light, same place, same subject state? A jump there reads as a
+  continuity error in the finished video.
+- Are they the same subject as the character pack?
+
+**Per-scene references.** Every shot in `generation-plan.json` should carry
+the references its `continuity.json` entry implies. Check specifically:
+
+- Shots with a person attach the character reference — **including** macro
+  shots of hands, arms, boots, or clothing. A macro of "dirty bare hands
+  gripping a shovel" was generated without it on the assumption that
+  hands-only meant no identity to hold; it came back with different hands in
+  a different place and cost 20 credits to redo.
+- Every shot attaches the environment sheet, or the model re-invents the
+  location from words — that is how a winter forest became a summer one.
+- Only genuinely empty shots may omit references.
+
+If any image is wrong, do not approve the look gate. See "When the plan is
+not good" below.
+
 **G. `plan.json` is a real contract.**
 
 ```bash
@@ -316,5 +390,8 @@ $0.00 for MCP work because those generations never reach the manifest.
 | Prompts sane | `/verify-realism` | no rule violations |
 | References verified | `npm run refcheck -- <p>` (add `--no-character` when no person recurs) | PASS, no blockers |
 | Plates correct | `Read` each plate | matches `continuity.json` |
+| Character pack | `Read` all six | one person, six angles, exact filenames |
+| Anchors correct | `Read` each start/end frame | right moment; end of N continuous with start of N+1 |
+| References attached | read `generation-plan.json` | every peopled shot carries the character ref, macros included |
 | Price honest | read `plan.json` `cost` | a range, includes plates + retries |
 | Plan complete | read `plan.json` | runnable without the transcript |

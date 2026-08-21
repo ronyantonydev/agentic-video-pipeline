@@ -126,18 +126,43 @@ report the gap and let them decide.
 Remember the two wallets: API and subscription bill separately, and
 generation here goes through MCP against the subscription wallet.
 
-## Verify the plates with your eyes
+## Verify every image with your eyes
 
-`refcheck` proves a file is readable, not that it is right. It passed with
-**zero images** on rain-riverbed because sheets only warn.
+`refcheck` and `validateAnchor` prove an image is readable, correctly sized
+and not blank. **Nothing in this repo can tell you it is the right face, the
+right place, or the right moment.** The drift score explicitly cannot — a
+photograph of a stool scored 0.50 against a character master, above two of
+five genuine samples. Smoke signal, never a verdict.
 
-So: Read every plate. Check it against continuity.json — the light, the
-palette, the location, the texture. A wrong plate is wrong in every shot
-generated against it, and it costs 1 credit to redo now versus the whole run
-later.
+refcheck also passed with **zero images** on rain-riverbed, because missing
+sheets only warn. Passing is not evidence.
 
-The drift score is advisory only and cannot tell a face from a prop. Never
-present it as a verdict.
+So Read every one of these and check it against continuity.json:
+
+| What | Check |
+|---|---|
+| Character pack (6) | One person across all six. Same wardrobe, age, build. |
+| Environment sheet | The location the shots describe, in the stated light. |
+| Style sheet | The palette and grade every shot inherits. |
+| Prop sheets | Grounded in a real setting, not floating on a backdrop. |
+| Start frame | The moment the shot opens on. |
+| End frame | Where it lands — and continuous with the next shot's start. |
+
+**The pack filenames are exact** — `referencePackPaths` finds no others:
+`face-front`, `face-three-quarter`, `face-profile`, `body-front`,
+`body-three-quarter`, `body-back`. Six from six independent calls produces
+six near-strangers; one reference will not hold a face across separate calls.
+
+**Anchors are the highest-leverage check.** A video model given a start and
+end frame fills in the middle, so a wrong anchor guarantees a wrong clip at
+roughly 100× the frame's cost. Both failures on the first project were
+visible in the anchor and cost a full clip each to find.
+
+**Then check the attachments** in generation-plan.json: every shot with a
+person carries the character reference — *including* macros of hands, boots
+or sleeves — and every shot carries the environment sheet. A hands-only macro
+generated without it came back with different hands in a different place, 20
+credits to redo.
 
 ## Finishing
 
